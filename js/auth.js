@@ -45,6 +45,7 @@ const loginForm = document.getElementById('login-form');
 const loginMessage = document.getElementById('login-message');
 
 if (loginForm) {
+  console.log("Login form found, attaching event listener.");
   loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('login-username').value;
