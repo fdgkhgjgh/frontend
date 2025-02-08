@@ -66,11 +66,12 @@ if (loginForm) {
                 console.log('Login Data:', data);
 
                 if (response.ok) {
-                    loginMessage.textContent = data.message;
-                    loginMessage.style.color = "green";
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('userId', data.userId);
-                    window.location.href = 'index.html';
+                  loginMessage.textContent = data.message;
+                  loginMessage.style.color = "green";
+                  localStorage.setItem('token', data.token);
+                  localStorage.setItem('userId', data.userId);
+                  localStorage.setItem('username', data.username); // ADD THIS LINE
+                  window.location.href = 'index.html';
                 } else {
                     loginMessage.textContent = data.message;
                     loginMessage.style.color = "red";

@@ -176,3 +176,45 @@ if (createPostFormMain) {
         }
     })
 }
+
+// Example (in app.js, or wherever you manage the header)
+function updateHeader() { // You might already have a function like this
+    const username = localStorage.getItem('username');
+    const loginLink = document.querySelector('a[href="login.html"]'); //find login link.
+    const registerLink = document.querySelector('a[href="register.html"]');
+
+    if (username) {
+        // User is logged in, display username
+        const usernameDisplay = document.createElement('span'); // Or any suitable element
+        usernameDisplay.textContent = `Logged in as: ${username}`;
+        usernameDisplay.id = 'user-info'; // Add an ID for easy styling/removal
+          if(loginLink) {
+            loginLink.style.display = 'none'
+          }
+        if(registerLink) {
+           registerLink.style.display = 'none';
+        }
+        // Add the usernameDisplay element to the header (adjust as needed)
+        // For instance, if you have <header><h1>Mini Forum</h1></header>
+        document.querySelector('header').appendChild(usernameDisplay);
+    } else {
+       // User is not logged in, remove the username display if it exists
+        const usernameDisplay = document.getElementById('user-info');
+        if (usernameDisplay) {
+          usernameDisplay.remove();
+             if(loginLink) {
+                loginLink.style.display = 'inline-block'
+             }
+            if(registerLink){
+               registerLink.style.display = 'inline-block'
+            }
+         }
+    }
+}
+
+// Call updateHeader() after checkLoginStatus()
+ document.addEventListener('DOMContentLoaded', () => {
+        checkLoginStatus(); // From auth.js
+        updateHeader(); // Update header to show username.
+        loadPosts();
+    });
