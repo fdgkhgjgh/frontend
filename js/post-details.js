@@ -61,45 +61,47 @@ function displayPostDetails(post) {
           //  postElement.appendChild(imgContainer); // Append image container to the *main* post element
             contentContainer.appendChild(imgContainer)
     }
-      // --- Like/Dislike Buttons ---
+       // --- Like/Dislike Buttons ---
         const voteContainer = document.createElement('div');
         voteContainer.classList.add('vote-container');
 
         const likeButton = document.createElement('button');
         likeButton.classList.add('vote-button', 'like-button');
-        likeButton.innerHTML = '&#x25B2;'; // Up arrow
-        likeButton.dataset.postId = post._id;
-        likeButton.addEventListener('click', () => handleLike(post._id, likeCount)); // Pass likeCount
+        likeButton.innerHTML = '&#x25B2;';
+        likeButton.dataset.postId = post._id;  // Store postID
         voteContainer.appendChild(likeButton);
 
-		const likeCount = document.createElement('span');
-		likeCount.classList.add('vote-count')
-		likeCount.textContent = post.likes;
-		voteContainer.appendChild(likeCount);
-
+        const likeCount = document.createElement('span');
+        likeCount.classList.add('vote-count');
+        likeCount.textContent = post.likes; // Display initial count
+        voteContainer.appendChild(likeCount);
 
         const dislikeButton = document.createElement('button');
         dislikeButton.classList.add('vote-button', 'dislike-button');
-        dislikeButton.innerHTML = '&#x25BC;'; // Down arrow
-        dislikeButton.dataset.postId = post._id;
-        dislikeButton.addEventListener('click', () => handleDislike(post._id, dislikeCount)); // Pass dislikeCount
+        dislikeButton.innerHTML = '&#x25BC;';
+        dislikeButton.dataset.postId = post._id; // Store post ID
         voteContainer.appendChild(dislikeButton);
 
-		const dislikeCount = document.createElement('span'); //Display count
-		dislikeCount.classList.add('vote-count');
-		dislikeCount.textContent = post.dislikes; //Dislay dislikes count
-		voteContainer.appendChild(dislikeCount)
-
+        const dislikeCount = document.createElement('span');
+        dislikeCount.classList.add('vote-count');
+        dislikeCount.textContent = post.dislikes;  //Display count
+        voteContainer.appendChild(dislikeCount);
         contentContainer.appendChild(voteContainer);
+
+    // Add event listeners *AFTER* elements are added to the DOM!
+    likeButton.addEventListener('click', () => handleLike(post._id, likeCount));
+    dislikeButton.addEventListener('click', () => handleDislike(post._id, dislikeCount));
 
     postElement.appendChild(contentContainer);
     postDetailsContainer.appendChild(postElement);
 
 }
 
+
 // --- Like Handler (in post-details.js) ---
 async function handleLike(postId, likeCountElement) {
-    try {
+  // ... (same as in app.js) ...
+   try {
         const token = localStorage.getItem('token');
         if (!token) {
           alert("You must be logged in to like.")
@@ -129,6 +131,7 @@ async function handleLike(postId, likeCountElement) {
 
 // --- Dislike Handler (in post-details.js) ---
 async function handleDislike(postId, dislikeCountElement) {
+    // ... (same as in app.js) ...
     try {
         const token = localStorage.getItem('token');
          if(!token) {
@@ -147,6 +150,9 @@ async function handleDislike(postId, dislikeCountElement) {
         if (response.ok) {
             // Update the dislike count using the value from the server!
             dislikeCountElement.textContent = data.dislikes;
+        }else {
+          alert(`Error: ${data.message}`)
+          console.error('Dislike failed', data.message)
         }
     } catch (error) {
         console.error('Error disliking post:', error);
