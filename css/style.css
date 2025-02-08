@@ -49,20 +49,29 @@ nav button:hover, nav a:hover {
   flex-direction: column;
 }
 
-/*Image Container*/
+.post h2 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.post p {
+  margin-bottom: 10px;
+}
+
+/* --- Image Container --- */
 .image-container {
-  width: 150px;  /* Fixed width for the image container */
+  width: 150px;  /* Fixed width */
   display: flex; /* Use flexbox to center image */
   align-items: center; /* Center vertically */
-  justify-content: center;/* Center horizontally */
+  justify-content: center; /* Center horizontally */
 }
 
 .image-container img {
   max-width: 100%; /* Don't overflow container */
   max-height: 150px; /* Limit height */
   height: auto;
-  display: block;
-  border-radius: 4px; /* Optional: Rounded corners */
+  display: block;  /* Remove extra space below inline elements */
+  border-radius: 4px;
 }
 
 /* --- Vote Container and Buttons --- */
@@ -95,7 +104,7 @@ nav button:hover, nav a:hover {
 }
 
 .vote-count {
-margin-right: 10px; /*Keep space*/
+    margin-right: 10px; /*Keep space*/
 }
 
 /* Specific button styles (optional, but good for visual distinction) */
@@ -110,14 +119,14 @@ margin-right: 10px; /*Keep space*/
 
 }
 .delete-button{
-margin-top: auto; /* Push the delete button to the bottom */
-align-self: flex-start; /* Align to the start (left) of its container */
-background-color: #f44336;
-color: white;
-padding: 5px 10px;
-border: none;
-border-radius: 4px;
-cursor: pointer;
+    margin-top: auto; /* Push the delete button to the bottom */
+    align-self: flex-start; /* Align to the start (left) of its container */
+    background-color: #f44336;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 /* --- Form Styles (General) --- */
@@ -157,25 +166,25 @@ button[type="submit"]:hover {
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-  .post {
-    display: none; /* This would hide ALL posts! */
-  }
-}
+    nav a, nav button {
+        display: block;
+        margin: 5px 0;
+        width: 100%;
+        text-align: center;
+    }
+     .post {
+        flex-direction: column; /* Stack content and image on smaller screens */
+    }
 
-/* GOOD (Correctly styles posts for mobile) */
-@media (max-width: 768px) {
-  .post {
-      flex-direction: column;
-  }
-  .image-container{
-      width: 100%;
-      margin-bottom: 10px;
-  }
+    .image-container {
+        width: 100%; /* Full width on smaller screens */
+        margin-bottom: 10px; /* Space between image and content*/
+    }
+   /* Adjust padding and spacing as needed */
     .post-content {
-     margin-right: 0;
-  }
+        margin-right: 0; /* Remove right margin */
+    }
 }
-*/
 
 /* --- Modal styles (Keep ,but move them to bottom) --- */
 .modal {
@@ -208,4 +217,3 @@ button[type="submit"]:hover {
 #comment-text{
   min-height: 80px;
 }
-/* --- (Removed comment styles) --- */
