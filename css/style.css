@@ -153,3 +153,91 @@ margin-top: 10px; /* Add spacing above the button */
 #comment-text{
   min-height: 80px;
 }
+
+/* frontend/css/style.css */
+
+/* Existing styles (from previous steps) ... */
+
+/* Post Container */
+.post {
+  display: flex; /* Use Flexbox! */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Content Area (Title, Author, etc.) */
+.post-content {
+  flex: 1; /* Take up remaining space */
+  margin-right: 20px; /* Spacing between content and image */
+  display: flex;
+  flex-direction: column;
+}
+
+.post h2 {
+  margin-top: 0;
+  margin-bottom: 5px; /* Space between title and author/date */
+}
+
+.post p {
+  margin-bottom: 10px;
+}
+
+/* Image Container */
+.image-container {
+  width: 150px; /* Set a fixed width for the image container */
+  height: auto;
+   /* Add some basic flex properties to center the image. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-container img {
+  max-width: 100%; /* Ensure image doesn't overflow container */
+  max-height: 150px;  /*Control image size*/
+  height: auto;
+  display: block; /* Remove extra space below inline elements */
+  border-radius: 4px; /* Optional: Rounded corners */
+}
+
+/* Like/Dislike Buttons */
+.vote-container {
+  display: flex; /* Arrange buttons horizontally */
+  align-items: center; /* Vertically center */
+  margin-bottom: 10px; /* Space below the buttons */
+}
+
+.vote-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  margin-right: 5px; /* Spacing between buttons */
+  cursor: pointer;
+  border-radius: 3px; /* Slightly rounded corners */
+  font-size: 16px; /* Adjust size as needed */
+  line-height: 1; /* Remove extra line height */
+}
+
+.vote-button:hover {
+  background-color: #ddd;
+}
+
+.like-button {
+  background-color: #4CAF50; /* Green background for like button */
+}
+
+.like-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.dislike-button {
+  background-color: #f44336; /* Red background for dislike button */
+}
+
+.dislike-button:hover {
+  background-color: #da190b; /* Darker red on hover */
+}

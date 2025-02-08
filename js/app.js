@@ -28,48 +28,63 @@ async function loadPosts() {
 }
 
 function displayPosts(posts) {
-  console.log("postList element", postList) //Check postList get correct.
     postList.innerHTML = ''; // Clear existing posts
     posts.forEach(post => {
-        console.log('Current Post:', post); // Log each individual post
         const postElement = document.createElement('div');
         postElement.classList.add('post');
 
+        // --- Main Container for Content ---
+        const contentContainer = document.createElement('div');
+        contentContainer.classList.add('post-content');
+
+        // --- Title ---
         const titleElement = document.createElement('h2');
         titleElement.textContent = post.title;
-        postElement.appendChild(titleElement);
+        contentContainer.appendChild(titleElement);
 
-        const authorElement = document.createElement('p');
-        authorElement.textContent = `By: ${post.author.username}`; // Display the author's username
-        postElement.appendChild(authorElement);
+        // --- Author and Date ---
+        const authorDateElement = document.createElement('p');
+        authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
+        contentContainer.appendChild(authorDateElement);
 
-        const contentElement = document.createElement('p');
-        contentElement.textContent = post.content.substring(0, 150); // Show a preview
-        postElement.appendChild(contentElement);
+		// --- Content ---
+		 const contentElement = document.createElement('p');
+        contentElement.textContent = post.content.substring(0, 250); // Show a  preview
+        contentContainer.appendChild(contentElement);
 
 
+        // --- Like/Dislike Buttons ---
+        const voteContainer = document.createElement('div');
+        voteContainer.classList.add('vote-container');
+
+        const likeButton = document.createElement('button');
+        likeButton.classList.add('vote-button', 'like-button');
+        likeButton.innerHTML = '&#x25B2;'; // Up arrow (▲) -  Use HTML entities for special characters
+        voteContainer.appendChild(likeButton);
+
+
+        const dislikeButton = document.createElement('button');
+        dislikeButton.classList.add('vote-button', 'dislike-button');
+        dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
+        voteContainer.appendChild(dislikeButton);
+
+        contentContainer.appendChild(voteContainer);
+
+        // --- Image (Right Side) ---
         if (post.imageUrl) {
+            const imgContainer = document.createElement('div');
+            imgContainer.classList.add('image-container');
+
             const imgElement = document.createElement('img');
             imgElement.src = post.imageUrl;
             imgElement.alt = post.title;
-            imgElement.style.maxWidth = '100%'; // Ensure images fit within the container
-            imgElement.style.height = 'auto';
-            postElement.appendChild(imgElement);
+            //No need set width and height in js, just set in css.
+            imgContainer.appendChild(imgElement);
+          //  postElement.appendChild(imgContainer); // Append image container to the *main* post element
+            contentContainer.appendChild(imgContainer)
         }
-		// Format and display the creation date
-        const dateElement = document.createElement('p');
-        dateElement.textContent = `Posted on: ${formatDate(post.createdAt)}`; // Use formatDate here
-        postElement.appendChild(dateElement);
-
-        //Add view details button to jump a new details page in the future.
-        const detailsLink = document.createElement('a');
-        detailsLink.href = '#';  // Replace this with the post detail page URL when created.
-        detailsLink.textContent = 'View Details';
-        postElement.appendChild(detailsLink);
-        // Add click event in the future.
-
-        // --- DELETE BUTTON LOGIC --- (Existing delete button logic)
-        const currentUserId = localStorage.getItem('userId');
+		// --- Delete Button---
+		 const currentUserId = localStorage.getItem('userId');
         if (currentUserId && currentUserId === post.author._id.toString()) {
             // Only show the delete button if the current user is the author
             const deleteButton = document.createElement('button');
@@ -78,11 +93,11 @@ function displayPosts(posts) {
             deleteButton.addEventListener('click', () => {
                 deletePost(post._id, postElement); // Pass the post ID *and* the element
             });
-            postElement.appendChild(deleteButton);
+            contentContainer.appendChild(deleteButton); // Append to content container.
         }
 
-        // --- COMMENT SECTION --- (Removed)
-
+        // --- Combine Everything ---
+        postElement.appendChild(contentContainer);
         postList.appendChild(postElement);
     });
 }
