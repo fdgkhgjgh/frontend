@@ -12,7 +12,7 @@ const postList = document.getElementById('post-list');
 const createPostFormMain = document.getElementById('create-post-form-main');
 const createPostMessageMain = document.getElementById('create-post-message-main');
 
-const API_BASE_URL = 'http://localhost:5000/api'; //  Or your Render backend URL
+const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; //  Or your Render backend URL
 
 
 async function loadPosts() {
