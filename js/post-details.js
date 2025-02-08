@@ -61,104 +61,28 @@ function displayPostDetails(post) {
           //  postElement.appendChild(imgContainer); // Append image container to the *main* post element
             contentContainer.appendChild(imgContainer)
     }
-       // --- Like/Dislike Buttons ---
+      // --- Like/Dislike Buttons ---
         const voteContainer = document.createElement('div');
         voteContainer.classList.add('vote-container');
 
         const likeButton = document.createElement('button');
         likeButton.classList.add('vote-button', 'like-button');
-        likeButton.innerHTML = '&#x25B2;';
-        likeButton.dataset.postId = post._id;  // Store postID
+        likeButton.innerHTML = '&#x25B2;'; // Up arrow (▲) -  Use HTML entities for special characters
         voteContainer.appendChild(likeButton);
 
-        const likeCount = document.createElement('span');
-        likeCount.classList.add('vote-count');
-        likeCount.textContent = post.likes; // Display initial count
-        voteContainer.appendChild(likeCount);
 
         const dislikeButton = document.createElement('button');
         dislikeButton.classList.add('vote-button', 'dislike-button');
-        dislikeButton.innerHTML = '&#x25BC;';
-        dislikeButton.dataset.postId = post._id; // Store post ID
+        dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
         voteContainer.appendChild(dislikeButton);
 
-        const dislikeCount = document.createElement('span');
-        dislikeCount.classList.add('vote-count');
-        dislikeCount.textContent = post.dislikes;  //Display count
-        voteContainer.appendChild(dislikeCount);
         contentContainer.appendChild(voteContainer);
-
-    // Add event listeners *AFTER* elements are added to the DOM!
-    likeButton.addEventListener('click', () => handleLike(post._id, likeCount));
-    dislikeButton.addEventListener('click', () => handleDislike(post._id, dislikeCount));
 
     postElement.appendChild(contentContainer);
     postDetailsContainer.appendChild(postElement);
 
 }
 
-
-// --- Like Handler (in post-details.js) ---
-async function handleLike(postId, likeCountElement) {
-  // ... (same as in app.js) ...
-   try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          alert("You must be logged in to like.")
-          return;
-        }
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}/like`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-        });
-
-        const data = await response.json();
-		//IMPORTANT Change!
-        if (response.ok) {
-            // Update the like count using the value from the server!
-            likeCountElement.textContent = data.likes;
-        } else {
-          alert(`Error: ${data.message}`)
-          console.error('Like failed:', data.message);
-        }
-    } catch (error) {
-        console.error('Error liking post:', error);
-        alert("An error occurred while liking the post")
-    }
-}
-
-// --- Dislike Handler (in post-details.js) ---
-async function handleDislike(postId, dislikeCountElement) {
-    // ... (same as in app.js) ...
-    try {
-        const token = localStorage.getItem('token');
-         if(!token) {
-           alert('You must be logged in to dislike.')
-           return;
-         }
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}/dislike`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-        });
-
-        const data = await response.json();
-		 //IMPORTANT change.
-        if (response.ok) {
-            // Update the dislike count using the value from the server!
-            dislikeCountElement.textContent = data.dislikes;
-        }else {
-          alert(`Error: ${data.message}`)
-          console.error('Dislike failed', data.message)
-        }
-    } catch (error) {
-        console.error('Error disliking post:', error);
-        alert("An error occurred while disliking post.")
-    }
-}
 
 // --- Add Comment Submission ---
 
@@ -255,34 +179,3 @@ function displayComments(comments) {
 
 // Export
 export {loadPostDetails}
-//Delete comment function in post-details.js
-async function deleteComment(commentId, commentItem) {
-  const isConfirm = confirm("Are you sure you want to delete this comment?")
-  if(!isConfirm) return;
-
-  try {
-    const token = localStorage.getItem('token');
-    // Get post id from url search params.
-    const postId = new URLSearchParams(window.location.search).get('id');
-    const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}`, {
-       method: "DELETE",
-       headers: {
-        'Authorization': `Bearer ${token}`
-       }
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      // Remove the comment from the DOM
-      commentItem.remove();
-      alert(data.message)
-    } else {
-      alert(`Error: ${data.message}`)
-    }
-
-  } catch (error) {
-    console.error("Delete comment failed:", error);
-    alert("An error occurred while deleting comment.")
-  }
-}
