@@ -157,9 +157,13 @@ button[type="submit"]:hover {
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-  /* ... (other responsive styles) ... */
-
-  .post {
+  nav a, nav button {
+      display: block;
+      margin: 5px 0;
+      width: 100%;
+      text-align: center;
+  }
+   .post {
       flex-direction: column; /* Stack content and image on smaller screens */
   }
 
@@ -167,9 +171,10 @@ button[type="submit"]:hover {
       width: 100%; /* Full width on smaller screens */
       margin-bottom: 10px; /* Space between image and content*/
   }
+ /* Adjust padding and spacing as needed */
   .post-content {
-      margin-right: 0;
-   }
+      margin-right: 0; /* Remove right margin */
+  }
 }
 
 /* --- Modal styles (Keep ,but move them to bottom) --- */
