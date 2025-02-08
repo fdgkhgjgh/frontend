@@ -16,6 +16,7 @@
             <a href="login.html">Login</a>
             <button id="logout-button" style="display: none;">Logout</button>
              <a href="index.html">Back to Main Page</a>
+             <a href="profile.html" id="profile-link" style="display: none;">Profile</a>
         </nav>
     </header>
 
@@ -32,12 +33,14 @@
     <script src="js/utils.js" type="module"></script>
     <script src="js/auth.js" type="module"></script>
     <script src="js/profile.js" type="module"></script> <!-- Add this -->
-     <script src="js/theme-toggle.js" type="module"></script>  <! --Add this. -->
+    <script src="js/theme-toggle.js" type="module"></script>
     <script type="module">
-          import { checkLoginStatus } from './js/auth.js';
+        import { checkLoginStatus } from './js/auth.js';
+        import { loadUserProfile } from './js/profile.js'; // IMPORT IT HERE!
+
         document.addEventListener('DOMContentLoaded', () => {
             checkLoginStatus();
-            loadUserProfile(); // Add this line to load profile on page load
+            loadUserProfile();
         });
     </script>
 </body>
