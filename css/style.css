@@ -157,24 +157,26 @@ button[type="submit"]:hover {
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-  nav a, nav button {
-      display: block;
-      margin: 5px 0;
-      width: 100%;
-      text-align: center;
+  .post {
+    display: none; /* This would hide ALL posts! */
   }
-   .post {
-      flex-direction: column; /* Stack content and image on smaller screens */
-  }
+}
 
-  .image-container {
-      width: 100%; /* Full width on smaller screens */
-      margin-bottom: 10px; /* Space between image and content*/
-  }
- /* Adjust padding and spacing as needed */
-  .post-content {
-      margin-right: 0; /* Remove right margin */
-  }
+/* GOOD (Correctly styles posts for mobile) */
+@media (max-width: 768px) {
+    .post {
+        flex-direction: column; /* Stack content and image */
+   }
+
+    .image-container {
+        width: 100%;
+        margin-bottom: 10px;
+
+    }
+    /*Remove right margin in mobile*/
+    .post-content {
+       margin-right: 0;
+    }
 }
 
 /* --- Modal styles (Keep ,but move them to bottom) --- */
