@@ -83,31 +83,6 @@ function displayPostDetails(post) {
 
 }
 
-function displayComments(comments) {
-    commentsList.innerHTML = ''; // Clear existing comments
-    if (!comments || comments.length === 0) {
-      commentsList.innerHTML = '<li>No comments yet.</li>';
-      return;
-    }
-    comments.forEach(comment => {
-        const commentItem = document.createElement('li');
-        commentItem.textContent = `${comment.author.username}: ${comment.text} -- ${formatDate(comment.createdAt)}`;
-		//Add delete button.
-        const currentUserId = localStorage.getItem('userId');
-        if (currentUserId && currentUserId === comment.author._id.toString()) {
-              const deleteButton = document.createElement('button');
-              deleteButton.textContent = "Delete";
-              deleteButton.classList.add('delete-button');
-              deleteButton.addEventListener('click', () => {
-                deleteComment(comment._id, commentItem)
-              });
-              commentItem.appendChild(deleteButton);
-          }
-
-        commentsList.appendChild(commentItem);
-
-    });
-}
 
 // --- Add Comment Submission ---
 
