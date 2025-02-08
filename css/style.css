@@ -164,20 +164,18 @@ button[type="submit"]:hover {
 
 /* GOOD (Correctly styles posts for mobile) */
 @media (max-width: 768px) {
-    .post {
-        flex-direction: column; /* Stack content and image */
-   }
-
-    .image-container {
-        width: 100%;
-        margin-bottom: 10px;
-
-    }
-    /*Remove right margin in mobile*/
+  .post {
+      flex-direction: column;
+  }
+  .image-container{
+      width: 100%;
+      margin-bottom: 10px;
+  }
     .post-content {
-       margin-right: 0;
-    }
+     margin-right: 0;
+  }
 }
+*/
 
 /* --- Modal styles (Keep ,but move them to bottom) --- */
 .modal {
