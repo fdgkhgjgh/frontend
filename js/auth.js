@@ -45,39 +45,37 @@ const loginForm = document.getElementById('login-form');
 const loginMessage = document.getElementById('login-message');
 
 if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = document.getElementById('login-username').value;
-        const password = document.getElementById('login-password').value;
+  loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
 
-        try {
-            const response = await fetch(`${API_BASE_URL}/auth/login`, { // Use API_BASE_URL
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
+      try {
+          const response = await fetch(`${API_BASE_URL}/auth/login`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ username, password }),
+          });
 
-            const data = await response.json();
-            if (response.ok) {
-                loginMessage.textContent = data.message;
-                loginMessage.style.color = "green"
-                // Store the token in local storage
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('userId', data.userId); // Store user ID as well
-                // Redirect to the main page
-                window.location.href = 'index.html';
-            } else {
-                loginMessage.textContent = data.message;
-                loginMessage.style.color = "red"
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            loginMessage.textContent = 'An error occurred during login.';
-            loginMessage.style.color = 'red';
-        }
-    });
+          console.log('Login Response:', response); // Log the response
+
+          const data = await response.json();
+
+          console.log('Login Data:', data); // Log the parsed data
+
+          if (response.ok) {
+              // ... (rest of your success handling) ...
+          } else {
+             // ... (rest of your error handling) ...
+          }
+      } catch (error) {
+          console.error('Login error:', error);
+          loginMessage.textContent = 'An error occurred during login.';
+          loginMessage.style.color = 'red';
+      }
+  });
 }
 
 // Logout
