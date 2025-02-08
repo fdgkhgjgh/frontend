@@ -1,23 +1,18 @@
 // frontend/js/app.js
 import { formatDate } from './utils.js'; // Import the formatDate function
+import { checkLoginStatus } from './auth.js'; // Import checkLoginStatus
 
 const postList = document.getElementById('post-list');
-// const commentModal = document.getElementById('comment-modal'); //Comment form container. No need any more.Remove it.
-// const commentForm = document.getElementById('add-comment-form'); No need any more.Remove it.
-// const commentText = document.getElementById('comment-text');  No need any more.Remove it.
-// const commentPostId = document.getElementById('comment-post-id'); //Hidden input value. No need any more.Remove it.
-// const commentMessage = document.getElementById("comment-message"); No need any more.Remove it.
 
 // Create post element and relative variables.
 const createPostFormMain = document.getElementById('create-post-form-main');
 const createPostMessageMain = document.getElementById('create-post-message-main');
-
 const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; //  Or your Render backend URL
 
 
 async function loadPosts() {
     try {
-        const response = await fetch(`${API_BASE_URL}/posts`);
+        const response = await fetch(`${API_BASE_URL}/posts`); // Use API_BASE_URL
         console.log('Response:', response); // Log the entire response object
 
         if (!response.ok) {
@@ -100,7 +95,7 @@ async function deletePost(postId, postElement) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {  //Use API_BASE_URL
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -148,7 +143,7 @@ if (createPostFormMain) {
                 createPostMessageMain.style.color = 'red';
                 return; //Stop execution if not logged in.
             }
-            const response = await fetch(`${API_BASE_URL}/posts`, {
+            const response = await fetch(`${API_BASE_URL}/posts`, { //Use API_BASE_URL
                 method: "POST",
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -156,7 +151,12 @@ if (createPostFormMain) {
                 body: formData
             });
 
+            console.log("Create Post Response:", response); // ADD THIS
+
             const data = await response.json();
+
+            console.log("Create Post Data:", data);  //ADD THIS
+
             if (response.ok) {
                 createPostMessageMain.textContent = 'Post created successfully!';
                 createPostMessageMain.style.color = "green";
@@ -176,45 +176,51 @@ if (createPostFormMain) {
         }
     })
 }
-
-// Example (in app.js, or wherever you manage the header)
-function updateHeader() { // You might already have a function like this
+//Update header to show username.
+function updateHeader() {
     const username = localStorage.getItem('username');
-    const loginLink = document.querySelector('a[href="login.html"]'); //find login link.
+    const loginLink = document.querySelector('a[href="login.html"]');
     const registerLink = document.querySelector('a[href="register.html"]');
 
     if (username) {
-        // User is logged in, display username
-        const usernameDisplay = document.createElement('span'); // Or any suitable element
+         // User is logged in, display username and hide login/register links
+        const usernameDisplay = document.createElement('span');
         usernameDisplay.textContent = `Logged in as: ${username}`;
-        usernameDisplay.id = 'user-info'; // Add an ID for easy styling/removal
-          if(loginLink) {
-            loginLink.style.display = 'none'
-          }
-        if(registerLink) {
-           registerLink.style.display = 'none';
+        usernameDisplay.id = 'user-info';
+        if(loginLink) {
+            loginLink.style.display = 'none';
         }
-        // Add the usernameDisplay element to the header (adjust as needed)
-        // For instance, if you have <header><h1>Mini Forum</h1></header>
-        document.querySelector('header').appendChild(usernameDisplay);
+        if(registerLink) {
+            registerLink.style.display = 'none';
+        }
+
+        const logoutButton = document.getElementById('logout-button');
+        if(logoutButton) {
+            logoutButton.style.display = 'inline-block';
+        }
+
+        document.querySelector('header nav').appendChild(usernameDisplay); //Append after <nav>
     } else {
-       // User is not logged in, remove the username display if it exists
+        // User is not logged in, remove the username display if it exists
         const usernameDisplay = document.getElementById('user-info');
         if (usernameDisplay) {
-          usernameDisplay.remove();
-             if(loginLink) {
-                loginLink.style.display = 'inline-block'
-             }
-            if(registerLink){
-               registerLink.style.display = 'inline-block'
-            }
+            usernameDisplay.remove();
+        }
+        if(loginLink) {
+            loginLink.style.display = 'inline-block'
          }
+        if(registerLink){
+           registerLink.style.display = 'inline-block'
+        }
+        const logoutButton = document.getElementById('logout-button');
+        if(logoutButton) {
+            logoutButton.style.display = 'none';
+        }
     }
 }
-
-// Call updateHeader() after checkLoginStatus()
- document.addEventListener('DOMContentLoaded', () => {
-        checkLoginStatus(); // From auth.js
-        updateHeader(); // Update header to show username.
-        loadPosts();
-    });
+// Call checkLoginStatus and loadPosts, and updateHeader when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    checkLoginStatus(); // Now this will work correctly
+    updateHeader(); // Update header to show username.
+    loadPosts();
+});
