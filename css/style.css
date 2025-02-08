@@ -49,29 +49,20 @@ nav button:hover, nav a:hover {
   flex-direction: column;
 }
 
-.post h2 {
-  margin-top: 0;
-  margin-bottom: 5px;
-}
-
-.post p {
-  margin-bottom: 10px;
-}
-
-/* --- Image Container --- */
+/*Image Container*/
 .image-container {
-  width: 150px;  /* Fixed width */
+  width: 150px;  /* Fixed width for the image container */
   display: flex; /* Use flexbox to center image */
   align-items: center; /* Center vertically */
-  justify-content: center; /* Center horizontally */
+  justify-content: center;/* Center horizontally */
 }
 
 .image-container img {
   max-width: 100%; /* Don't overflow container */
   max-height: 150px; /* Limit height */
   height: auto;
-  display: block;  /* Remove extra space below inline elements */
-  border-radius: 4px;
+  display: block;
+  border-radius: 4px; /* Optional: Rounded corners */
 }
 
 /* --- Vote Container and Buttons --- */
@@ -166,13 +157,9 @@ button[type="submit"]:hover {
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-  nav a, nav button {
-      display: block;
-      margin: 5px 0;
-      width: 100%;
-      text-align: center;
-  }
-   .post {
+  /* ... (other responsive styles) ... */
+
+  .post {
       flex-direction: column; /* Stack content and image on smaller screens */
   }
 
@@ -180,10 +167,9 @@ button[type="submit"]:hover {
       width: 100%; /* Full width on smaller screens */
       margin-bottom: 10px; /* Space between image and content*/
   }
- /* Adjust padding and spacing as needed */
   .post-content {
-      margin-right: 0; /* Remove right margin */
-  }
+      margin-right: 0;
+   }
 }
 
 /* --- Modal styles (Keep ,but move them to bottom) --- */
