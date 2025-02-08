@@ -166,24 +166,30 @@ button[type="submit"]:hover {
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-    nav a, nav button {
-        display: block;
-        margin: 5px 0;
-        width: 100%;
-        text-align: center;
-    }
-     .post {
-        flex-direction: column; /* Stack content and image on smaller screens */
-    }
+  .post {
+      flex-direction: column; /* Stack content on small screens */
+      padding: 10px; /* Reduce padding */
+  }
 
-    .image-container {
-        width: 100%; /* Full width on smaller screens */
-        margin-bottom: 10px; /* Space between image and content*/
-    }
-   /* Adjust padding and spacing as needed */
-    .post-content {
-        margin-right: 0; /* Remove right margin */
-    }
+  .image-container {
+      width: 100%; /* Ensure images take full width */
+      text-align: center;
+  }
+
+  .image-container img {
+      max-width: 80%; /* Prevent overflow */
+      height: auto;
+  }
+
+  .post-content {
+      margin-right: 0; /* Remove unnecessary spacing */
+  }
+
+  nav a, nav button {
+      width: 100%;
+      padding: 10px; /* Better touch target */
+      font-size: 16px; /* Increase readability */
+  }
 }
 
 /* --- Modal styles (Keep ,but move them to bottom) --- */
@@ -216,4 +222,9 @@ button[type="submit"]:hover {
 }
 #comment-text{
   min-height: 80px;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
 }
