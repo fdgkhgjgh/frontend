@@ -1,5 +1,5 @@
 // frontend/js/auth.js
-const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; // Or your Render backend URL
+import { API_BASE_URL } from './config.js'; // Import the constant
 
 // Register Form
 const registerForm = document.getElementById('register-form');
@@ -12,7 +12,7 @@ if (registerForm) { // Check if the element exists on the current page
     const password = document.getElementById('password').value;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, { // Use API_BASE_URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,13 +31,13 @@ if (registerForm) { // Check if the element exists on the current page
       } else {
         registerMessage.textContent = data.message;
         registerMessage.style.color = 'red';
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      registerMessage.textContent = 'An error occurred during registration.';
+      registerMessage.style.color = 'red';
     }
-  } catch (error) {
-    console.error('Registration error:', error);
-    registerMessage.textContent = 'An error occurred during registration.';
-    registerMessage.style.color = 'red';
-  }
-});
+  });
 }
 
 // Login Form
@@ -45,51 +45,51 @@ const loginForm = document.getElementById('login-form');
 const loginMessage = document.getElementById('login-message');
 
 if (loginForm) {
-  loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('login-username').value;
-      const password = document.getElementById('login-password').value;
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
 
-      try {
-          const response = await fetch(`${API_BASE_URL}/auth/login`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ username, password }),
-          });
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, { // Use API_BASE_URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
 
-          const data = await response.json();
-          if (response.ok) {
-              loginMessage.textContent = data.message;
-              loginMessage.style.color = "green"
-              // Store the token in local storage
-              localStorage.setItem('token', data.token);
-              localStorage.setItem('userId', data.userId); // Store user ID as well
-              // Redirect to the main page
-              window.location.href = 'index.html';
-          } else {
-              loginMessage.textContent = data.message;
-              loginMessage.style.color = "red"
-          }
-      } catch (error) {
-          console.error('Login error:', error);
-          loginMessage.textContent = 'An error occurred during login.';
-          loginMessage.style.color = 'red';
-      }
-  });
+            const data = await response.json();
+            if (response.ok) {
+                loginMessage.textContent = data.message;
+                loginMessage.style.color = "green"
+                // Store the token in local storage
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('userId', data.userId); // Store user ID as well
+                // Redirect to the main page
+                window.location.href = 'index.html';
+            } else {
+                loginMessage.textContent = data.message;
+                loginMessage.style.color = "red"
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            loginMessage.textContent = 'An error occurred during login.';
+            loginMessage.style.color = 'red';
+        }
+    });
 }
 
 // Logout
 const logoutButton = document.getElementById('logout-button');
 if (logoutButton) {
-  logoutButton.addEventListener('click', () => {
-      // Remove the token from local storage
-      localStorage.removeItem('token');
-      localStorage.removeItem('userId');
-      // Redirect to the main page (or login page)
-      window.location.href = 'index.html';
-  });
+    logoutButton.addEventListener('click', () => {
+        // Remove the token from local storage
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        // Redirect to the main page (or login page)
+        window.location.href = 'index.html';
+    });
 }
 
 // Function to check login status and show/hide elements
@@ -114,3 +114,5 @@ function checkLoginStatus() {
       if (loginLink) loginLink.style.display = 'inline-block';    //Show the login link.
   }
 }
+
+export { checkLoginStatus }; // Export the function

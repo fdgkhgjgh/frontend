@@ -1,37 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ... (rest of the head section) ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Forum</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css" id="theme-stylesheet">
+    <!-- 1. config.js (for API_BASE_URL) -->
+    <script src="js/config.js" type="module"></script>
+    <!-- 2. utils.js (for formatDate, or other utilities) -->
+    <script src="js/utils.js" type="module"></script>
+    <!-- 3. auth.js (for checkLoginStatus, login, register, logout) -->
+    <script src="js/auth.js" type="module"></script>
+    <!-- 4. app.js (for main application logic, depends on auth.js)-->
+    <script src="js/app.js" type="module"></script>
+     <!-- 5. theme-toggle.js (can be anywhere, but usually best after main logic) -->
+    <script src="js/theme-toggle.js" type="module"></script>
+      <script type="module">
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus(); //This will work fine.
+            loadPosts();
+        });
+     </script>
 </head>
 <body>
-    <!-- ... (header and nav) ... -->
-     <main id="post-list">
+    <header>
+        <h1>Mini Forum</h1>
+        <nav>
+            <button id="theme-toggle">Toggle Theme</button>
+            <a href="register.html">Register</a>
+            <a href="login.html">Login</a>
+            <button id="logout-button" style="display: none;">Logout</button>
+             <a href="#" id="new-post-link" style="display: none;">New Post</a>
+        </nav>
+    </header>
+    <main id="post-list">
         <!-- Posts will be dynamically inserted here -->
-    </main>
-    <!--Comment Form Modal ,to hide comment form everywhere.-->
-    <div id="comment-modal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Add Comment</h2>
-             <form id="add-comment-form">
-               <input type="hidden" id="comment-post-id">
-                <textarea id="comment-text" placeholder="Your comment..." required></textarea>
-                <button type="submit">Submit Comment</button>
-              </form>
-               <p id="comment-message"></p>
-        </div>
-    </div>
 
-    <script src="js/app.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/theme-toggle.js"></script>
-     <script>
-        // Check for existing token on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            checkLoginStatus(); // From auth.js
-            loadPosts();       // From app.js
-             setupModal();      //From app.js
-        });
-    </script>
+    </main>
+    <section id="create-post-section">
+        <h2>Create New Post</h2>
+        <form id="create-post-form-main"> <!-- Different ID from the create-post.html form -->
+            <label for="title-main">Title:</label>
+            <input type="text" id="title-main" name="title" required><br><br>
+
+            <label for="content-main">Content:</label>
+            <textarea id="content-main" name="content" rows="4" required></textarea><br><br>
+
+            <label for="image-main">Image (optional):</label>
+            <input type="file" id="image-main" name="image" accept="image/*"><br><br>
+
+            <button type="submit">Create Post</button>
+        </form>
+        <p id="create-post-message-main"></p> <!-- Different ID for the message -->
+    </section>
 </body>
 </html>

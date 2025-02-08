@@ -1,24 +1,45 @@
 // frontend/js/app.js
+import { formatDate } from './utils.js'; // Import the formatDate function
+
 const postList = document.getElementById('post-list');
-const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; //  Or your Render backend URL
-const commentModal = document.getElementById('comment-modal'); //Comment form container.
-const commentForm = document.getElementById('add-comment-form');
-const commentText = document.getElementById('comment-text');
-const commentPostId = document.getElementById('comment-post-id'); //Hidden input value.
-const commentMessage = document.getElementById("comment-message");
+// const commentModal = document.getElementById('comment-modal'); //Comment form container. No need any more.Remove it.
+// const commentForm = document.getElementById('add-comment-form'); No need any more.Remove it.
+// const commentText = document.getElementById('comment-text');  No need any more.Remove it.
+// const commentPostId = document.getElementById('comment-post-id'); //Hidden input value. No need any more.Remove it.
+// const commentMessage = document.getElementById("comment-message"); No need any more.Remove it.
+
+// Create post element and relative variables.
+const createPostFormMain = document.getElementById('create-post-form-main');
+const createPostMessageMain = document.getElementById('create-post-message-main');
+
+const API_BASE_URL = 'http://localhost:5000/api'; //  Or your Render backend URL
+
 
 async function loadPosts() {
-	//...The same as before. No changed.
+    try {
+        const response = await fetch(`${API_BASE_URL}/posts`);
+        console.log('Response:', response); // Log the entire response object
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch posts: ${response.status}`);
+        }
+        const posts = await response.json();
+        console.log('Posts:', posts); // Log the parsed posts data
+        displayPosts(posts);
+    } catch (error) {
+        console.error('Error loading posts:', error);
+        postList.innerHTML = '<p>Error loading posts. Please try again later.</p>';
+    }
 }
 
 function displayPosts(posts) {
+  console.log("postList element", postList) //Check postList get correct.
     postList.innerHTML = ''; // Clear existing posts
-
     posts.forEach(post => {
+        console.log('Current Post:', post); // Log each individual post
         const postElement = document.createElement('div');
         postElement.classList.add('post');
 
-        // ... (existing post display code - title, author, content, image, details link) ...
         const titleElement = document.createElement('h2');
         titleElement.textContent = post.title;
         postElement.appendChild(titleElement);
@@ -40,11 +61,18 @@ function displayPosts(posts) {
             imgElement.style.height = 'auto';
             postElement.appendChild(imgElement);
         }
+		// Format and display the creation date
+        const dateElement = document.createElement('p');
+        dateElement.textContent = `Posted on: ${formatDate(post.createdAt)}`; // Use formatDate here
+        postElement.appendChild(dateElement);
 
+        //Add view details button to jump a new details page in the future.
         const detailsLink = document.createElement('a');
-        detailsLink.href = '#';  // Replace with the post detail page URL (future feature).
+        detailsLink.href = '#';  // Replace this with the post detail page URL when created.
         detailsLink.textContent = 'View Details';
         postElement.appendChild(detailsLink);
+        // Add click event in the future.
+
         // --- DELETE BUTTON LOGIC --- (Existing delete button logic)
         const currentUserId = localStorage.getItem('userId');
         if (currentUserId && currentUserId === post.author._id.toString()) {
@@ -58,157 +86,93 @@ function displayPosts(posts) {
             postElement.appendChild(deleteButton);
         }
 
-        // --- COMMENT SECTION ---
-        const commentsSection = document.createElement('div');
-        commentsSection.classList.add('comments-section');
+        // --- COMMENT SECTION --- (Removed)
 
-        const commentsHeading = document.createElement('h3');
-        commentsHeading.textContent = 'Comments';
-        commentsSection.appendChild(commentsHeading);
-
-        // Display existing comments
-        if (post.comments && post.comments.length > 0) {
-            const commentsList = document.createElement('ul');
-            post.comments.forEach(comment => {
-                const commentItem = document.createElement('li');
-                commentItem.textContent = `${comment.author.username}: ${comment.text}`;
-
-                //Add comment delete button.
-                 if (currentUserId && currentUserId === comment.author._id.toString()) {
-
-                    const deleteCommentButton = document.createElement('button');
-                     deleteCommentButton.textContent = 'Delete';
-                     deleteCommentButton.classList.add('delete-button');
-                     deleteCommentButton.addEventListener('click', () => {
-                        deleteComment(post._id, comment._id, commentItem); // Pass post ID, comment ID, and list item
-                     })
-                     commentItem.appendChild(deleteCommentButton);  //Append delete button to comment.
-                 }
-
-                commentsList.appendChild(commentItem);
-            });
-            commentsSection.appendChild(commentsList);
-        } else {
-            const noComments = document.createElement('p');
-            noComments.textContent = 'No comments yet.';
-            commentsSection.appendChild(noComments);
-        }
-
-        // Add Comment Button
-        const addCommentButton = document.createElement('button');
-        addCommentButton.textContent = 'Add Comment';
-        addCommentButton.classList.add('add-comment-button'); //for style.
-        addCommentButton.addEventListener('click', () => {
-           // Show comment form
-           commentPostId.value = post._id; // Set the post ID in hidden form.
-           commentModal.style.display = 'block'; // Show the modal
-
-        });
-        commentsSection.appendChild(addCommentButton);
-
-        postElement.appendChild(commentsSection);
         postList.appendChild(postElement);
     });
 }
 
-// --- ADD COMMENT FUNCTION ---
-if(commentForm){
-
-  commentForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const postId = commentPostId.value;  //Get post id from hidden form.
-    const text = commentText.value;
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-        commentMessage.textContent = 'You must be logged in to comment.';
-        commentMessage.style.color = 'red';
-
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({ text }),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-            // Success:
-            commentMessage.textContent = 'Comment added successfully!';
-            commentMessage.style.color = 'green';
-            commentText.value = ''; // Clear the textarea
-            commentModal.style.display = 'none';  //Hide comment form.
-            displayPosts(data);  //important, Reload posts with new comment.
-
-
-        } else {
-            // Handle errors from the backend
-           commentMessage.textContent = data.message;
-           commentMessage.style.color = "red";
-        }
-
-    } catch (error) {
-        console.error('Error adding comment:', error);
-        commentMessage.textContent = "An error occurred while adding comment.";
-        commentMessage.style.color = 'red';
-    }
-});
-}
-
+// --- ADD COMMENT FUNCTION --- (Removed)
 
 async function deletePost(postId, postElement) {
-	//...The same as before, no changed.
-}
+    const confirmDelete = confirm("Are you sure you want to delete this post?");
+    if (!confirmDelete) return;
 
-//Delete comment function.
-async function deleteComment(postId, commentId, commentItem) {
-    const confirmDelete = confirm("Are you sure you want to delete this comment?");
-     if (!confirmDelete) return;
-
-     try {
-         const token = localStorage.getItem('token');
-         const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}`, {
-            method: "DELETE",
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+            method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
             }
-         });
+        });
 
-         const data = await response.json();
-         if (response.ok) {
-            commentItem.remove();  // Remove the comment element from the DOM.
-         } else {
-            alert(`Error deleting comment: ${data.message}`); // Show error message
-         }
+        const data = await response.json();
 
-
-     } catch(error) {
-        console.error("Error deleting comment:", error);
-        alert("An error occurred while deleting comment.")
-     }
+        if (response.ok) {
+            // Remove the post element from the DOM
+            postElement.remove();
+        } else {
+			alert(`Error message:${data.message}`)
+        }
+    } catch (error) {
+        console.error('Error deleting post:', error);
+		alert("An error occurred while deleting the post.")
+    }
 }
 
-//Setup modal.
-function setupModal() {
-  const closeButton = document.querySelector('.close-button');
+//Delete comment function. (Removed)
 
-   // Close the modal when the close button is clicked
-   if(closeButton){  //Check if it exists.
-     closeButton.addEventListener('click', () => {
-       commentModal.style.display = 'none';
-      });
-   }
+//Setup modal. (Removed)
 
-  // Close the modal when clicking outside the modal content
-   window.addEventListener('click', (event) => {
-     if (event.target === commentModal) {
-       commentModal.style.display = 'none';
-      }
-    });
+// --- CREATE POST FUNCTION (in index.html) ---
+if (createPostFormMain) {
+    createPostFormMain.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('title-main').value;
+        const content = document.getElementById('content-main').value;
+        const image = document.getElementById('image-main').files[0];
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+        if(image) {
+            formData.append('image', image)
+        }
+
+        try{
+            const token = localStorage.getItem('token');
+            if (!token) {
+                createPostMessageMain.textContent = "You must be logged in to create a post."
+                createPostMessageMain.style.color = 'red';
+                return; //Stop execution if not logged in.
+            }
+            const response = await fetch(`${API_BASE_URL}/posts`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                createPostMessageMain.textContent = 'Post created successfully!';
+                createPostMessageMain.style.color = "green";
+                //Reload posts to display the new post.
+                loadPosts();
+                //Clear the form
+                createPostFormMain.reset();
+            } else {
+                createPostMessageMain.textContent = data.message;
+                createPostMessageMain.style.color = 'red'
+            }
+
+        } catch(error) {
+            console.error("Create post error:", error);
+            createPostMessageMain.textContent = "An error occurred while creating post."
+            createPostMessageMain.style.color = 'red';
+        }
+    })
 }
