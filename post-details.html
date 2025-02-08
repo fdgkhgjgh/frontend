@@ -16,6 +16,7 @@
             <a href="login.html">Login</a>
             <button id="logout-button" style="display: none;">Logout</button>
             <a href="index.html">Back to Main Page</a>
+            <a href="profile.html" id="profile-link" style="display: none;">Profile</a>
         </nav>
 
     </header>
@@ -46,18 +47,17 @@
     <script src="js/post-details.js" type="module"></script> <!-- Add this -->
     <script src="js/theme-toggle.js" type="module"></script>
     <script type="module">
-          import { checkLoginStatus } from './js/auth.js';
+        import { checkLoginStatus } from './js/auth.js';
+        import { loadPostDetails } from './js/post-details.js'; // IMPORT IT HERE
+
         document.addEventListener('DOMContentLoaded', () => {
             checkLoginStatus();
-              // Extract the post ID from the URL
             const urlParams = new URLSearchParams(window.location.search);
             const postId = urlParams.get('id');
 
             if (postId) {
-                loadPostDetails(postId); // Call the function to load post details and comments.
-                //No need to add this in app.js
+                loadPostDetails(postId);
             } else {
-                // Handle the case where there's no post ID (e.g., redirect to the main page)
                 window.location.href = 'index.html';
             }
         });
