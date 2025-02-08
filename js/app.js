@@ -37,10 +37,16 @@ function displayPosts(posts) {
         const contentContainer = document.createElement('div');
         contentContainer.classList.add('post-content');
 
-        // --- Title ---
+        // --- Title (NOW CLICKABLE) ---
         const titleElement = document.createElement('h2');
-        titleElement.textContent = post.title;
+        const titleLink = document.createElement('a'); // Create an <a> tag
+        titleLink.href = `post-details.html?id=${post._id}`; // Set the link to the details page
+        titleLink.textContent = post.title; // Set the link text to the post title
+        titleElement.appendChild(titleLink);   // Wrap the title text in the link
         contentContainer.appendChild(titleElement);
+       // titleElement.textContent = post.title; //No need this, we already add link text above.
+
+        // ... (rest of the displayPosts function: author, content, image, etc.) ...
 
         // --- Author and Date ---
         const authorDateElement = document.createElement('p');

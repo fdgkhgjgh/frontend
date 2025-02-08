@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css" id="theme-stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Mini Forum</h1>
+         <nav>
+            <button id="theme-toggle">Toggle Theme</button>
+            <a href="register.html">Register</a>
+            <a href="login.html">Login</a>
+            <button id="logout-button" style="display: none;">Logout</button>
+             <a href="index.html">Back to Main Page</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>User Profile</h1>
+        <p id="user-info"></p>
+
+        <h2>My Posts</h2>
+        <div id="user-posts">
+            <!-- User's posts will be displayed here -->
+        </div>
+    </main>
+    <script src="js/config.js" type="module"></script>
+    <script src="js/utils.js" type="module"></script>
+    <script src="js/auth.js" type="module"></script>
+    <script src="js/profile.js" type="module"></script> <!-- Add this -->
+     <script src="js/theme-toggle.js" type="module"></script>  <! --Add this. -->
+    <script type="module">
+          import { checkLoginStatus } from './js/auth.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus();
+            loadUserProfile(); // Add this line to load profile on page load
+        });
+    </script>
+</body>
+</html>

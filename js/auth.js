@@ -103,23 +103,44 @@ if (logoutButton) {
   function checkLoginStatus() {
       const token = localStorage.getItem('token');
       const logoutButton = document.getElementById('logout-button');
-      const newPostLink = document.getElementById('new-post-link');
       const registerLink = document.querySelector('a[href="register.html"]'); //find register link
       const loginLink = document.querySelector('a[href="login.html"]');      //find login link.
   
       if (token) {
           // User is logged in
           if (logoutButton) logoutButton.style.display = 'inline-block';  // Show logout button
-          if (newPostLink) newPostLink.style.display = 'inline-block';    // Show new post link
           if (registerLink) registerLink.style.display = 'none'; //Hide register link
           if (loginLink) loginLink.style.display = 'none';    //Hide login Link
       } else {
           // User is not logged in
           if (logoutButton) logoutButton.style.display = 'none';   // Hide logout button
-          if (newPostLink) newPostLink.style.display = 'none';     // Hide new post link.
           if (registerLink) registerLink.style.display = 'inline-block';  //Show the register link
           if (loginLink) loginLink.style.display = 'inline-block';    //Show the login link.
       }
   }
   
   export { checkLoginStatus };
+
+  function checkLoginStatus() {
+    const token = localStorage.getItem('token');
+    const logoutButton = document.getElementById('logout-button');
+    const registerLink = document.querySelector('a[href="register.html"]');
+    const loginLink = document.querySelector('a[href="login.html"]');
+    const profileLink = document.querySelector('a[href="profile.html"]'); // Add profile link
+    
+    
+    if (token) {
+       // ... (other parts of the if block)
+        // Show profile link.
+        if (profileLink) {
+          profileLink.style.display = 'inline-block'
+        }
+    } else {
+       // ... (other parts of the else block)
+        if (profileLink) {
+          profileLink.style.display = 'none'
+        }
+    
+    }
+    }
+    

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css" id="theme-stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Mini Forum</h1>
+        <nav>
+            <button id="theme-toggle">Toggle Theme</button>
+            <a href="register.html">Register</a>
+            <a href="login.html">Login</a>
+            <button id="logout-button" style="display: none;">Logout</button>
+            <a href="index.html">Back to Main Page</a>
+        </nav>
+
+    </header>
+
+    <main id="post-details-container">
+        <!-- Post details will be displayed here -->
+    </main>
+
+    <section id="comments-section">
+        <h2>Comments</h2>
+        <ul id="comments-list">
+            <!-- Comments will be dynamically added here -->
+        </ul>
+
+        <!-- Add Comment Form -->
+        <div id="add-comment-section">
+                <h2>Add Comment</h2>
+                <form id="add-comment-form">
+                    <textarea id="comment-text" name="comment" rows="4" required placeholder="Write your comment..."></textarea>
+                    <button type="submit">Add Comment</button>
+                </form>
+                <p id = "comment-message"></p>
+            </div>
+    </section>
+	<script src="js/config.js" type="module"></script>
+    <script src="js/utils.js" type="module"></script>
+    <script src="js/auth.js" type="module"></script>
+    <script src="js/post-details.js" type="module"></script> <!-- Add this -->
+    <script src="js/theme-toggle.js" type="module"></script>
+    <script type="module">
+          import { checkLoginStatus } from './js/auth.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus();
+              // Extract the post ID from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+
+            if (postId) {
+                loadPostDetails(postId); // Call the function to load post details and comments.
+                //No need to add this in app.js
+            } else {
+                // Handle the case where there's no post ID (e.g., redirect to the main page)
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
