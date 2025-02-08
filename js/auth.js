@@ -101,27 +101,6 @@ if (logoutButton) {
   
   // Function to check login status and show/hide elements
   function checkLoginStatus() {
-      const token = localStorage.getItem('token');
-      const logoutButton = document.getElementById('logout-button');
-      const registerLink = document.querySelector('a[href="register.html"]'); //find register link
-      const loginLink = document.querySelector('a[href="login.html"]');      //find login link.
-  
-      if (token) {
-          // User is logged in
-          if (logoutButton) logoutButton.style.display = 'inline-block';  // Show logout button
-          if (registerLink) registerLink.style.display = 'none'; //Hide register link
-          if (loginLink) loginLink.style.display = 'none';    //Hide login Link
-      } else {
-          // User is not logged in
-          if (logoutButton) logoutButton.style.display = 'none';   // Hide logout button
-          if (registerLink) registerLink.style.display = 'inline-block';  //Show the register link
-          if (loginLink) loginLink.style.display = 'inline-block';    //Show the login link.
-      }
-  }
-  
-  export { checkLoginStatus };
-
-  function checkLoginStatus() {
     const token = localStorage.getItem('token');
     const logoutButton = document.getElementById('logout-button');
     const registerLink = document.querySelector('a[href="register.html"]');
@@ -143,4 +122,7 @@ if (logoutButton) {
     
     }
     }
+  
+  export { checkLoginStatus };
+
     
