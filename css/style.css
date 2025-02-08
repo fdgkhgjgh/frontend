@@ -1,68 +1,153 @@
 /* frontend/css/style.css */
+
 body {
-    font-family: sans-serif;
-    background-color: #90ee90; /* Light green background */
-    color: #333;
-    margin: 0;
-    padding: 0;
+  font-family: sans-serif;
+  background-color: #90ee90; /* Light green background */
+  color: #333;
+  margin: 0;
+  padding: 0;
 }
 
 header {
-    background-color: #70c870;
-    padding: 10px;
-    text-align: center;
+  background-color: #70c870;
+  padding: 10px;
+  text-align: center;
 }
 
 nav {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 nav a, nav button {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #333;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
+  margin: 0 10px;
+  text-decoration: none;
+  color: #333;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
 }
 nav button:hover, nav a:hover {
   background-color: #ddd;
 }
 
+/* --- Post Styles --- */
 .post {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex; /* Use Flexbox for layout */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-content {
+  flex: 1; /* Take up remaining space */
+  margin-right: 20px; /* Spacing between content and image */
+  display: flex;
+  flex-direction: column;
 }
 
 .post h2 {
-    margin-top: 0;
+  margin-top: 0;
+  margin-bottom: 5px;
 }
 
-form {
-    margin-bottom: 20px;
+.post p {
+  margin-bottom: 10px;
+}
 
+/* --- Image Container --- */
+.image-container {
+  width: 150px;  /* Fixed width */
+  display: flex; /* Use flexbox to center image */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
+
+.image-container img {
+  max-width: 100%; /* Don't overflow container */
+  max-height: 150px; /* Limit height */
+  height: auto;
+  display: block;  /* Remove extra space below inline elements */
+  border-radius: 4px;
+}
+
+/* --- Vote Container and Buttons --- */
+.vote-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.vote-button {
+  background-color: #f0f0f0; /* Light gray background */
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  margin-right: 5px; /* Spacing between button and count */
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 16px;
+  line-height: 1;
+  color: #333; /* Default text color (change as needed) */
+   /* Remove default button styles that can interfere */
+   -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0; /* Remove default margin */
+
+}
+
+.vote-button:hover {
+  background-color: #ddd;
+}
+
+.vote-count {
+margin-right: 10px; /*Keep space*/
+}
+
+/* Specific button styles (optional, but good for visual distinction) */
+.like-button {
+  /* Example: Green for like */
+ color: #4CAF50;
+}
+
+.dislike-button {
+  /* Example: Red for dislike */
+  color: #f44336;
+
+}
+.delete-button{
+margin-top: auto; /* Push the delete button to the bottom */
+align-self: flex-start; /* Align to the start (left) of its container */
+background-color: #f44336;
+color: white;
+padding: 5px 10px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+/* --- Form Styles (General) --- */
+form {
+  margin-bottom: 20px;
 }
 
 label {
-  display: block; /* Make labels block-level for better layout */
+  display: block;
   margin-bottom: 5px;
-
 }
 
 input[type="text"],
 input[type="password"],
 textarea {
-  width: 100%; /* Take up full width of the container */
+  width: 100%;
   padding: 8px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  box-sizing: border-box;
 }
 
 button[type="submit"] {
@@ -78,51 +163,30 @@ button[type="submit"]:hover {
   background-color: #45a049;
 }
 
-/* Responsive adjustments */
+
+/* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-    nav a, nav button {
-        display: block; /* Stack navigation items vertically */
-        margin: 5px 0; /* Add vertical margin */
-        width: 100%;   /*Make them occupy all width*/
-        text-align: center;
-    }
-}
-.comments-section {
-  margin-top: 20px;
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
+  nav a, nav button {
+      display: block;
+      margin: 5px 0;
+      width: 100%;
+      text-align: center;
+  }
+   .post {
+      flex-direction: column; /* Stack content and image on smaller screens */
+  }
+
+  .image-container {
+      width: 100%; /* Full width on smaller screens */
+      margin-bottom: 10px; /* Space between image and content*/
+  }
+ /* Adjust padding and spacing as needed */
+  .post-content {
+      margin-right: 0; /* Remove right margin */
+  }
 }
 
-.comments-section ul {
-  list-style: none;
-  padding: 0;
-}
-
-.comments-section li {
-  margin-bottom: 5px;
-  padding: 5px;
-  border-bottom: 1px solid #eee;
-}
-.comments-section li:last-child {
-  border-bottom: none; /* Remove border from the last comment */
-}
-
-.add-comment-button {
-/* Style similar to other buttons, but perhaps a different color */
-background-color: #6c757d; /* Slightly muted color */
-color: white;
-padding: 5px 10px;
-border: none;
-border-radius: 4px;
-cursor: pointer;
-margin-top: 10px; /* Add spacing above the button */
-}
-
-.add-comment-button:hover {
-  background-color: #5a6268;
-}
-
-/* Modal Styles */
+/* --- Modal styles (Keep ,but move them to bottom) --- */
 .modal {
   position: fixed;
   top: 0;
@@ -153,91 +217,4 @@ margin-top: 10px; /* Add spacing above the button */
 #comment-text{
   min-height: 80px;
 }
-
-/* frontend/css/style.css */
-
-/* Existing styles (from previous steps) ... */
-
-/* Post Container */
-.post {
-  display: flex; /* Use Flexbox! */
-  background-color: #fff;
-  border: 1px solid #ddd;
-  margin-bottom: 20px;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Main Content Area (Title, Author, etc.) */
-.post-content {
-  flex: 1; /* Take up remaining space */
-  margin-right: 20px; /* Spacing between content and image */
-  display: flex;
-  flex-direction: column;
-}
-
-.post h2 {
-  margin-top: 0;
-  margin-bottom: 5px; /* Space between title and author/date */
-}
-
-.post p {
-  margin-bottom: 10px;
-}
-
-/* Image Container */
-.image-container {
-  width: 150px; /* Set a fixed width for the image container */
-  height: auto;
-   /* Add some basic flex properties to center the image. */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.image-container img {
-  max-width: 100%; /* Ensure image doesn't overflow container */
-  max-height: 150px;  /*Control image size*/
-  height: auto;
-  display: block; /* Remove extra space below inline elements */
-  border-radius: 4px; /* Optional: Rounded corners */
-}
-
-/* Like/Dislike Buttons */
-.vote-container {
-  display: flex; /* Arrange buttons horizontally */
-  align-items: center; /* Vertically center */
-  margin-bottom: 10px; /* Space below the buttons */
-}
-
-.vote-button {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  margin-right: 5px; /* Spacing between buttons */
-  cursor: pointer;
-  border-radius: 3px; /* Slightly rounded corners */
-  font-size: 16px; /* Adjust size as needed */
-  line-height: 1; /* Remove extra line height */
-}
-
-.vote-button:hover {
-  background-color: #ddd;
-}
-
-.like-button {
-  background-color: #4CAF50; /* Green background for like button */
-}
-
-.like-button:hover {
-  background-color: #45a049; /* Darker green on hover */
-}
-
-.dislike-button {
-  background-color: #f44336; /* Red background for dislike button */
-}
-
-.dislike-button:hover {
-  background-color: #da190b; /* Darker red on hover */
-}
+/* --- (Removed comment styles) --- */
