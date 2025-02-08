@@ -1,0 +1,68 @@
+/* frontend/css/dark-mode.css */
+body {
+    background-color: #121212; /* Dark background */
+    color: #eee;
+}
+
+header {
+    background-color: #1e1e1e;
+}
+
+nav a, nav button{
+    color: #eee;
+    background-color: #333;
+    border-color: #555;
+}
+nav a:hover, nav button:hover {
+    background-color: #444;
+}
+
+.post {
+    background-color: #2c2c2c;
+    border-color: #444;
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1); /* Lighter shadow for dark mode */
+}
+
+.post h2 {
+  color: #eee;
+}
+
+button[type="submit"] {
+    background-color:#04AA6D;
+}
+button[type='submit']:hover{
+  background-color: #059862;
+}
+input[type="text"],
+input[type="password"],
+textarea{
+  background-color: #333;
+  color: #fff;
+}
+
+.dark-mode .comments-section {
+  border-top: 1px solid #444;
+}
+
+.dark-mode .comments-section li {
+  border-bottom: 1px solid #333;
+}
+.dark-mode .comments-section li:last-child{
+border-bottom: none;
+}
+.dark-mode .add-comment-button {
+background-color: #5a6268;
+}
+.dark-mode .add-comment-button:hover{
+background-color: #6c757d;
+}
+
+.dark-mode .modal-content {
+background-color: #2c2c2c;
+ color: #fff;  /* Make text white in the dark mode modal */
+ box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1); /* Lighter shadow */
+}
+.dark-mode #comment-text{
+ background-color: #333;
+color: #fff;
+}

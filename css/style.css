@@ -1,0 +1,155 @@
+/* frontend/css/style.css */
+body {
+    font-family: sans-serif;
+    background-color: #90ee90; /* Light green background */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #70c870;
+    padding: 10px;
+    text-align: center;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+
+nav a, nav button {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #333;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+nav button:hover, nav a:hover {
+  background-color: #ddd;
+}
+
+.post {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post h2 {
+    margin-top: 0;
+}
+
+form {
+    margin-bottom: 20px;
+
+}
+
+label {
+  display: block; /* Make labels block-level for better layout */
+  margin-bottom: 5px;
+
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+  width: 100%; /* Take up full width of the container */
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    nav a, nav button {
+        display: block; /* Stack navigation items vertically */
+        margin: 5px 0; /* Add vertical margin */
+        width: 100%;   /*Make them occupy all width*/
+        text-align: center;
+    }
+}
+.comments-section {
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.comments-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.comments-section li {
+  margin-bottom: 5px;
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+}
+.comments-section li:last-child {
+  border-bottom: none; /* Remove border from the last comment */
+}
+
+.add-comment-button {
+/* Style similar to other buttons, but perhaps a different color */
+background-color: #6c757d; /* Slightly muted color */
+color: white;
+padding: 5px 10px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+margin-top: 10px; /* Add spacing above the button */
+}
+
+.add-comment-button:hover {
+  background-color: #5a6268;
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  max-width: 80%;
+  width: 400px; /* Adjust width as needed */
+}
+
+.close-button {
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#comment-text{
+  min-height: 80px;
+}
