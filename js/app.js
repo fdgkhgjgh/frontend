@@ -200,14 +200,22 @@ if (createPostFormMain) {
 //Update header to show username.
 function updateHeader() {
     const username = localStorage.getItem('username');
+    const userId = localStorage.getItem('userId'); // Get the logged-in user's ID
     const loginLink = document.querySelector('a[href="login.html"]');
     const registerLink = document.querySelector('a[href="register.html"]');
 
-    if (username) {
-         // User is logged in, display username and hide login/register links
+    if (username && userId) { // Check for both username *and* userId
+         // User is logged in, Create link with username
         const usernameDisplay = document.createElement('span');
-        usernameDisplay.textContent = `Logged in as: ${username}`;
         usernameDisplay.id = 'user-info';
+
+        const userLink = document.createElement('a'); // Create the link element
+        userLink.href = `profile.html?id=${userId}`; // Set the link to profile.html with the user's ID
+        userLink.textContent = username; // The username is the link text
+
+        usernameDisplay.textContent = 'Logged in as: ';  //Text before link
+        usernameDisplay.appendChild(userLink);           // Put link in the span.
+
         if(loginLink) {
             loginLink.style.display = 'none';
         }
@@ -220,7 +228,11 @@ function updateHeader() {
             logoutButton.style.display = 'inline-block';
         }
 
-        document.querySelector('header nav').appendChild(usernameDisplay); //Append after <nav>
+        // Check if element exists before to appendChild.
+        const navElement = document.querySelector('header nav');
+        if (navElement) {
+            navElement.appendChild(usernameDisplay);
+        }
     } else {
         // User is not logged in, remove the username display if it exists
         const usernameDisplay = document.getElementById('user-info');
