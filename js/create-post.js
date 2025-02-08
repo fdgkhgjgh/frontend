@@ -1,7 +1,7 @@
 // frontend/js/create-post.js
 const createPostForm = document.getElementById('create-post-form');
 const createPostMessage = document.getElementById('create-post-message');
-const API_BASE_URL = 'http://localhost:5000/api'; // Or your Render backend URL
+const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; // Or your Render backend URL
 
 if (createPostForm) { //Important ,check if the element exists!
     createPostForm.addEventListener('submit', async (e) => {

@@ -1,5 +1,5 @@
 // frontend/js/auth.js
-const API_BASE_URL = 'http://localhost:5000/api'; // Or your Render backend URL
+const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; // Or your Render backend URL
 
 // Register Form
 const registerForm = document.getElementById('register-form');
