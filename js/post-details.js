@@ -116,23 +116,30 @@ if (addCommentForm) {
         e.preventDefault();
 
         const commentText = document.getElementById('comment-text').value;
-        const postId = new URLSearchParams(window.location.search).get('id'); // Get postId from URL
+        const commentImage = document.getElementById('comment-image').files[0]; // Get the file
+        const postId = new URLSearchParams(window.location.search).get('id');
+
+        const formData = new FormData(); // Use FormData
+        formData.append('text', commentText);
+        if (commentImage) {
+            formData.append('image', commentImage); // Append the file
+        }
 
         try {
             const token = localStorage.getItem('token');
             if (!token) {
                commentMessage.textContent = "You must be logged in to comment."
                commentMessage.style.color = 'red';
-                return; // Stop if not logged in
+                return;
             }
 
             const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
+                    // DO NOT set Content-Type with FormData
                 },
-                body: JSON.stringify({ text: commentText }),
+                body: formData, // Send the FormData
             });
 
             const data = await response.json();
@@ -140,60 +147,58 @@ if (addCommentForm) {
             if (response.ok) {
                 commentMessage.textContent = "Add comment success!";
                 commentMessage.style.color = 'green';
-                // Clear the textarea
                 document.getElementById('comment-text').value = '';
-                //Re-display new comments.
+                document.getElementById('comment-image').value = ''; // Clear the file input
                 displayComments(data.comments)
             } else {
-                commentMessage.textContent = data.message
-                commentMessage.style.color = 'red'            }
+                 commentMessage.textContent = data.message
+                commentMessage.style.color = 'red'
+            }
 
         } catch (error) {
             console.error('Error adding comment:', error);
-          commentMessage.textContent = "An error occurred while adding comment."
-          commentMessage.style.color = 'red'
+            commentMessage.textContent = "An error occurred while adding comment."
+            commentMessage.style.color = 'red'
         }
     });
 }
-
-async function deleteComment(commentId, commentItem) {
-     const confirmDelete = confirm("Are you sure you want to delete this comment?");
-     if(!confirmDelete) return;
-     
-     try{
-       const token = localStorage.getItem('token');
-       const postId = new URLSearchParams(window.location.search).get('id');
-       // Check token.
-        if (!token) {
-               commentMessage.textContent = "You must be logged in to delete comment."
-               commentMessage.style.color = "red"
-                return; // Stop if not logged in
-            }
-       const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}`, {
-          method: "DELETE",
-          headers: {
-             'Authorization': `Bearer ${token}`,
-          }
-       });
-       const data = await response.json();
-       
-       if(response.ok) {
-          commentMessage.textContent = data.message;
-          commentMessage.style.color = "green";
-          //Remove commentItem from the DOM
-          commentItem.remove();
-       } else {
-          commentMessage.textContent = data.message;
-          commentMessage.style.color = 'red';
-       }
-       
-
-
-     } catch (error) {
-        console.log("Delete comment error:", error)
-        commentMessage.textContent = "Error occurred while deleting comment.";
-        commentMessage.style.color = 'red' ;
+ //Display images
+function displayComments(comments) {
+ commentsList.innerHTML = ''; // Clear existing comments
+ if (!comments || comments.length === 0) {
+   commentsList.innerHTML = '<li>No comments yet.</li>';
+   return;
+ }
+ comments.forEach(comment => {
+     const commentItem = document.createElement('li');
+     //Add image element
+      let commentContent = `${comment.author.username}: ${comment.text} -- ${formatDate(comment.createdAt)}`;
+     if(comment.imageUrl) {
+          const imgElement = document.createElement('img');
+          imgElement.src = comment.imageUrl;
+          imgElement.alt = "Comment Image"; //Add alt
+          imgElement.style.maxWidth = '100%';  // Set maxWidth
+          imgElement.style.height = 'auto';    //Keep ratio
+          commentItem.appendChild(imgElement);  //Append image first .
      }
+      const textElement = document.createElement('p');
+      textElement.textContent = commentContent;
+      commentItem.appendChild(textElement); // Then append text content.
+
+     //Add delete button.
+     const currentUserId = localStorage.getItem('userId');
+     if (currentUserId && currentUserId === comment.author._id.toString()) {
+           const deleteButton = document.createElement('button');
+           deleteButton.textContent = "Delete";
+           deleteButton.classList.add('delete-button');
+           deleteButton.addEventListener('click', () => {
+             deleteComment(comment._id, commentItem)
+           });
+           commentItem.appendChild(deleteButton);
+       }
+     commentsList.appendChild(commentItem);
+
+ });
 }
 // No need to add DOMContentLoaded, because it has been added in post-details.html
 
