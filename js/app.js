@@ -3,31 +3,42 @@ import { formatDate } from './utils.js'; // Import the formatDate function
 import { checkLoginStatus } from './auth.js'; // Import checkLoginStatus
 
 const postList = document.getElementById('post-list');
-
-// Create post element and relative variables.
 const createPostFormMain = document.getElementById('create-post-form-main');
 const createPostMessageMain = document.getElementById('create-post-message-main');
-const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; //  Or your Render backend URL
+const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; // Or your Render backend URL
 
+const POSTS_PER_PAGE = 8; // Adjust as needed
+
+// --- Add Pagination Variables ---
+let currentPage = 1;
+let totalPages = 1;
+let isLoading = false;
 
 async function loadPosts() {
+    isLoading = true;
     try {
-        const response = await fetch(`${API_BASE_URL}/posts`); // Use API_BASE_URL
-        console.log('Response:', response); // Log the entire response object
+        const response = await fetch(`${API_BASE_URL}/posts?page=${currentPage}`); // Use API_BASE_URL with page
+        console.log('Response:', response);
 
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
         }
-        const posts = await response.json();
+
+        const data = await response.json(); // Parse the JSON response
+        const posts = data.posts;   //Extract actual posts
+        totalPages = data.totalPages;  //Extract total pages
         console.log('Posts:', posts); // Log the parsed posts data
+
         displayPosts(posts);
+        updatePaginationButtons();
+
     } catch (error) {
         console.error('Error loading posts:', error);
         postList.innerHTML = '<p>Error loading posts. Please try again later.</p>';
+    } finally {
+        isLoading = false;
     }
 }
-
-// function displayPosts.
 
 function displayPosts(posts) {
     postList.innerHTML = ''; // Clear existing posts
@@ -171,8 +182,6 @@ postList.addEventListener('click', async (event) => {
     }
 });
 
-// --- ADD COMMENT FUNCTION --- (Removed)
-
 async function deletePost(postId, postElement) {
     const confirmDelete = confirm("Are you sure you want to delete this post?");
     if (!confirmDelete) return;
@@ -199,8 +208,6 @@ async function deletePost(postId, postElement) {
 		alert("An error occurred while deleting the post.")
     }
 }
-
-//Delete comment function. (Removed)
 
 //Setup modal. (Removed)
 
@@ -314,9 +321,48 @@ function updateHeader() {
         }
     }
 }
+function updatePaginationButtons() {
+    let paginationHTML = '';
+
+    // Previous Button
+    paginationHTML += `<button id="prev-page" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>`;
+
+    // Page Number Display
+    paginationHTML += `<span> Page ${currentPage} of ${totalPages} </span>`;
+
+    // Next Button
+    paginationHTML += `<button id="next-page" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+
+    // Inject into the DOM - Assuming you have a pagination container
+    const paginationContainer = document.getElementById('pagination-container');
+    if (paginationContainer) {
+        paginationContainer.innerHTML = paginationHTML;
+
+        // Add event listeners to the buttons
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                loadPosts();
+            }
+        });
+
+        document.getElementById('next-page').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                loadPosts();
+            }
+        });
+    } else {
+        console.warn('Pagination container not found!');
+    }
+}
+
 // Call checkLoginStatus and loadPosts, and updateHeader when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
-    checkLoginStatus(); // Now this will work correctly
-    updateHeader(); // Update header to show username.
+    checkLoginStatus();
+    updateHeader();
+    // After DOM is loaded, add a div to handle pagination, right after postList
+    let paginationHTML = `<div id = "pagination-container"></div>`;
+    const paginationContainer = document.getElementById('post-list').insertAdjacentHTML("afterend", paginationHTML);
     loadPosts();
 });
