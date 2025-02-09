@@ -1,15 +1,13 @@
 // frontend/js/app.js
-import { formatDate } from './utils.js'; // Import the formatDate function
-import { checkLoginStatus } from './auth.js'; // Import checkLoginStatus
+import { formatDate } from './utils.js';
+import { checkLoginStatus } from './auth.js';
 
 const postList = document.getElementById('post-list');
 const createPostFormMain = document.getElementById('create-post-form-main');
 const createPostMessageMain = document.getElementById('create-post-message-main');
-const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; // Or your Render backend URL
+const API_BASE_URL = 'https://backend-5be9.onrender.com/api';
 
 const POSTS_PER_PAGE = 8; // Adjust as needed
-
-// --- Add Pagination Variables ---
 let currentPage = 1;
 let totalPages = 1;
 let isLoading = false;
@@ -17,19 +15,22 @@ let isLoading = false;
 async function loadPosts() {
     isLoading = true;
     try {
-        const response = await fetch(`${API_BASE_URL}/posts?page=${currentPage}`); // Use API_BASE_URL with page
-        console.log('Response:', response);
+        const response = await fetch(`${API_BASE_URL}/posts?page=${currentPage}`);
+        console.log('Raw Response:', response); // Log the raw response
 
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
         }
 
         const data = await response.json(); // Parse the JSON response
-        const posts = data.posts;   //Extract actual posts
-        totalPages = data.totalPages;  //Extract total pages
-        console.log('Posts:', posts); // Log the parsed posts data
+        console.log('Parsed Data:', data);     // Log the parsed data
 
-        displayPosts(posts);
+        const posts = data.posts;   // Extract the actual array of posts
+        totalPages = data.totalPages;  // Extract total pages
+
+        console.log('Extracted Posts:', posts);
+
+        displayPosts(posts); // Pass the extracted posts array
         updatePaginationButtons();
 
     } catch (error) {
@@ -42,7 +43,8 @@ async function loadPosts() {
 
 function displayPosts(posts) {
     postList.innerHTML = ''; // Clear existing posts
-    posts.forEach(post => {
+    //Use optional chaining in case posts is somehow null.
+    posts?.forEach(post => {
         const postElement = document.createElement('div');
         postElement.classList.add('post');
 
@@ -56,18 +58,14 @@ function displayPosts(posts) {
         titleLink.href = `post-details.html?id=${post._id}`; // Set the link to the details page
         titleLink.textContent = post.title; // Set the link text to the post title
         titleElement.appendChild(titleLink);   // Wrap the title text in the link
-        //contentContainer.appendChild(titleElement);
-       // titleElement.textContent = post.title; //No need this, we already add link text above.
 
         // --- Author and Date ---
         const authorDateElement = document.createElement('p');
         authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
-        //contentContainer.appendChild(authorDateElement);
 
         // --- Content ---
          const contentElement = document.createElement('p');
-        contentElement.textContent = post.content.substring(0, 250); // Show a  preview
-        //contentContainer.appendChild(contentElement);
+        contentElement.textContent = post.content.substring(0, 250); // Show a preview
 
         // --- New Container for Title and Image ---
         const titleImageContainer = document.createElement('div');
@@ -82,7 +80,6 @@ function displayPosts(posts) {
             const imgElement = document.createElement('img');
             imgElement.src = post.imageUrl;
             imgElement.alt = post.title;
-            //No need set width and height in js, just set in css.
             imgContainer.appendChild(imgElement);
             titleImageContainer.appendChild(imgContainer)
         }
@@ -108,7 +105,6 @@ function displayPosts(posts) {
         upvoteCount.textContent = post.upvotes; //Set default upvotes.
         voteContainer.appendChild(upvoteCount);
 
-
         const dislikeButton = document.createElement('button');
         dislikeButton.classList.add('vote-button', 'dislike-button');
         dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
@@ -122,7 +118,6 @@ function displayPosts(posts) {
         downvoteCount.id = `downvote-count-${post._id}`;
         downvoteCount.textContent = post.downvotes; //Set default downvotes.
         voteContainer.appendChild(downvoteCount);
-
 
         contentContainer.appendChild(voteContainer);
 
@@ -145,50 +140,13 @@ function displayPosts(posts) {
     });
 }
 
-// Attach event listener to the post list (event delegation)
-postList.addEventListener('click', async (event) => {
-    if (event.target.classList.contains('vote-button')) {
-        const postId = event.target.dataset.postId;
-        const voteType = event.target.dataset.voteType;
-
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('You must be logged in to vote.');
-                return;
-            }
-
-            const response = await fetch(`${API_BASE_URL}/posts/${postId}/${voteType}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-
-            if (!response.ok) {
-                const data = await response.json()
-                throw new Error(`Voting failed: ${data.message}`);
-            }
-
-            const data = await response.json(); // Get updated counts
-
-            // Update the vote counts on the page
-            document.getElementById(`upvote-count-${postId}`).textContent = data.upvotes;
-            document.getElementById(`downvote-count-${postId}`).textContent = data.downvotes;
-        } catch (error) {
-            console.error('Error voting:', error);
-            alert(error.message);
-        }
-    }
-});
-
 async function deletePost(postId, postElement) {
     const confirmDelete = confirm("Are you sure you want to delete this post?");
     if (!confirmDelete) return;
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {  //Use API_BASE_URL
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -209,9 +167,6 @@ async function deletePost(postId, postElement) {
     }
 }
 
-//Setup modal. (Removed)
-
-// --- CREATE POST FUNCTION (in index.html) ---
 if (createPostFormMain) {
     createPostFormMain.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -234,7 +189,7 @@ if (createPostFormMain) {
                 createPostMessageMain.style.color = 'red';
                 return; //Stop execution if not logged in.
             }
-            const response = await fetch(`${API_BASE_URL}/posts`, { //Use API_BASE_URL
+            const response = await fetch(`${API_BASE_URL}/posts`, {
                 method: "POST",
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -242,18 +197,14 @@ if (createPostFormMain) {
                 body: formData
             });
 
-            console.log("Create Post Response:", response); // ADD THIS
-
+            console.log("Create Post Response:", response);
             const data = await response.json();
-
-            console.log("Create Post Data:", data);  //ADD THIS
+            console.log("Create Post Data:", data);
 
             if (response.ok) {
                 createPostMessageMain.textContent = 'Post created successfully!';
                 createPostMessageMain.style.color = "green";
-                //Reload posts to display the new post.
                 loadPosts();
-                //Clear the form
                 createPostFormMain.reset();
             } else {
                 createPostMessageMain.textContent = data.message;
@@ -267,24 +218,23 @@ if (createPostFormMain) {
         }
     })
 }
-//Update header to show username.
+
 function updateHeader() {
     const username = localStorage.getItem('username');
-    const userId = localStorage.getItem('userId'); // Get the logged-in user's ID
+    const userId = localStorage.getItem('userId');
     const loginLink = document.querySelector('a[href="login.html"]');
     const registerLink = document.querySelector('a[href="register.html"]');
 
-    if (username && userId) { // Check for both username *and* userId
-         // User is logged in, Create link with username
+    if (username && userId) {
         const usernameDisplay = document.createElement('span');
         usernameDisplay.id = 'user-info';
 
-        const userLink = document.createElement('a'); // Create the link element
-        userLink.href = `profile.html?id=${userId}`; // Set the link to profile.html with the user's ID
-        userLink.textContent = username; // The username is the link text
+        const userLink = document.createElement('a');
+        userLink.href = `profile.html?id=${userId}`;
+        userLink.textContent = username;
 
-        usernameDisplay.textContent = 'Logged in as: ';  //Text before link
-        usernameDisplay.appendChild(userLink);           // Put link in the span.
+        usernameDisplay.textContent = 'Logged in as: ';
+        usernameDisplay.appendChild(userLink);
 
         if(loginLink) {
             loginLink.style.display = 'none';
@@ -298,13 +248,11 @@ function updateHeader() {
             logoutButton.style.display = 'inline-block';
         }
 
-        // Check if element exists before to appendChild.
         const navElement = document.querySelector('header nav');
         if (navElement) {
             navElement.appendChild(usernameDisplay);
         }
     } else {
-        // User is not logged in, remove the username display if it exists
         const usernameDisplay = document.getElementById('user-info');
         if (usernameDisplay) {
             usernameDisplay.remove();
@@ -321,6 +269,7 @@ function updateHeader() {
         }
     }
 }
+
 function updatePaginationButtons() {
     let paginationHTML = '';
 
@@ -357,12 +306,11 @@ function updatePaginationButtons() {
     }
 }
 
-// Call checkLoginStatus and loadPosts, and updateHeader when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     checkLoginStatus();
     updateHeader();
-    // After DOM is loaded, add a div to handle pagination, right after postList
     let paginationHTML = `<div id = "pagination-container"></div>`;
+    // After DOM is loaded, add a div to handle pagination, right after postList
     const paginationContainer = document.getElementById('post-list').insertAdjacentHTML("afterend", paginationHTML);
     loadPosts();
 });
