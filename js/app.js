@@ -319,18 +319,22 @@ function updatePaginationButtons() {
 }
 
 // ADD a Force load
-function forceLoad() {
+function domLoadedCallback() {
    if (document.readyState === "complete") {
-          checkLoginStatus();
-          updateHeader();
-          let paginationHTML = `<div id = "pagination-container"></div>`;
-          // After DOM is loaded, add a div to handle pagination, right after postList
-          const paginationContainer = document.getElementById('post-list').insertAdjacentHTML("afterend", paginationHTML);
-          loadPosts();
-          return;
-    }
-    setTimeout(forceLoad, 50); // Try again every 50 milliseconds
+      //ADD RAW DOM CHECK
+      const postListCheck = document.getElementById('post-list');
+      const paginationContainerCheck = document.getElementById('pagination-container');
+      if (postListCheck && paginationContainerCheck) {
+         console.log("DOM elements found");
+         checkLoginStatus();
+         updateHeader();
+         loadPosts();
+      } else {
+         console.warn("post-list or pagination-container NOT FOUND.");
+      }
+   } else {
+      console.log("Document not yet complete. State: " + document.readyState);
+   }
 }
 
-
-document.addEventListener('DOMContentLoaded', forceLoad);
+document.addEventListener('DOMContentLoaded', domLoadedCallback);
