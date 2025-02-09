@@ -103,33 +103,33 @@ function displayPosts(posts) {
         const voteContainer = document.createElement('div');
         voteContainer.classList.add('vote-container');
 
-        const likeButton = document.createElement('button');
-        likeButton.classList.add('vote-button', 'like-button');
-        likeButton.innerHTML = '&#x25B2;';
-        likeButton.dataset.postId = post._id;
-        likeButton.dataset.voteType = "upvote"
-        voteContainer.appendChild(likeButton);
+        // const likeButton = document.createElement('button');
+        // likeButton.classList.add('vote-button', 'like-button');
+        // likeButton.innerHTML = '&#x25B2;';
+        // likeButton.dataset.postId = post._id;
+        // likeButton.dataset.voteType = "upvote"
+        // voteContainer.appendChild(likeButton);
 
-         //Upvotes span tag.
-        const upvoteCount = document.createElement('span');
-        upvoteCount.classList.add('vote-count');
-        upvoteCount.id = `upvote-count-${post._id}`;
-        upvoteCount.textContent = post.upvotes;
-        voteContainer.appendChild(upvoteCount);
+        //  //Upvotes span tag.
+        // const upvoteCount = document.createElement('span');
+        // upvoteCount.classList.add('vote-count');
+        // upvoteCount.id = `upvote-count-${post._id}`;
+        // upvoteCount.textContent = post.upvotes;
+        // voteContainer.appendChild(upvoteCount);
 
-        const dislikeButton = document.createElement('button');
-        dislikeButton.classList.add('vote-button', 'dislike-button');
-        dislikeButton.innerHTML = '&#x25BC;';
-        dislikeButton.dataset.postId = post._id;
-        dislikeButton.dataset.voteType = "downvote"
-        voteContainer.appendChild(dislikeButton);
+        // const dislikeButton = document.createElement('button');
+        // dislikeButton.classList.add('vote-button', 'dislike-button');
+        // dislikeButton.innerHTML = '&#x25BC;';
+        // dislikeButton.dataset.postId = post._id;
+        // dislikeButton.dataset.voteType = "downvote"
+        // voteContainer.appendChild(dislikeButton);
 
-         //Downvotes span tag.
-        const downvoteCount = document.createElement('span');
-        downvoteCount.classList.add('vote-count');
-        downvoteCount.id = `downvote-count-${post._id}`;
-        downvoteCount.textContent = post.downvotes;
-        voteContainer.appendChild(downvoteCount);
+        //  //Downvotes span tag.
+        // const downvoteCount = document.createElement('span');
+        // downvoteCount.classList.add('vote-count');
+        // downvoteCount.id = `downvote-count-${post._id}`;
+        // downvoteCount.textContent = post.downvotes;
+        // voteContainer.appendChild(downvoteCount);
 
         contentContainer.appendChild(voteContainer);
 
@@ -318,11 +318,19 @@ function updatePaginationButtons() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    checkLoginStatus();
-    updateHeader();
-    let paginationHTML = `<div id = "pagination-container"></div>`;
-    // After DOM is loaded, add a div to handle pagination, right after postList
-    const paginationContainer = document.getElementById('post-list').insertAdjacentHTML("afterend", paginationHTML);
-    loadPosts();
-});
+// ADD a Force load
+function forceLoad() {
+   if (document.readyState === "complete") {
+          checkLoginStatus();
+          updateHeader();
+          let paginationHTML = `<div id = "pagination-container"></div>`;
+          // After DOM is loaded, add a div to handle pagination, right after postList
+          const paginationContainer = document.getElementById('post-list').insertAdjacentHTML("afterend", paginationHTML);
+          loadPosts();
+          return;
+    }
+    setTimeout(forceLoad, 50); // Try again every 50 milliseconds
+}
+
+
+document.addEventListener('DOMContentLoaded', forceLoad);
