@@ -7,7 +7,7 @@ const createPostFormMain = document.getElementById('create-post-form-main');
 const createPostMessageMain = document.getElementById('create-post-message-main');
 const API_BASE_URL = 'https://backend-5be9.onrender.com/api';
 
-const POSTS_PER_PAGE = 8; // Adjust as needed
+const POSTS_PER_PAGE = 8;
 let currentPage = 1;
 let totalPages = 1;
 let isLoading = false;
@@ -16,21 +16,28 @@ async function loadPosts() {
     isLoading = true;
     try {
         const response = await fetch(`${API_BASE_URL}/posts?page=${currentPage}`);
-        console.log('Raw Response:', response); // Log the raw response
+        console.log('Raw Response:', response);
 
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
         }
 
-        const data = await response.json(); // Parse the JSON response
-        console.log('Parsed Data:', data);     // Log the parsed data
+        const data = await response.json();
+        console.log('Parsed Data:', data);
 
-        const posts = data.posts;   // Extract the actual array of posts
-        totalPages = data.totalPages;  // Extract total pages
+        //Check if `data` is undefined and if its post is undefined.
+        let posts = data && data.posts;
+        if (!posts) {
+             console.error("Posts data is missing or invalid:", data);
+             posts = [];   // Set a default empty list to not throw posts is not defined error.
+             //postList.innerHTML = '<p>Error loading posts. Data was incorrect.</p>';
+            }
+
+        totalPages = data ? data.totalPages : 1;  // Set totalPages a proper value
 
         console.log('Extracted Posts:', posts);
 
-        displayPosts(posts); // Pass the extracted posts array
+        displayPosts(posts);
         updatePaginationButtons();
 
     } catch (error) {
@@ -43,8 +50,13 @@ async function loadPosts() {
 
 function displayPosts(posts) {
     postList.innerHTML = ''; // Clear existing posts
-    //Use optional chaining in case posts is somehow null.
-    posts?.forEach(post => {
+
+   if (!posts || !Array.isArray(posts)) {
+        console.warn("displayPosts was called with non-array:", posts);
+        postList.innerHTML = "<p>No posts to display (likely a data issue).</p>";
+        return;
+    }
+    posts.forEach(post => { //Ensure not to fail.
         const postElement = document.createElement('div');
         postElement.classList.add('post');
 
@@ -54,10 +66,10 @@ function displayPosts(posts) {
 
         // --- Title (NOW CLICKABLE) ---
         const titleElement = document.createElement('h2');
-        const titleLink = document.createElement('a'); // Create an <a> tag
-        titleLink.href = `post-details.html?id=${post._id}`; // Set the link to the details page
-        titleLink.textContent = post.title; // Set the link text to the post title
-        titleElement.appendChild(titleLink);   // Wrap the title text in the link
+        const titleLink = document.createElement('a');
+        titleLink.href = `post-details.html?id=${post._id}`;
+        titleLink.textContent = post.title;
+        titleElement.appendChild(titleLink);
 
         // --- Author and Date ---
         const authorDateElement = document.createElement('p');
@@ -65,7 +77,7 @@ function displayPosts(posts) {
 
         // --- Content ---
          const contentElement = document.createElement('p');
-        contentElement.textContent = post.content.substring(0, 250); // Show a preview
+        contentElement.textContent = post.content.substring(0, 250);
 
         // --- New Container for Title and Image ---
         const titleImageContainer = document.createElement('div');
@@ -93,30 +105,30 @@ function displayPosts(posts) {
 
         const likeButton = document.createElement('button');
         likeButton.classList.add('vote-button', 'like-button');
-        likeButton.innerHTML = '&#x25B2;'; // Up arrow (▲) -  Use HTML entities for special characters
-        likeButton.dataset.postId = post._id; //Set id for like button.
-        likeButton.dataset.voteType = "upvote" //Set vote type for like button.
+        likeButton.innerHTML = '&#x25B2;';
+        likeButton.dataset.postId = post._id;
+        likeButton.dataset.voteType = "upvote"
         voteContainer.appendChild(likeButton);
 
          //Upvotes span tag.
         const upvoteCount = document.createElement('span');
         upvoteCount.classList.add('vote-count');
         upvoteCount.id = `upvote-count-${post._id}`;
-        upvoteCount.textContent = post.upvotes; //Set default upvotes.
+        upvoteCount.textContent = post.upvotes;
         voteContainer.appendChild(upvoteCount);
 
         const dislikeButton = document.createElement('button');
         dislikeButton.classList.add('vote-button', 'dislike-button');
-        dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
-        dislikeButton.dataset.postId = post._id; //Set id for dislike button.
-        dislikeButton.dataset.voteType = "downvote" //Set vote type for dislike button.
+        dislikeButton.innerHTML = '&#x25BC;';
+        dislikeButton.dataset.postId = post._id;
+        dislikeButton.dataset.voteType = "downvote"
         voteContainer.appendChild(dislikeButton);
 
          //Downvotes span tag.
         const downvoteCount = document.createElement('span');
         downvoteCount.classList.add('vote-count');
         downvoteCount.id = `downvote-count-${post._id}`;
-        downvoteCount.textContent = post.downvotes; //Set default downvotes.
+        downvoteCount.textContent = post.downvotes;
         voteContainer.appendChild(downvoteCount);
 
         contentContainer.appendChild(voteContainer);
@@ -127,11 +139,11 @@ function displayPosts(posts) {
             // Only show the delete button if the current user is the author
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Delete';
-            deleteButton.classList.add('delete-button'); // Add a class for styling
+            deleteButton.classList.add('delete-button');
             deleteButton.addEventListener('click', () => {
-                deletePost(post._id, postElement); // Pass the post ID *and* the element
+                deletePost(post._id, postElement);
             });
-            contentContainer.appendChild(deleteButton); // Append to content container.
+            contentContainer.appendChild(deleteButton);
         }
 
         // --- Combine Everything ---
@@ -187,7 +199,7 @@ if (createPostFormMain) {
             if (!token) {
                 createPostMessageMain.textContent = "You must be logged in to create a post."
                 createPostMessageMain.style.color = 'red';
-                return; //Stop execution if not logged in.
+                return;
             }
             const response = await fetch(`${API_BASE_URL}/posts`, {
                 method: "POST",
