@@ -1,37 +1,33 @@
+// frontend/js/app.js
 import { formatDate } from './utils.js'; // Import the formatDate function
 import { checkLoginStatus } from './auth.js'; // Import checkLoginStatus
 
 const postList = document.getElementById('post-list');
-const paginationContainer = document.getElementById('pagination-container'); // Add this to your HTML
+
+// Create post element and relative variables.
 const createPostFormMain = document.getElementById('create-post-form-main');
 const createPostMessageMain = document.getElementById('create-post-message-main');
 const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; //  Or your Render backend URL
 
-let currentPage = 1;   // Initialize the current page
-const postsPerPage = 10; // You can adjust the number of posts per page
-let totalPages = 1;   // Initialize totalPages (will be updated after first fetch)
 
-async function loadPosts(page = 1) {  // Pass the page number as an argument
+async function loadPosts() {
     try {
-        const response = await fetch(`${API_BASE_URL}/posts?page=${page}&limit=${postsPerPage}`);
-        console.log('Response:', response);
+        const response = await fetch(`${API_BASE_URL}/posts`); // Use API_BASE_URL
+        console.log('Response:', response); // Log the entire response object
 
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
         }
-        const data = await response.json();  // Assuming backend returns { posts, totalPages }
-        console.log('Posts Data:', data); //log out the data to make sure posts are inside data.
-        const posts = data.posts
-        totalPages = data.totalPages;
-
+        const posts = await response.json();
         console.log('Posts:', posts); // Log the parsed posts data
         displayPosts(posts);
-        displayPagination(totalPages, page);  // Display the pagination
     } catch (error) {
         console.error('Error loading posts:', error);
         postList.innerHTML = '<p>Error loading posts. Please try again later.</p>';
     }
 }
+
+// function displayPosts.
 
 function displayPosts(posts) {
     postList.innerHTML = ''; // Clear existing posts
@@ -138,39 +134,6 @@ function displayPosts(posts) {
     });
 }
 
-function displayPagination(totalPages, currentPage) {
-    paginationContainer.innerHTML = '';  // Clear existing pagination
-
-    const prevButton = document.createElement('button');
-    prevButton.textContent = 'Previous';
-    prevButton.disabled = currentPage === 1;  // Disable if on the first page
-    prevButton.addEventListener('click', () => {
-        loadPosts(currentPage - 1);
-    });
-    paginationContainer.appendChild(prevButton);
-
-    // Display page numbers (you can customize this)
-    for (let i = 1; i <= totalPages; i++) {
-        const pageButton = document.createElement('button');
-        pageButton.textContent = i;
-        pageButton.classList.add('page-number-button'); // Add a class for styling
-        if (i === currentPage) {
-            pageButton.classList.add('active'); // Highlight the current page
-        }
-        pageButton.addEventListener('click', () => {
-            loadPosts(i);
-        });
-        paginationContainer.appendChild(pageButton);
-    }
-
-    const nextButton = document.createElement('button');
-    nextButton.textContent = 'Next';
-    nextButton.disabled = currentPage === totalPages;  // Disable if on the last page
-    nextButton.addEventListener('click', () => {
-        loadPosts(currentPage + 1);
-    });
-    paginationContainer.appendChild(nextButton);
-}
 // Attach event listener to the post list (event delegation)
 postList.addEventListener('click', async (event) => {
     if (event.target.classList.contains('vote-button')) {
@@ -355,5 +318,7 @@ function updateHeader() {
 document.addEventListener('DOMContentLoaded', () => {
     checkLoginStatus(); // Now this will work correctly
     updateHeader(); // Update header to show username.
-    loadPosts();      // Load the initial page (page 1)
+    loadPosts();
 });
+
+
