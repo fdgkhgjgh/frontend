@@ -49,18 +49,19 @@ function displayPostDetails(post) {
      contentElement.textContent = post.content;
      contentContainer.appendChild(contentElement);
 
-    if (post.imageUrl) {
-          const imgContainer = document.createElement('div');
-            imgContainer.classList.add('image-container');
-
-            const imgElement = document.createElement('img');
-            imgElement.src = post.imageUrl;
-            imgElement.alt = post.title;
-            //No need set width and height in js, just set in css.
-            imgContainer.appendChild(imgElement);
-          //  postElement.appendChild(imgContainer); // Append image container to the *main* post element
-            contentContainer.appendChild(imgContainer)
-    }
+     if (post.imageUrl) {
+        const imgContainer = document.createElement('div');
+          imgContainer.classList.add('image-container');
+          imgContainer.style.width = '100%'; //Set width
+          imgContainer.style.maxWidth = '100%'; //Set width max
+          const imgElement = document.createElement('img');
+          imgElement.src = post.imageUrl;
+          imgElement.alt = post.title;
+          //No need set width and height in js, just set in css.
+          imgContainer.appendChild(imgElement);
+        //  postElement.appendChild(imgContainer); // Append image container to the *main* post element
+          contentContainer.appendChild(imgContainer)
+  }
     // --- Like/Dislike Buttons ---
     const voteContainer = document.createElement('div');
     voteContainer.classList.add('vote-container');

@@ -232,6 +232,7 @@ html, body {
 .title-image-container h2 {
   margin: 0; /* Reset default heading margins */
   flex: 1; /* Allow the title to take up remaining space */
+  text-align: left;  /* Ensure the title is left-aligned within its space */
 }
 
 .title-image-container .image-container {
