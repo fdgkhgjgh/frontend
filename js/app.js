@@ -27,6 +27,8 @@ async function loadPosts() {
     }
 }
 
+// function displayPosts.
+
 function displayPosts(posts) {
     postList.innerHTML = ''; // Clear existing posts
     posts.forEach(post => {
@@ -66,13 +68,32 @@ function displayPosts(posts) {
         const likeButton = document.createElement('button');
         likeButton.classList.add('vote-button', 'like-button');
         likeButton.innerHTML = '&#x25B2;'; // Up arrow (▲) -  Use HTML entities for special characters
+        likeButton.dataset.postId = post._id; //Set id for like button.
+        likeButton.dataset.voteType = "upvote" //Set vote type for like button.
         voteContainer.appendChild(likeButton);
+
+         //Upvotes span tag.
+        const upvoteCount = document.createElement('span');
+        upvoteCount.classList.add('vote-count');
+        upvoteCount.id = `upvote-count-${post._id}`;
+        upvoteCount.textContent = post.upvotes; //Set default upvotes.
+        voteContainer.appendChild(upvoteCount);
 
 
         const dislikeButton = document.createElement('button');
         dislikeButton.classList.add('vote-button', 'dislike-button');
         dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
+        dislikeButton.dataset.postId = post._id; //Set id for dislike button.
+        dislikeButton.dataset.voteType = "downvote" //Set vote type for dislike button.
         voteContainer.appendChild(dislikeButton);
+
+         //Downvotes span tag.
+        const downvoteCount = document.createElement('span');
+        downvoteCount.classList.add('vote-count');
+        downvoteCount.id = `downvote-count-${post._id}`;
+        downvoteCount.textContent = post.downvotes; //Set default downvotes.
+        voteContainer.appendChild(downvoteCount);
+
 
         contentContainer.appendChild(voteContainer);
 
@@ -107,6 +128,43 @@ function displayPosts(posts) {
         postList.appendChild(postElement);
     });
 }
+
+// Attach event listener to the post list (event delegation)
+postList.addEventListener('click', async (event) => {
+    if (event.target.classList.contains('vote-button')) {
+        const postId = event.target.dataset.postId;
+        const voteType = event.target.dataset.voteType;
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You must be logged in to vote.');
+                return;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/posts/${postId}/${voteType}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                const data = await response.json()
+                throw new Error(`Voting failed: ${data.message}`);
+            }
+
+            const data = await response.json(); // Get updated counts
+
+            // Update the vote counts on the page
+            document.getElementById(`upvote-count-${postId}`).textContent = data.upvotes;
+            document.getElementById(`downvote-count-${postId}`).textContent = data.downvotes;
+        } catch (error) {
+            console.error('Error voting:', error);
+            alert(error.message);
+        }
+    }
+});
 
 // --- ADD COMMENT FUNCTION --- (Removed)
 

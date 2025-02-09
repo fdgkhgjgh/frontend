@@ -61,22 +61,39 @@ function displayPostDetails(post) {
           //  postElement.appendChild(imgContainer); // Append image container to the *main* post element
             contentContainer.appendChild(imgContainer)
     }
-      // --- Like/Dislike Buttons ---
-        const voteContainer = document.createElement('div');
-        voteContainer.classList.add('vote-container');
+    // --- Like/Dislike Buttons ---
+    const voteContainer = document.createElement('div');
+    voteContainer.classList.add('vote-container');
 
-        const likeButton = document.createElement('button');
-        likeButton.classList.add('vote-button', 'like-button');
-        likeButton.innerHTML = '&#x25B2;'; // Up arrow (▲) -  Use HTML entities for special characters
-        voteContainer.appendChild(likeButton);
+    const likeButton = document.createElement('button');
+    likeButton.classList.add('vote-button', 'like-button');
+    likeButton.innerHTML = '&#x25B2;'; // Up arrow (▲)
+    likeButton.dataset.postId = post._id;
+    likeButton.dataset.voteType = "upvote";
+    voteContainer.appendChild(likeButton);
 
+    //Upvotes span tag.
+    const upvoteCount = document.createElement('span');
+    upvoteCount.classList.add('vote-count');
+    upvoteCount.id = `upvote-count-${post._id}`;
+    upvoteCount.textContent = post.upvotes; //Set default upvotes.
+    voteContainer.appendChild(upvoteCount);
 
-        const dislikeButton = document.createElement('button');
-        dislikeButton.classList.add('vote-button', 'dislike-button');
-        dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
-        voteContainer.appendChild(dislikeButton);
+    const dislikeButton = document.createElement('button');
+    dislikeButton.classList.add('vote-button', 'dislike-button');
+    dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
+    dislikeButton.dataset.postId = post._id;
+    dislikeButton.dataset.voteType = "downvote";
+    voteContainer.appendChild(dislikeButton);
 
-        contentContainer.appendChild(voteContainer);
+     //Downvotes span tag.
+    const downvoteCount = document.createElement('span');
+    downvoteCount.classList.add('vote-count');
+    downvoteCount.id = `downvote-count-${post._id}`;
+    downvoteCount.textContent = post.downvotes; //Set default downvotes.
+    voteContainer.appendChild(downvoteCount);
+
+    contentContainer.appendChild(voteContainer);
 
     postElement.appendChild(contentContainer);
     postDetailsContainer.appendChild(postElement);
@@ -175,6 +192,42 @@ function displayComments(comments) {
 
  });
 }
+// Add event listener to the post details container (event delegation)
+postDetailsContainer.addEventListener('click', async (event) => {
+        if (event.target.classList.contains('vote-button')) {
+            const postId = event.target.dataset.postId;
+            const voteType = event.target.dataset.voteType;
+
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('You must be logged in to vote.');
+                    return;
+                }
+
+                const response = await fetch(`${API_BASE_URL}/posts/${postId}/${voteType}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    const data = await response.json()
+                    throw new Error(`Voting failed: ${data.message}`);
+                }
+
+                const data = await response.json(); // Get updated counts
+
+                // Update the vote counts on the page
+                document.getElementById(`upvote-count-${postId}`).textContent = data.upvotes;
+                document.getElementById(`downvote-count-${postId}`).textContent = data.downvotes;
+            } catch (error) {
+                console.error('Error voting:', error);
+                alert(error.message);
+            }
+        }
+    });
 // No need to add DOMContentLoaded, because it has been added in post-details.html
 
 // Export
