@@ -60,23 +60,25 @@ function displayPosts(posts) {
         titleFileContainer.appendChild(titleElement);
 
         // --- Images (Right Side) ---
-       if (post.imageUrls && post.imageUrls.length > 0) {   //Check if has images.
+        //Modified this images showing here .
+        if (post.imageUrls && post.imageUrls.length > 0) {   //Check if has images.
             const imgContainer = document.createElement('div');
             imgContainer.classList.add('image-container');
             imgContainer.style.display = 'flex'; //Use flex display.
             imgContainer.style.flexDirection = 'column'; //Vertical align.
             imgContainer.style.alignItems = 'center';   //Center images.
 
-            post.imageUrls.forEach(imageUrl => {     //Loop each image URL.
-                const imgElement = document.createElement('img');
-                imgElement.src = imageUrl;
-                imgElement.alt = post.title;
-                imgElement.style.maxWidth = '100%'; //Don't overflow container
-                imgElement.style.maxHeight = '150px';
-                imgElement.style.marginBottom = '5px'; //Optional spacing.
-                imgContainer.appendChild(imgElement);
-            });
-             titleFileContainer.appendChild(imgContainer);
+            const firstImageUrl = post.imageUrls[0]; // Get the *first* image URL
+
+            const imgElement = document.createElement('img');
+            imgElement.src = firstImageUrl;
+            imgElement.alt = post.title;
+            imgElement.style.maxWidth = '100%'; //Don't overflow container
+            imgElement.style.maxHeight = '150px';
+            imgElement.style.marginBottom = '5px'; //Optional spacing.
+            imgContainer.appendChild(imgElement);
+
+            titleFileContainer.appendChild(imgContainer);
         }
 
         //Display videos
@@ -158,6 +160,7 @@ function displayPosts(posts) {
         postList.appendChild(postElement);
     });
 }
+
 
 // --- ADD COMMENT FUNCTION --- (Removed)
 
