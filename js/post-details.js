@@ -49,24 +49,46 @@ function displayPostDetails(post) {
     contentContainer.appendChild(contentElement);
   
    // --- Images ---
-    if (post.imageUrls && post.imageUrls.length > 0) {
-        const imgContainer = document.createElement('div');
-        imgContainer.classList.add('image-container');
-        imgContainer.style.display = 'flex'; //Use flex display.
-        imgContainer.style.flexDirection = 'column'; //Vertical align.
-        imgContainer.style.alignItems = 'center';   //Center images.
+      if (post.imageUrls && post.imageUrls.length > 0) {
+          const imgContainer = document.createElement('div');
+          imgContainer.classList.add('image-container');
+          imgContainer.style.display = 'flex'; //Use flex display.
+          imgContainer.style.flexDirection = 'column'; //Vertical align.
+          imgContainer.style.alignItems = 'center';   //Center images.
   
-        post.imageUrls.forEach(imageUrl => {
-            const imgElement = document.createElement('img');
-            imgElement.src = imageUrl;
-            imgElement.alt = "Post Image";
-            imgElement.style.maxWidth = '100%';
-            imgElement.style.maxHeight = '300px'; //Adjust max height
-            imgElement.style.marginBottom = '10px'; //Optional spacing
-            imgContainer.appendChild(imgElement);
-        });
-        contentContainer.appendChild(imgContainer);
-    }
+          post.imageUrls.forEach(imageUrl => {
+              const imgElement = document.createElement('img');
+              imgElement.src = imageUrl;
+              imgElement.alt = "Post Image";
+              imgElement.style.maxWidth = '100%';
+              imgElement.style.maxHeight = '300px'; //Adjust max height
+              imgElement.style.marginBottom = '10px'; //Optional spacing
+              imgContainer.appendChild(imgElement);
+          });
+          contentContainer.appendChild(imgContainer);
+      }
+  
+      //Videos
+      if (post.videoUrls && post.videoUrls.length > 0) {
+          const videoContainer = document.createElement('div');
+          videoContainer.classList.add('video-container');
+          videoContainer.style.display = 'flex';
+          videoContainer.style.flexDirection = 'column';
+          videoContainer.style.alignItems = 'center';
+  
+          post.videoUrls.forEach(videoUrl => {
+              const videoElement = document.createElement('video');
+              videoElement.src = videoUrl;
+              videoElement.alt = "Post Video";
+              videoElement.controls = true; //Enable video controls.
+              videoElement.style.maxWidth = '100%';
+              videoElement.style.maxHeight = '300px';
+              videoElement.style.marginBottom = '10px';
+  
+              videoContainer.appendChild(videoElement);
+          });
+          contentContainer.appendChild(videoContainer);
+      }
     // --- Like/Dislike Buttons ---
     const voteContainer = document.createElement('div');
     voteContainer.classList.add('vote-container');

@@ -26,13 +26,18 @@
         <form id="create-post-form-main">
             <label for="title-main">Title:</label>
             <input type="text" id="title-main" name="title" required><br><br>
-
+    
             <label for="content-main">Content:</label>
             <textarea id="content-main" name="content" rows="4" required></textarea><br><br>
-
-            <label for="image-main">Image (optional):</label>
-            <input type="file" id="image-main" name="image" accept="image/*"><br><br>
-
+    
+            <!--  REPLACE THIS LINE -->
+            <!-- <label for="image-main">Image (optional):</label>
+            <input type="file" id="image-main" name="image" accept="image/*"><br><br> -->
+    
+            <!-- WITH THIS -->
+            <label for="file-main">Files (optional):</label>
+            <input type="file" id="file-main" name="files" accept="image/*, video/*" multiple><br><br>
+    
             <button type="submit">Create Post</button>
         </form>
         <p id="create-post-message-main"></p>

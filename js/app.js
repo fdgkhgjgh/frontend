@@ -54,13 +54,13 @@ function displayPosts(posts) {
         const contentElement = document.createElement('p');
         contentElement.textContent = post.content.substring(0, 250); // Show a  preview
 
-        // --- New Container for Title and Image ---
-        const titleImageContainer = document.createElement('div');
-        titleImageContainer.classList.add('title-image-container');
-        titleImageContainer.appendChild(titleElement);
+        // --- New Container for Title and Files ---
+        const titleFileContainer = document.createElement('div');
+        titleFileContainer.classList.add('title-file-container');
+        titleFileContainer.appendChild(titleElement);
 
         // --- Images (Right Side) ---
-        if (post.imageUrls && post.imageUrls.length > 0) {   //Check if has images.
+       if (post.imageUrls && post.imageUrls.length > 0) {   //Check if has images.
             const imgContainer = document.createElement('div');
             imgContainer.classList.add('image-container');
             imgContainer.style.display = 'flex'; //Use flex display.
@@ -76,9 +76,31 @@ function displayPosts(posts) {
                 imgElement.style.marginBottom = '5px'; //Optional spacing.
                 imgContainer.appendChild(imgElement);
             });
-            titleImageContainer.appendChild(imgContainer);
+             titleFileContainer.appendChild(imgContainer);
         }
-        contentContainer.appendChild(titleImageContainer)
+
+        //Display videos
+        if (post.videoUrls && post.videoUrls.length > 0) {
+            const videoContainer = document.createElement('div');
+            videoContainer.classList.add('video-container');
+            videoContainer.style.display = 'flex';
+            videoContainer.style.flexDirection = 'column';
+            videoContainer.style.alignItems = 'center';
+
+            post.videoUrls.forEach(videoUrl => {
+                const videoElement = document.createElement('video');
+                videoElement.src = videoUrl;
+                videoElement.alt = post.title;
+                videoElement.controls = true; //Enable video controls.
+                videoElement.style.maxWidth = '100%';
+                videoElement.style.maxHeight = '300px';
+                videoElement.style.marginBottom = '5px';
+
+                videoContainer.appendChild(videoElement);
+            });
+            titleFileContainer.appendChild(videoContainer)
+        }
+        contentContainer.appendChild(titleFileContainer)
         contentContainer.appendChild(authorDateElement);
         contentContainer.appendChild(contentElement);
 
@@ -137,43 +159,6 @@ function displayPosts(posts) {
     });
 }
 
-// Attach event listener to the post list (event delegation)
-postList.addEventListener('click', async (event) => {
-    if (event.target.classList.contains('vote-button')) {
-        const postId = event.target.dataset.postId;
-        const voteType = event.target.dataset.voteType;
-
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('You must be logged in to vote.');
-                return;
-            }
-
-            const response = await fetch(`${API_BASE_URL}/posts/${postId}/${voteType}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-
-            if (!response.ok) {
-                const data = await response.json()
-                throw new Error(`Voting failed: ${data.message}`);
-            }
-
-            const data = await response.json(); // Get updated counts
-
-            // Update the vote counts on the page
-            document.getElementById(`upvote-count-${postId}`).textContent = data.upvotes;
-            document.getElementById(`downvote-count-${postId}`).textContent = data.downvotes;
-        } catch (error) {
-            console.error('Error voting:', error);
-            alert(error.message);
-        }
-    }
-});
-
 // --- ADD COMMENT FUNCTION --- (Removed)
 
 async function deletePost(postId, postElement) {
@@ -214,16 +199,16 @@ if (createPostFormMain) {
 
         const title = document.getElementById('title-main').value;
         const content = document.getElementById('content-main').value;
-        const imageInput = document.getElementById('image-main'); // Get the input element
-        const images = imageInput.files; // Get the selected files
+        const fileInput = document.getElementById('file-main'); // Get the input element
+        const files = fileInput.files; // Get the selected files
 
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
 
-        // Append each image to the FormData
-        for (let i = 0; i < images.length; i++) {
-            formData.append('images', images[i]); //Use images as same as backend.
+        // Append each file to the FormData
+        for (let i = 0; i < files.length; i++) {
+            formData.append('files', files[i]); //Use files as same as backend.
         }
 
         try{
