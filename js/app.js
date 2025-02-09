@@ -45,21 +45,39 @@ function displayPosts(posts) {
         titleLink.href = `post-details.html?id=${post._id}`; // Set the link to the details page
         titleLink.textContent = post.title; // Set the link text to the post title
         titleElement.appendChild(titleLink);   // Wrap the title text in the link
-        contentContainer.appendChild(titleElement);
+        //contentContainer.appendChild(titleElement);
        // titleElement.textContent = post.title; //No need this, we already add link text above.
-
-        // ... (rest of the displayPosts function: author, content, image, etc.) ...
 
         // --- Author and Date ---
         const authorDateElement = document.createElement('p');
         authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
-        contentContainer.appendChild(authorDateElement);
+        //contentContainer.appendChild(authorDateElement);
 
-		// --- Content ---
-		 const contentElement = document.createElement('p');
+        // --- Content ---
+         const contentElement = document.createElement('p');
         contentElement.textContent = post.content.substring(0, 250); // Show a  preview
-        contentContainer.appendChild(contentElement);
+        //contentContainer.appendChild(contentElement);
 
+        // --- New Container for Title and Image ---
+        const titleImageContainer = document.createElement('div');
+        titleImageContainer.classList.add('title-image-container');
+        titleImageContainer.appendChild(titleElement);
+
+         // --- Image (Right Side) ---
+        if (post.imageUrl) {
+            const imgContainer = document.createElement('div');
+            imgContainer.classList.add('image-container');
+
+            const imgElement = document.createElement('img');
+            imgElement.src = post.imageUrl;
+            imgElement.alt = post.title;
+            //No need set width and height in js, just set in css.
+            imgContainer.appendChild(imgElement);
+            titleImageContainer.appendChild(imgContainer)
+        }
+        contentContainer.appendChild(titleImageContainer)
+        contentContainer.appendChild(authorDateElement);
+        contentContainer.appendChild(contentElement);
 
         // --- Like/Dislike Buttons ---
         const voteContainer = document.createElement('div');
@@ -97,21 +115,8 @@ function displayPosts(posts) {
 
         contentContainer.appendChild(voteContainer);
 
-        // --- Image (Right Side) ---
-        if (post.imageUrl) {
-            const imgContainer = document.createElement('div');
-            imgContainer.classList.add('image-container');
-
-            const imgElement = document.createElement('img');
-            imgElement.src = post.imageUrl;
-            imgElement.alt = post.title;
-            //No need set width and height in js, just set in css.
-            imgContainer.appendChild(imgElement);
-          //  postElement.appendChild(imgContainer); // Append image container to the *main* post element
-            contentContainer.appendChild(imgContainer)
-        }
-		// --- Delete Button---
-		 const currentUserId = localStorage.getItem('userId');
+        // --- Delete Button---
+         const currentUserId = localStorage.getItem('userId');
         if (currentUserId && currentUserId === post.author._id.toString()) {
             // Only show the delete button if the current user is the author
             const deleteButton = document.createElement('button');
