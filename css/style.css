@@ -248,3 +248,45 @@ html, body {
 .post-content {
   flex-direction: column; /* Revert to column layout for other content */
 }
+
+/* Styles for the pagination container */
+#pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Basic button styles */
+#pagination-container button {
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  color: #555;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+/* Hover state for buttons */
+#pagination-container button:hover {
+  background-color: #ddd;
+}
+
+/* Style for the active (current) page button */
+#pagination-container button.active {
+  background-color: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+/* Style for disabled buttons (e.g., previous on first page) */
+#pagination-container button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#pagination-container button:disabled:hover {
+  background-color: #f8f8f8; /* keep the original background */
+}

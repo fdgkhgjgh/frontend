@@ -3,32 +3,39 @@ import { formatDate } from './utils.js'; // Import the formatDate function
 import { checkLoginStatus } from './auth.js'; // Import checkLoginStatus
 
 const postList = document.getElementById('post-list');
-
+const paginationContainer = document.createElement('div'); // Create a container for pagination
+paginationContainer.id = 'pagination-container';
+postList.parentNode.insertBefore(paginationContainer, postList.nextSibling); //Insert after the postList
 // Create post element and relative variables.
 const createPostFormMain = document.getElementById('create-post-form-main');
 const createPostMessageMain = document.getElementById('create-post-message-main');
 const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; //  Or your Render backend URL
 
+let currentPage = 1; // Track the current page
 
-async function loadPosts() {
+async function loadPosts(page = 1) {
     try {
-        const response = await fetch(`${API_BASE_URL}/posts`); // Use API_BASE_URL
+        const limit = 8; // Number of posts per page
+        const response = await fetch(`${API_BASE_URL}/posts?page=${page}&limit=${limit}`); // Use API_BASE_URL
         console.log('Response:', response); // Log the entire response object
 
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
         }
-        const posts = await response.json();
+        const data = await response.json(); // Parse response as JSON
+        const posts = data.posts; // Get the posts
+        const totalPages = data.totalPages; // Get total pages
         console.log('Posts:', posts); // Log the parsed posts data
+        console.log('totalPages:', totalPages); // Log the parsed posts data
         displayPosts(posts);
+        displayPagination(totalPages, page); // Display pagination controls
+
     } catch (error) {
         console.error('Error loading posts:', error);
         postList.innerHTML = '<p>Error loading posts. Please try again later.</p>';
     }
 }
-
 // function displayPosts.
-
 function displayPosts(posts) {
     postList.innerHTML = ''; // Clear existing posts
     posts.forEach(post => {
@@ -160,10 +167,55 @@ function displayPosts(posts) {
         postList.appendChild(postElement);
     });
 }
+// Function to display pagination controls
+function displayPagination(totalPages, currentPage) {
+    paginationContainer.innerHTML = ''; // Clear existing pagination
+    const maxButtons = 5; // Maximum number of page buttons to display
 
+    // Calculate start and end page numbers to display
+    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
 
+    // Adjust start page if end page is too close to totalPages
+    if (endPage - startPage < maxButtons - 1) {
+        startPage = Math.max(1, endPage - maxButtons + 1);
+    }
+    // Previous Page button
+    if (currentPage > 1) {
+        const prevButton = document.createElement('button');
+        prevButton.textContent = 'Previous';
+        prevButton.addEventListener('click', () => {
+            loadPosts(currentPage - 1);
+        });
+        paginationContainer.appendChild(prevButton);
+    }
+
+    // Create page number buttons
+    for (let i = startPage; i <= endPage; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.addEventListener('click', () => {
+            loadPosts(i);
+        });
+
+        if (i === currentPage) {
+            pageButton.classList.add('active'); // Style the current page button
+        }
+
+        paginationContainer.appendChild(pageButton);
+    }
+
+    // Next Page button
+    if (currentPage < totalPages) {
+        const nextButton = document.createElement('button');
+        nextButton.textContent = 'Next';
+        nextButton.addEventListener('click', () => {
+            loadPosts(currentPage + 1);
+        });
+        paginationContainer.appendChild(nextButton);
+    }
+}
 // --- ADD COMMENT FUNCTION --- (Removed)
-
 async function deletePost(postId, postElement) {
     const confirmDelete = confirm("Are you sure you want to delete this post?");
     if (!confirmDelete) return;
@@ -190,7 +242,6 @@ async function deletePost(postId, postElement) {
 		alert("An error occurred while deleting the post.")
     }
 }
-
 //Delete comment function. (Removed)
 
 //Setup modal. (Removed)
@@ -314,5 +365,3 @@ document.addEventListener('DOMContentLoaded', () => {
     updateHeader(); // Update header to show username.
     loadPosts();
 });
-
-
