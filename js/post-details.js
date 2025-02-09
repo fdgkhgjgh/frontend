@@ -26,80 +26,85 @@ async function loadPostDetails(postId) {
 }
 
 function displayPostDetails(post) {
-  postDetailsContainer.innerHTML = ''; // Clear previous details
-
-  const postElement = document.createElement('div');
-  postElement.classList.add('post');
-
-  // --- Main Container for Content ---
-  const contentContainer = document.createElement('div');
-  contentContainer.classList.add('post-content');
-
-  const titleElement = document.createElement('h2');
-  titleElement.textContent = post.title;
-  contentContainer.appendChild(titleElement);
-
-  // --- Author and Date ---
-  const authorDateElement = document.createElement('p');
-  authorDateElement.textContent = `By: ${post.author?.username || "Unknown"} on ${formatDate(post.createdAt)}`; //Use optional chaining
-  contentContainer.appendChild(authorDateElement);
-
-
-  const contentElement = document.createElement('p');
-  contentElement.textContent = post.content;
-  contentContainer.appendChild(contentElement);
-
-  if (post.imageUrl) {
-    const imgContainer = document.createElement('div');
-    imgContainer.classList.add('image-container');
-    imgContainer.style.width = '100%'; //Set width
-    imgContainer.style.maxWidth = '100%'; //Set width max
-    const imgElement = document.createElement('img');
-    imgElement.src = post.imageUrl;
-    imgElement.alt = post.title;
-    //No need set width and height in js, just set in css.
-    imgContainer.appendChild(imgElement);
-    //  postElement.appendChild(imgContainer); // Append image container to the *main* post element
-    contentContainer.appendChild(imgContainer)
+    postDetailsContainer.innerHTML = ''; // Clear previous details
+  
+    const postElement = document.createElement('div');
+    postElement.classList.add('post');
+  
+    // --- Main Container for Content ---
+    const contentContainer = document.createElement('div');
+    contentContainer.classList.add('post-content');
+  
+    const titleElement = document.createElement('h2');
+    titleElement.textContent = post.title;
+    contentContainer.appendChild(titleElement);
+  
+    // --- Author and Date ---
+    const authorDateElement = document.createElement('p');
+    authorDateElement.textContent = `By: ${post.author?.username || "Unknown"} on ${formatDate(post.createdAt)}`; //Use optional chaining
+    contentContainer.appendChild(authorDateElement);
+  
+    const contentElement = document.createElement('p');
+    contentElement.textContent = post.content;
+    contentContainer.appendChild(contentElement);
+  
+   // --- Images ---
+    if (post.imageUrls && post.imageUrls.length > 0) {
+        const imgContainer = document.createElement('div');
+        imgContainer.classList.add('image-container');
+        imgContainer.style.display = 'flex'; //Use flex display.
+        imgContainer.style.flexDirection = 'column'; //Vertical align.
+        imgContainer.style.alignItems = 'center';   //Center images.
+  
+        post.imageUrls.forEach(imageUrl => {
+            const imgElement = document.createElement('img');
+            imgElement.src = imageUrl;
+            imgElement.alt = "Post Image";
+            imgElement.style.maxWidth = '100%';
+            imgElement.style.maxHeight = '300px'; //Adjust max height
+            imgElement.style.marginBottom = '10px'; //Optional spacing
+            imgContainer.appendChild(imgElement);
+        });
+        contentContainer.appendChild(imgContainer);
+    }
+    // --- Like/Dislike Buttons ---
+    const voteContainer = document.createElement('div');
+    voteContainer.classList.add('vote-container');
+  
+    const likeButton = document.createElement('button');
+    likeButton.classList.add('vote-button', 'like-button');
+    likeButton.innerHTML = '&#x25B2;'; // Up arrow (▲)
+    likeButton.dataset.postId = post._id;
+    likeButton.dataset.voteType = "upvote";
+    voteContainer.appendChild(likeButton);
+  
+    //Upvotes span tag.
+    const upvoteCount = document.createElement('span');
+    upvoteCount.classList.add('vote-count');
+    upvoteCount.id = `upvote-count-${post._id}`;
+    upvoteCount.textContent = post.upvotes; //Set default upvotes.
+    voteContainer.appendChild(upvoteCount);
+  
+    const dislikeButton = document.createElement('button');
+    dislikeButton.classList.add('vote-button', 'dislike-button');
+    dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
+    dislikeButton.dataset.postId = post._id;
+    dislikeButton.dataset.voteType = "downvote";
+    voteContainer.appendChild(dislikeButton);
+  
+    //Downvotes span tag.
+    const downvoteCount = document.createElement('span');
+    downvoteCount.classList.add('vote-count');
+    downvoteCount.id = `downvote-count-${post._id}`;
+    downvoteCount.textContent = post.downvotes; //Set default downvotes.
+    voteContainer.appendChild(downvoteCount);
+  
+    contentContainer.appendChild(voteContainer);
+  
+    postElement.appendChild(contentContainer);
+    postDetailsContainer.appendChild(postElement);
+  
   }
-  // --- Like/Dislike Buttons ---
-  const voteContainer = document.createElement('div');
-  voteContainer.classList.add('vote-container');
-
-  const likeButton = document.createElement('button');
-  likeButton.classList.add('vote-button', 'like-button');
-  likeButton.innerHTML = '&#x25B2;'; // Up arrow (▲)
-  likeButton.dataset.postId = post._id;
-  likeButton.dataset.voteType = "upvote";
-  voteContainer.appendChild(likeButton);
-
-  //Upvotes span tag.
-  const upvoteCount = document.createElement('span');
-  upvoteCount.classList.add('vote-count');
-  upvoteCount.id = `upvote-count-${post._id}`;
-  upvoteCount.textContent = post.upvotes; //Set default upvotes.
-  voteContainer.appendChild(upvoteCount);
-
-  const dislikeButton = document.createElement('button');
-  dislikeButton.classList.add('vote-button', 'dislike-button');
-  dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
-  dislikeButton.dataset.postId = post._id;
-  dislikeButton.dataset.voteType = "downvote";
-  voteContainer.appendChild(dislikeButton);
-
-  //Downvotes span tag.
-  const downvoteCount = document.createElement('span');
-  downvoteCount.classList.add('vote-count');
-  downvoteCount.id = `downvote-count-${post._id}`;
-  downvoteCount.textContent = post.downvotes; //Set default downvotes.
-  voteContainer.appendChild(downvoteCount);
-
-  contentContainer.appendChild(voteContainer);
-
-  postElement.appendChild(contentContainer);
-  postDetailsContainer.appendChild(postElement);
-
-}
 
 
 // --- Add Comment Submission ---

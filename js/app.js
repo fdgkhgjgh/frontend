@@ -45,35 +45,38 @@ function displayPosts(posts) {
         titleLink.href = `post-details.html?id=${post._id}`; // Set the link to the details page
         titleLink.textContent = post.title; // Set the link text to the post title
         titleElement.appendChild(titleLink);   // Wrap the title text in the link
-        //contentContainer.appendChild(titleElement);
-       // titleElement.textContent = post.title; //No need this, we already add link text above.
 
         // --- Author and Date ---
         const authorDateElement = document.createElement('p');
         authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
-        //contentContainer.appendChild(authorDateElement);
 
         // --- Content ---
-         const contentElement = document.createElement('p');
+        const contentElement = document.createElement('p');
         contentElement.textContent = post.content.substring(0, 250); // Show a  preview
-        //contentContainer.appendChild(contentElement);
 
         // --- New Container for Title and Image ---
         const titleImageContainer = document.createElement('div');
         titleImageContainer.classList.add('title-image-container');
         titleImageContainer.appendChild(titleElement);
 
-         // --- Image (Right Side) ---
-        if (post.imageUrl) {
+        // --- Images (Right Side) ---
+        if (post.imageUrls && post.imageUrls.length > 0) {   //Check if has images.
             const imgContainer = document.createElement('div');
             imgContainer.classList.add('image-container');
+            imgContainer.style.display = 'flex'; //Use flex display.
+            imgContainer.style.flexDirection = 'column'; //Vertical align.
+            imgContainer.style.alignItems = 'center';   //Center images.
 
-            const imgElement = document.createElement('img');
-            imgElement.src = post.imageUrl;
-            imgElement.alt = post.title;
-            //No need set width and height in js, just set in css.
-            imgContainer.appendChild(imgElement);
-            titleImageContainer.appendChild(imgContainer)
+            post.imageUrls.forEach(imageUrl => {     //Loop each image URL.
+                const imgElement = document.createElement('img');
+                imgElement.src = imageUrl;
+                imgElement.alt = post.title;
+                imgElement.style.maxWidth = '100%'; //Don't overflow container
+                imgElement.style.maxHeight = '150px';
+                imgElement.style.marginBottom = '5px'; //Optional spacing.
+                imgContainer.appendChild(imgElement);
+            });
+            titleImageContainer.appendChild(imgContainer);
         }
         contentContainer.appendChild(titleImageContainer)
         contentContainer.appendChild(authorDateElement);
@@ -211,13 +214,16 @@ if (createPostFormMain) {
 
         const title = document.getElementById('title-main').value;
         const content = document.getElementById('content-main').value;
-        const image = document.getElementById('image-main').files[0];
+        const imageInput = document.getElementById('image-main'); // Get the input element
+        const images = imageInput.files; // Get the selected files
 
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
-        if(image) {
-            formData.append('image', image)
+
+        // Append each image to the FormData
+        for (let i = 0; i < images.length; i++) {
+            formData.append('images', images[i]); //Use images as same as backend.
         }
 
         try{
