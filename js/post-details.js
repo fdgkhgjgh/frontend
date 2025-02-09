@@ -130,7 +130,6 @@ if (addCommentForm) {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    // DO NOT set Content-Type with FormData
                 },
                 body: formData, // Send the FormData
             });
@@ -142,7 +141,7 @@ if (addCommentForm) {
                 commentMessage.style.color = 'green';
                 document.getElementById('comment-text').value = '';
                 document.getElementById('comment-image').value = ''; // Clear the file input
-                displayComments(data.comments)
+                loadPostDetails(postId)
             } else {
                  commentMessage.textContent = data.message
                 commentMessage.style.color = 'red'
@@ -165,7 +164,7 @@ function displayComments(comments) {
  comments.forEach(comment => {
      const commentItem = document.createElement('li');
      //Add image element
-      let commentContent = `${comment.author.username}: ${comment.text} -- ${formatDate(comment.createdAt)}`;
+      let commentContent = `${comment.author?.username}: ${comment.text} -- ${formatDate(comment.createdAt)}`;
      if(comment.imageUrl) {
           const imgElement = document.createElement('img');
           imgElement.src = comment.imageUrl;
@@ -180,7 +179,7 @@ function displayComments(comments) {
 
      //Add delete button.
      const currentUserId = localStorage.getItem('userId');
-     if (currentUserId && currentUserId === comment.author._id.toString()) {
+     if (currentUserId && currentUserId === comment.author?._id.toString()) {
            const deleteButton = document.createElement('button');
            deleteButton.textContent = "Delete";
            deleteButton.classList.add('delete-button');
