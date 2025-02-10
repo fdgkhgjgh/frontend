@@ -290,3 +290,102 @@ html, body {
 #pagination-container button:disabled:hover {
   background-color: #f8f8f8; /* keep the original background */
 }
+
+/* frontend/css/style.css */
+/* Style for comment number */
+.comment-item {
+  position: relative; /* Set position to relative for absolute positioning of the number */
+  padding-left: 25px; /* Add padding to the left to make space for the number */
+}
+
+.comment-number {
+  position: absolute; /* Absolute position relative to the comment item */
+  left: 0; /* Position it at the left */
+  top: 0; /* Position it at the top */
+  font-size: 0.8em; /* Adjust font size for better appearance */
+  color: #777; /* Use a muted color */
+}
+
+/* Style for reply button */
+.reply-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/*Style for reply-container */
+.replies-container {
+  margin-left: 20px; /* Indent replies */
+  margin-top: 5px;
+  border-left: 1px solid #ccc; /* Vertical line to connect replies */
+  padding-left: 10px;
+}
+
+.reply {
+  margin-bottom: 5px;
+  padding: 5px;
+  background-color: #f9f9f9;
+  border-radius: 3px;
+}
+
+.overlapped-replies {
+  max-height: 100px; /* Adjust as needed */
+  overflow: hidden;
+  position: relative;
+}
+
+.overlapped-replies::after {
+  content: "...";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
+  text-align: center;
+  padding: 2px 0;
+}
+/* Style for the pagination container */
+#comment-pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Basic button styles */
+#comment-pagination-container button {
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  color: #555;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+/* Hover state for buttons */
+#comment-pagination-container button:hover {
+  background-color: #ddd;
+}
+
+/* Style for the active (current) page button */
+#comment-pagination-container button.active {
+  background-color: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+/* Style for disabled buttons (e.g., previous on first page) */
+#comment-pagination-container button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#comment-pagination-container button:disabled:hover {
+  background-color: #f8f8f8; /* keep the original background */
+}
