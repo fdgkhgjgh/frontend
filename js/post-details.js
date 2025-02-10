@@ -206,17 +206,19 @@ if (addCommentForm) {
               },
               body: formData,
           });
-        await response.json(); //VERY IMPORTANTE
-        if (!response.ok) { //This to know there is an error.
-          commentMessage.textContent = "An error occurred while adding comment."
-          commentMessage.style.color = 'red'
-        }
-        else {
-          commentMessage.textContent = "Add comment success!";
-          commentMessage.style.color = 'green';
-          document.getElementById('comment-text').value = '';
-          document.getElementById('comment-image').value = '';
-        }
+          const data = await response.json(); //VERY IMPORTANTE
+          if (!response.ok) { //This to know there is an error.
+            commentMessage.textContent = "An error occurred while adding comment."
+            commentMessage.style.color = 'red'
+          }
+          else {
+            commentMessage.textContent = "Add comment success!";
+            commentMessage.style.color = 'green';
+            document.getElementById('comment-text').value = '';
+            document.getElementById('comment-image').value = '';
+             // REMOVE THIS LINE:
+             //loadPostDetails(postId)
+          }
 
       } catch (error) {
           console.error('Error adding comment:', error);
@@ -335,23 +337,22 @@ function showReplyForm(commentId) {
 
 // Function to add a reply
 async function addReply(postId, commentId, replyText, repliesContainer) {
-
   try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-          commentMessage.textContent = "You must be logged in to reply.";
-          commentMessage.style.color = 'red';
-          return;
-      }
+              const token = localStorage.getItem('token');
+              if (!token) {
+                  commentMessage.textContent = "You must be logged in to reply.";
+                  commentMessage.style.color = 'red';
+                  return;
+              }
 
-      const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({ text: replyText }),
-      });
+              const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies`, {
+                  method: 'GET', //Change it to Get.
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`,
+                  },
+                  body: JSON.stringify({ text: replyText }),
+              });
 
       const data = await response.json();
 
