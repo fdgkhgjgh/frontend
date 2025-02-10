@@ -223,37 +223,42 @@ function displayComments(comments) {
 // Add event listener to the post details container (event delegation)
 postDetailsContainer.addEventListener('click', async (event) => {
   if (event.target.classList.contains('vote-button')) {
-    const postId = event.target.dataset.postId;
-    const voteType = event.target.dataset.voteType;
+      const postId = event.target.dataset.postId;
+      const voteType = event.target.dataset.voteType;
 
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('You must be logged in to vote.');
-        return;
+      try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+              alert('You must be logged in to vote.');
+              return;
+          }
+
+          const response = await fetch(`${API_BASE_URL}/posts/${postId}/${voteType}`, {
+              method: 'POST',
+              headers: {
+                  'Authorization': `Bearer ${token}`,
+              },
+          });
+
+          if (!response.ok) {
+              const data = await response.json();  // Parse the JSON response
+              if (response.status === 400) {
+                  alert(data.message); // Display the message from the backend
+              } else {
+                  throw new Error(`Voting failed: ${data.message}`); // For other errors
+              }
+              return; // Exit the function if voting failed
+          }
+
+          const data = await response.json(); // Get updated counts
+
+          // Update the vote counts on the page
+          document.getElementById(`upvote-count-${postId}`).textContent = data.upvotes;
+          document.getElementById(`downvote-count-${postId}`).textContent = data.downvotes;
+      } catch (error) {
+          console.error('Error voting:', error);
+          alert(error.message);
       }
-
-      const response = await fetch(`${API_BASE_URL}/posts/${postId}/${voteType}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const data = await response.json()
-        throw new Error(`Voting failed: ${data.message}`);
-      }
-
-      const data = await response.json(); // Get updated counts
-
-      // Update the vote counts on the page
-      document.getElementById(`upvote-count-${postId}`).textContent = data.upvotes;
-      document.getElementById(`downvote-count-${postId}`).textContent = data.downvotes;
-    } catch (error) {
-      console.error('Error voting:', error);
-      alert(error.message);
-    }
   }
 });
 
