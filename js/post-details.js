@@ -21,7 +21,8 @@ async function loadPostDetails(postId, commentPage = 1) {
 
       console.log("Fetched post details:", post); // Add logging here
       displayPostDetails(post);
-      displayComments(post.comments); // Pass the comments array
+      //Delete This
+      //displayComments(post.comments); // Pass the comments array
       displayCommentPagination(postId, totalPages, commentPage);
 
   } catch (error) {
@@ -218,6 +219,8 @@ if (addCommentForm) {
             document.getElementById('comment-image').value = '';
              // REMOVE THIS LINE:
              //loadPostDetails(postId)
+              //Run to refresh
+               loadPostDetails(postId);
           }
 
       } catch (error) {
