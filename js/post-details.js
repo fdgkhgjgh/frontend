@@ -248,8 +248,10 @@ function displayComments(comments) {
       const commentContent = document.createElement('div');
       commentContent.classList.add('comment-content'); // Add class for styling
       let commentText = `${comment.author?.username || "Unknown"}: ${comment.text} -- ${formatDate(comment.createdAt)}`;
-      commentContent.textContent = commentText;
-      commentItem.appendChild(commentContent);
+
+      const textElement = document.createElement('p');
+      textElement.textContent = commentText;
+      commentContent.appendChild(textElement); // Append text content.
 
       //Add image element
       if (comment.imageUrl) {
@@ -260,11 +262,7 @@ function displayComments(comments) {
           imgElement.style.height = 'auto';    //Keep ratio
           commentContent.appendChild(imgElement);  //Append image first .
       }
-
-      const textElement = document.createElement('p');
-      textElement.textContent = commentText;
-      commentContent.appendChild(textElement); // Then append text content.
-
+      commentItem.appendChild(commentContent)
       //Add delete button.
       const currentUserId = localStorage.getItem('userId');
       if (currentUserId && currentUserId === comment.author?._id.toString()) {
@@ -452,6 +450,7 @@ postDetailsContainer.addEventListener('click', async (event) => {
   }
 });
 
+// frontend/js/post-details.js
 async function deleteComment(commentId, commentElement) {
   const postId = new URLSearchParams(window.location.search).get('id');
   try {
