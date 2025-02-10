@@ -253,26 +253,26 @@ if (createPostFormMain) {
 
         const title = document.getElementById('title-main').value;
         const content = document.getElementById('content-main').value;
-        const fileInput = document.getElementById('file-main'); // Get the input element
-        const files = fileInput.files; // Get the selected files
+        const fileInput = document.getElementById('file-main');
+        const files = fileInput.files;
 
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
 
-        // Append each file to the FormData
         for (let i = 0; i < files.length; i++) {
-            formData.append('files', files[i]); //Use files as same as backend.
+            formData.append('files', files[i]);
         }
 
-        try{
+        try {
             const token = localStorage.getItem('token');
             if (!token) {
-                createPostMessageMain.textContent = "You must be logged in to create a post."
+                createPostMessageMain.textContent = "You must be logged in to create a post.";
                 createPostMessageMain.style.color = 'red';
-                return; //Stop execution if not logged in.
+                return;
             }
-            const response = await fetch(`${API_BASE_URL}/posts`, { //Use API_BASE_URL
+
+            const response = await fetch(`${API_BASE_URL}/posts`, {  // <---- CORRECTED THIS LINE
                 method: "POST",
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -280,30 +280,31 @@ if (createPostFormMain) {
                 body: formData
             });
 
-            console.log("Create Post Response:", response); // ADD THIS
+            console.log("Create Post Response:", response);
 
             const data = await response.json();
 
-            console.log("Create Post Data:", data);  //ADD THIS
+            console.log("Create Post Data:", data);
 
-            if (response.ok) {
+            if (response.status === 429) { // Check for 429 status
+                createPostMessageMain.textContent = data.message || "Too many requests, please try again later."; // Display the rate limit message (or a default)
+                createPostMessageMain.style.color = 'red';
+            } else if (response.ok) {
                 createPostMessageMain.textContent = 'Post created successfully!';
                 createPostMessageMain.style.color = "green";
-                //Reload posts to display the new post.
                 loadPosts();
-                //Clear the form
                 createPostFormMain.reset();
             } else {
-                createPostMessageMain.textContent = data.message;
-                createPostMessageMain.style.color = 'red'
+                createPostMessageMain.textContent = data.message || "An error occurred."; // Display the error message (or a default)
+                createPostMessageMain.style.color = 'red';
             }
 
-        } catch(error) {
+        } catch (error) {
             console.error("Create post error:", error);
-            createPostMessageMain.textContent = "An error occurred while creating post."
+            createPostMessageMain.textContent = "An error occurred while creating post.";
             createPostMessageMain.style.color = 'red';
         }
-    })
+    });
 }
 //Update header to show username.
 function updateHeader() {

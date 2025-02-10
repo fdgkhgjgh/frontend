@@ -133,52 +133,51 @@ function displayPostDetails(post) {
 
 if (addCommentForm) {
   addCommentForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+      e.preventDefault();
 
-    const commentText = document.getElementById('comment-text').value;
-    const commentImage = document.getElementById('comment-image').files[0]; // Get the file
-    const postId = new URLSearchParams(window.location.search).get('id');
+      const commentText = document.getElementById('comment-text').value;
+      const commentImage = document.getElementById('comment-image').files[0];
+      const postId = new URLSearchParams(window.location.search).get('id');
 
-    const formData = new FormData(); // Use FormData
-    formData.append('text', commentText);
-    if (commentImage) {
-      formData.append('image', commentImage); // Append the file
-    }
-
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        commentMessage.textContent = "You must be logged in to comment."
-        commentMessage.style.color = 'red';
-        return;
+      const formData = new FormData();
+      formData.append('text', commentText);
+      if (commentImage) {
+          formData.append('image', commentImage);
       }
 
-      const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData, // Send the FormData
-      });
+      try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+              commentMessage.textContent = "You must be logged in to comment.";
+              commentMessage.style.color = 'red';
+              return;
+          }
 
-      const data = await response.json();
+          const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, { // CORRECTED THIS LINE
+              method: 'POST',
+              headers: {
+                  'Authorization': `Bearer ${token}`, //CORRECT THIS LINE
+              },
+              body: formData,
+          });
+        await response.json(); //VERY IMPORTANTE
+        if (!response.ok) { //This to know there is an error.
+          commentMessage.textContent = "An error occurred while adding comment."
+          commentMessage.style.color = 'red'
+        }
+        else {
+          commentMessage.textContent = "Add comment success!";
+          commentMessage.style.color = 'green';
+          document.getElementById('comment-text').value = '';
+          document.getElementById('comment-image').value = '';
+          loadPostDetails(postId)
+        }
 
-      if (response.ok) {
-        commentMessage.textContent = "Add comment success!";
-        commentMessage.style.color = 'green';
-        document.getElementById('comment-text').value = '';
-        document.getElementById('comment-image').value = ''; // Clear the file input
-        loadPostDetails(postId)
-      } else {
-        commentMessage.textContent = data.message
-        commentMessage.style.color = 'red'
+      } catch (error) {
+          console.error('Error adding comment:', error);
+          commentMessage.textContent = "An error occurred while adding comment.";
+          commentMessage.style.color = 'red';
       }
-
-    } catch (error) {
-      console.error('Error adding comment:', error);
-      commentMessage.textContent = "An error occurred while adding comment."
-      commentMessage.style.color = 'red'
-    }
   });
 }
 //Display images
