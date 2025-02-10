@@ -216,7 +216,6 @@ if (addCommentForm) {
           commentMessage.style.color = 'green';
           document.getElementById('comment-text').value = '';
           document.getElementById('comment-image').value = '';
-          loadPostDetails(postId)
         }
 
       } catch (error) {
@@ -450,7 +449,7 @@ postDetailsContainer.addEventListener('click', async (event) => {
   }
 });
 
-// frontend/js/post-details.js
+// delete comment
 async function deleteComment(commentId, commentElement) {
   const postId = new URLSearchParams(window.location.search).get('id');
   try {
