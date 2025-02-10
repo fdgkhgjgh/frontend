@@ -34,7 +34,7 @@ nav button:hover, nav a:hover {
 /* --- Post Styles --- */
 .post {
   display: flex; /* Use Flexbox for layout */
-  background-color: #808080;
+  background-color: #b3b3b3;
   border: 1px solid #ddd;
   margin-bottom: 5px;
   padding: 5px;
