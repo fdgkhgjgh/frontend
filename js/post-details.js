@@ -1,20 +1,18 @@
 import { formatDate } from './utils.js';
-import { API_BASE_URL } from './config.js';
+import { API_BASE_URL } from './config.js'; //Import API_BASE_URL
 
 const postDetailsContainer = document.getElementById('post-details-container');
 const commentsList = document.getElementById('comments-list');
 const addCommentForm = document.getElementById('add-comment-form');
 const commentMessage = document.getElementById('comment-message');
 const commentsSection = document.getElementById('comments-section');
-const commentsPerPage = 10; // Define the number of comments per page (or a very large number to show all)
 
 // --- Load Post Details and Comments ---
 async function loadPostDetails(postId) {
     try {
         const response = await fetch(`${API_BASE_URL}/posts/${postId}`);
         if (!response.ok) {
-            const errorData = await response.json(); // Try to parse error message from backend
-            throw new Error(`Failed to fetch post: ${response.status} - ${errorData.message || 'Unknown error'}`);
+            throw new Error(`Failed to fetch post: ${response.status}`);
         }
         const post = await response.json();
         console.log("Fetched post details:", post);
@@ -23,7 +21,7 @@ async function loadPostDetails(postId) {
 
     } catch (error) {
         console.error('Error loading post details:', error);
-        postDetailsContainer.innerHTML = `<p>Error loading post details: ${error.message}</p>`; //Display error message
+        postDetailsContainer.innerHTML = '<p>Error loading post details.</p>';
     }
 }
 
@@ -400,7 +398,7 @@ async function loadReplies(commentId, repliesContainer) {
         console.log('Comment ID before fetch:', commentId);
         const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`);
         console.log('Fetch response status:', response.status);
-
+        
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(`Failed to fetch replies: ${response.status} - ${errorData.message || 'Unknown error'}`);
@@ -408,7 +406,7 @@ async function loadReplies(commentId, repliesContainer) {
         const replies = await response.json();
 
         console.log('Fetched replies:', replies);
-
+        
         if (replies.length > 0) {
             replies.forEach(reply => {
                 const replyElement = document.createElement('div');
