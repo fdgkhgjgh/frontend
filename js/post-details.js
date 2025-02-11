@@ -385,12 +385,13 @@ async function addReply(postId, commentId, replyText, repliesContainer) {
 }
 // Load replies function
 async function loadReplies(commentId, repliesContainer) {
+    const postId = new URLSearchParams(window.location.search).get('id');
     //Clear the replies container.
     repliesContainer.innerHTML = '';
 
     // Call the backend to get replies.
     try {
-        const response = await fetch(`${API_BASE_URL}/comments/${commentId}/replies`, {
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies`, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -418,7 +419,7 @@ async function loadReplies(commentId, repliesContainer) {
 
     } catch (error) {
         console.error('Error loading replies:', error);
-        repliesContainer.textContent = "Error loading replies.";
+        repliesContainer.textContent = `Error loading replies: ${error.message}`;
     }
 }
 // Export
