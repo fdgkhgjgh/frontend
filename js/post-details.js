@@ -417,15 +417,8 @@ async function loadReplies(commentId, repliesContainer) {
         } else {
             repliesContainer.textContent = "No replies yet.";
         }
-
-        // Instead of overlapping, allow scrolling
         if (replies.length > 5) {
-            repliesContainer.style.maxHeight = '300px'; // or adjust to your preferred height
-            repliesContainer.style.overflowY = 'auto'; // enable vertical scrolling
-        } else {
-            // If less than or equal to 5, remove any max height and scrolling
-            repliesContainer.style.maxHeight = '';
-            repliesContainer.style.overflowY = '';
+            repliesContainer.classList.add('overlapped-replies');
         }
 
     } catch (error) {
