@@ -66,3 +66,23 @@ background-color: #2c2c2c;
  background-color: #333;
 color: #fff;
 }
+
+.dark-mode .replies-container {
+  border-left-color: #444; /* Darker border color for replies container */
+}
+
+.dark-mode .reply {
+  background-color: #333; /* Darker background for replies */
+  color: #eee; /* Light text for contrast */
+}
+
+/* Style for the "Show More" button in dark mode */
+.dark-mode .show-more-button {
+  background-color: #555; /* Darker button background */
+  color: #fff; /* Light text for contrast */
+}
+
+/* If you want a smooth transition when toggling between modes */
+.reply, .show-more-button {
+  transition: background-color 0.3s, color 0.3s;
+}
