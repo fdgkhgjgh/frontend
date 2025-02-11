@@ -392,7 +392,7 @@ async function loadReplies(commentId, repliesContainer) {
     try {
         const response = await fetch(`${API_BASE_URL}/comments/${commentId}/replies`, {
             headers: {
-                'Content-Type': 'application/json'  // ADD THIS LINE
+                'Content-Type': 'application/json'
             }
         });
         if (!response.ok) {
