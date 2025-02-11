@@ -348,6 +348,16 @@ html, body {
   text-align: center;
   padding: 2px 0;
 }
+
+.show-more-button {
+  display: block;
+  margin: 10px auto 0;
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 3px;
+}
 /* Style for the pagination container */
 #comment-pagination-container {
   display: flex;

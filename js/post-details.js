@@ -408,24 +408,42 @@ async function loadReplies(commentId, repliesContainer) {
         console.log('Fetched replies:', replies);
         
         if (replies.length > 0) {
-            replies.forEach(reply => {
+            // Only display the first 5 replies
+            const visibleReplies = replies.slice(0, 5);
+            visibleReplies.forEach(reply => {
                 const replyElement = document.createElement('div');
                 replyElement.classList.add('reply');
                 replyElement.textContent = `${reply.author.username}: ${reply.text} -- ${formatDate(reply.createdAt)}`;
                 repliesContainer.appendChild(replyElement);
             });
+            
+            // Apply overlapping style if there are more than 5 replies
+            if (replies.length > 5) {
+                repliesContainer.classList.add('overlapped-replies');
+                
+                // Create and append a "Show More" button
+                const showMoreButton = document.createElement('button');
+                showMoreButton.textContent = 'Show More';
+                showMoreButton.classList.add('show-more-button');
+                showMoreButton.addEventListener('click', () => {
+                    // When clicked, show all replies
+                    repliesContainer.innerHTML = ''; // Clear existing content
+                    repliesContainer.classList.remove('overlapped-replies'); // Remove overlapping style
+                    replies.forEach(reply => {
+                        const replyElement = document.createElement('div');
+                        replyElement.classList.add('reply');
+                        replyElement.textContent = `${reply.author.username}: ${reply.text} -- ${formatDate(reply.createdAt)}`;
+                        repliesContainer.appendChild(replyElement);
+                    });
+                    // Enable scrolling
+                    repliesContainer.style.maxHeight = '300px';
+                    repliesContainer.style.overflowY = 'auto';
+                    showMoreButton.remove(); // Remove the button after showing all
+                });
+                repliesContainer.appendChild(showMoreButton);
+            }
         } else {
             repliesContainer.textContent = "No replies yet.";
-        }
-
-        // Instead of overlapping, allow scrolling
-        if (replies.length > 5) {
-            repliesContainer.style.maxHeight = '300px'; // or adjust to your preferred height
-            repliesContainer.style.overflowY = 'auto'; // enable vertical scrolling
-        } else {
-            // If less than or equal to 5, remove any max height and scrolling
-            repliesContainer.style.maxHeight = '';
-            repliesContainer.style.overflowY = '';
         }
 
     } catch (error) {
