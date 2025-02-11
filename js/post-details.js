@@ -410,9 +410,7 @@ async function loadReplies(commentId, repliesContainer) {
         } else {
             repliesContainer.textContent = "No replies yet.";
         }
-
-        // Remove overlapping style and allow for scrolling if needed
-        repliesContainer.classList.remove('overlapped-replies');
+        // Instead of overlapping, allow scrolling
         if (replies.length > 5) {
             repliesContainer.style.maxHeight = '300px'; // or adjust to your preferred height
             repliesContainer.style.overflowY = 'auto'; // enable vertical scrolling
@@ -427,5 +425,6 @@ async function loadReplies(commentId, repliesContainer) {
         repliesContainer.textContent = "Error loading replies.";
     }
 }
+
 // Export
 export { loadPostDetails }
