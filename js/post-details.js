@@ -6,6 +6,7 @@ const commentsList = document.getElementById('comments-list');
 const addCommentForm = document.getElementById('add-comment-form');
 const commentMessage = document.getElementById('comment-message');
 const commentsSection = document.getElementById('comments-section');
+const commentsPerPage = 20; 
 
 // --- Load Post Details and Comments ---
 async function loadPostDetails(postId) {
