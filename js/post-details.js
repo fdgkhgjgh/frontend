@@ -10,6 +10,7 @@ const commentPaginationContainer = document.getElementById('comment-pagination-c
 
 // --- Load Post Details and Comments ---
 async function loadPostDetails(postId, page = 1) {
+    const commentsPerPage = 20; // Comments per page <--- ADD THIS LINE
     try {
         const response = await fetch(`${API_BASE_URL}/posts/${postId}?page=${page}&limit=${commentsPerPage}`);
         if (!response.ok) {
