@@ -411,7 +411,8 @@ async function loadReplies(commentId, repliesContainer) {
             repliesContainer.textContent = "No replies yet.";
         }
 
-        // Instead of overlapping, allow scrolling
+        // Remove overlapping style and allow for scrolling if needed
+        repliesContainer.classList.remove('overlapped-replies');
         if (replies.length > 5) {
             repliesContainer.style.maxHeight = '300px'; // or adjust to your preferred height
             repliesContainer.style.overflowY = 'auto'; // enable vertical scrolling
