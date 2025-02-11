@@ -1,11 +1,10 @@
 import { formatDate } from './utils.js';
-import { API_BASE_URL } from './config.js'; //Import API_BASE_URL
+import { API_BASE_URL } from './config.js';
 
 const postDetailsContainer = document.getElementById('post-details-container');
 const commentsList = document.getElementById('comments-list');
 const addCommentForm = document.getElementById('add-comment-form');
 const commentMessage = document.getElementById('comment-message');
-const commentsSection = document.getElementById('comments-section');
 
 // --- Load Post Details and Comments ---
 async function loadPostDetails(postId) {
