@@ -385,10 +385,8 @@ async function addReply(postId, commentId, replyText, repliesContainer) {
 }
 // Load replies function
 async function loadReplies(commentId, repliesContainer) {
-    // Clear the replies container.
     repliesContainer.innerHTML = '';
 
-    // Call the backend to get replies.
     try {
         const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`);
         if (!response.ok) {
@@ -406,7 +404,6 @@ async function loadReplies(commentId, repliesContainer) {
         } else {
             repliesContainer.textContent = "No replies yet.";
         }
-        // Overlap if more than 5 replies
         if (replies.length > 5) {
             repliesContainer.classList.add('overlapped-replies');
         }
