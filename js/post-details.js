@@ -8,6 +8,11 @@ const commentMessage = document.getElementById('comment-message');
 const commentsSection = document.getElementById('comments-section');
 const commentPaginationContainer = document.getElementById('comment-pagination-container');
 
+
+let currentPage = 1; // Track current comment page
+const commentsPerPage = 20; // Comments per page  <--- DECLARE IT HERE
+
+
 // --- Load Post Details and Comments ---
 async function loadPostDetails(postId, page = 1) {
     const commentsPerPage = 20; // Comments per page <--- ADD THIS LINE
