@@ -388,7 +388,7 @@ async function loadReplies(commentId, repliesContainer) {
     repliesContainer.innerHTML = '';
 
     try {
-        const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`);
+        const response = await fetch(`${API_BASE_URL}/api/posts/comments/${commentId}/replies`);
         if (!response.ok) {
             throw new Error(`Failed to fetch replies: ${response.status}`);
         }
