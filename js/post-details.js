@@ -385,17 +385,12 @@ async function addReply(postId, commentId, replyText, repliesContainer) {
 }
 // Load replies function
 async function loadReplies(commentId, repliesContainer) {
-    const postId = new URLSearchParams(window.location.search).get('id');
-    //Clear the replies container.
+    // Clear the replies container.
     repliesContainer.innerHTML = '';
 
     // Call the backend to get replies.
     try {
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies`, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`);
         if (!response.ok) {
             throw new Error(`Failed to fetch replies: ${response.status}`);
         }
@@ -411,9 +406,8 @@ async function loadReplies(commentId, repliesContainer) {
         } else {
             repliesContainer.textContent = "No replies yet.";
         }
-        //Over laps 5.
+        // Overlap if more than 5 replies
         if (replies.length > 5) {
-            // Apply overlapping styles
             repliesContainer.classList.add('overlapped-replies');
         }
 
