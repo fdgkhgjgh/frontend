@@ -15,9 +15,8 @@ const commentsPerPage = 20; // Comments per page  <--- DECLARE IT HERE
 
 // --- Load Post Details and Comments ---
 async function loadPostDetails(postId, page = 1) {
-    const commentsPerPage = 20; // Comments per page <--- ADD THIS LINE
     try {
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}?page=${page}&limit=${commentsPerPage}`);
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}?page=${page}&limit=${window.commentsPerPage}`); //USE WINDOW.
         if (!response.ok) {
             throw new Error(`Failed to fetch post: ${response.status}`);
         }
@@ -28,7 +27,7 @@ async function loadPostDetails(postId, page = 1) {
 
         console.log("Fetched post details:", post);
         displayPostDetails(post);
-        displayComments(comments, page, commentsPerPage); // Pass page and limit
+        displayComments(comments, page, window.commentsPerPage); // Pass page and limit  //USE WINDOW.
         displayCommentPagination(totalPages, page, postId);  // Display pagination controls
     } catch (error) {
         console.error('Error loading post details:', error);
