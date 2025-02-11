@@ -385,37 +385,41 @@ async function addReply(postId, commentId, replyText, repliesContainer) {
 }
 // Load replies function
 async function loadReplies(commentId, repliesContainer) {
-  //Clear the replies container.
-  repliesContainer.innerHTML = '';
+    //Clear the replies container.
+    repliesContainer.innerHTML = '';
 
-  // Call the backend to get replies.
-  try {
-      const response = await fetch(`${API_BASE_URL}/comments/${commentId}/replies`); //Call back end
-      if (!response.ok) {
-          throw new Error(`Failed to fetch replies: ${response.status}`);
-      }
-      const replies = await response.json();
+    // Call the backend to get replies.
+    try {
+        const response = await fetch(`${API_BASE_URL}/comments/${commentId}/replies`, {
+            headers: {
+                'Content-Type': 'application/json'  // ADD THIS LINE
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch replies: ${response.status}`);
+        }
+        const replies = await response.json();
 
-      if (replies.length > 0) {
-          replies.forEach(reply => {
-              const replyElement = document.createElement('div');
-              replyElement.classList.add('reply');
-              replyElement.textContent = `${reply.author.username}: ${reply.text} -- ${formatDate(reply.createdAt)}`;
-              repliesContainer.appendChild(replyElement);
-          });
-      } else {
-          repliesContainer.textContent = "No replies yet.";
-      }
-      //Over laps 5.
-      if (replies.length > 5) {
-          // Apply overlapping styles
-          repliesContainer.classList.add('overlapped-replies');
-      }
+        if (replies.length > 0) {
+            replies.forEach(reply => {
+                const replyElement = document.createElement('div');
+                replyElement.classList.add('reply');
+                replyElement.textContent = `${reply.author.username}: ${reply.text} -- ${formatDate(reply.createdAt)}`;
+                repliesContainer.appendChild(replyElement);
+            });
+        } else {
+            repliesContainer.textContent = "No replies yet.";
+        }
+        //Over laps 5.
+        if (replies.length > 5) {
+            // Apply overlapping styles
+            repliesContainer.classList.add('overlapped-replies');
+        }
 
-  } catch (error) {
-      console.error('Error loading replies:', error);
-      repliesContainer.textContent = "Error loading replies.";
-  }
+    } catch (error) {
+        console.error('Error loading replies:', error);
+        repliesContainer.textContent = "Error loading replies.";
+    }
 }
 // Export
 export { loadPostDetails }
