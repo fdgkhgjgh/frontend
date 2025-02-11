@@ -1,10 +1,11 @@
 import { formatDate } from './utils.js';
-import { API_BASE_URL } from './config.js';
+import { API_BASE_URL } from './config.js'; //Import API_BASE_URL
 
 const postDetailsContainer = document.getElementById('post-details-container');
 const commentsList = document.getElementById('comments-list');
 const addCommentForm = document.getElementById('add-comment-form');
 const commentMessage = document.getElementById('comment-message');
+const commentsSection = document.getElementById('comments-section');
 
 // --- Load Post Details and Comments ---
 async function loadPostDetails(postId) {
@@ -384,28 +385,21 @@ async function addReply(postId, commentId, replyText, repliesContainer) {
 }
 // Load replies function
 async function loadReplies(commentId, repliesContainer) {
+    //Clear the replies container.
     repliesContainer.innerHTML = '';
 
-    // Check if commentId is a valid MongoDB ObjectId
-    if (!/^[0-9a-fA-F]{24}$/.test(commentId)) {
-        console.error('Invalid comment ID format:', commentId);
-        repliesContainer.textContent = 'Invalid comment ID format. Please try again.';
-        return;
-    }
-
+    // Call the backend to get replies.
     try {
-        console.log('Comment ID before fetch:', commentId);
-        const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`);
-        console.log('Fetch response status:', response.status);
-        
+        const response = await fetch(`${API_BASE_URL}/comments/${commentId}/replies`, {
+            headers: {
+                'Content-Type': 'application/json'  // ADD THIS LINE
+            }
+        });
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Failed to fetch replies: ${response.status} - ${errorData.message || 'Unknown error'}`);
+            throw new Error(`Failed to fetch replies: ${response.status}`);
         }
         const replies = await response.json();
 
-        console.log('Fetched replies:', replies);
-        
         if (replies.length > 0) {
             replies.forEach(reply => {
                 const replyElement = document.createElement('div');
@@ -416,13 +410,15 @@ async function loadReplies(commentId, repliesContainer) {
         } else {
             repliesContainer.textContent = "No replies yet.";
         }
+        //Over laps 5.
         if (replies.length > 5) {
+            // Apply overlapping styles
             repliesContainer.classList.add('overlapped-replies');
         }
 
     } catch (error) {
         console.error('Error loading replies:', error);
-        repliesContainer.textContent = `Error loading replies: ${error.message}`;
+        repliesContainer.textContent = "Error loading replies.";
     }
 }
 // Export
