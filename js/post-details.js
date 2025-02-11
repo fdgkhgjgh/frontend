@@ -428,6 +428,3 @@ async function loadReplies(commentId, repliesContainer) {
 }
 // Export
 export { loadPostDetails }
-
-// Export
-export { loadPostDetails }
