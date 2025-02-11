@@ -6,19 +6,24 @@ const commentsList = document.getElementById('comments-list');
 const addCommentForm = document.getElementById('add-comment-form');
 const commentMessage = document.getElementById('comment-message');
 const commentsSection = document.getElementById('comments-section');
+const commentPaginationContainer = document.getElementById('comment-pagination-container');
 
 // --- Load Post Details and Comments ---
-async function loadPostDetails(postId) {
+async function loadPostDetails(postId, page = 1) {
     try {
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}`);
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}?page=${page}&limit=${commentsPerPage}`);
         if (!response.ok) {
             throw new Error(`Failed to fetch post: ${response.status}`);
         }
-        const post = await response.json();
+        const data = await response.json();
+        const post = data.post;
+        const comments = data.comments;
+        const totalPages = data.totalPages;
+
         console.log("Fetched post details:", post);
         displayPostDetails(post);
-        displayComments(post.comments);
-
+        displayComments(comments, page, commentsPerPage); // Pass page and limit
+        displayCommentPagination(totalPages, page, postId);  // Display pagination controls
     } catch (error) {
         console.error('Error loading post details:', error);
         postDetailsContainer.innerHTML = '<p>Error loading post details.</p>';
@@ -181,17 +186,21 @@ if (addCommentForm) {
 }
 
 // Function to display comments
-function displayComments(comments) {
+function displayComments(comments, page = 1, limit = 20) {
     commentsList.innerHTML = ''; // Clear existing comments
     if (!comments || comments.length === 0) {
         commentsList.innerHTML = '<li>No comments yet.</li>';
         return;
     }
-    comments.forEach(comment => {
+
+    const startIndex = (page - 1) * limit; // Calculate the starting index
+
+    comments.forEach((comment, index) => { // Use index in forEach
+        const commentNumber = startIndex + index + 1; // Calculate comment number
         const commentItem = document.createElement('li');
 
         //Add image element
-        let commentContent = `${comment.author?.username || "Unknown"}: ${comment.text} -- ${formatDate(comment.createdAt)}`; // Check before rendering
+        let commentContent = `${commentNumber}. ${comment.author?.username || "Unknown"}: ${comment.text} -- ${formatDate(comment.createdAt)}`; // Check before rendering
         if (comment.imageUrl) {
             const imgElement = document.createElement('img');
             imgElement.src = comment.imageUrl;
@@ -231,10 +240,35 @@ function displayComments(comments) {
           loadReplies(comment._id, repliesContainer) //Call this one.
 
         commentsList.appendChild(commentItem);
-
-
     });
 }
+
+// Function to display pagination controls
+function displayCommentPagination(totalPages, currentPage, postId) {
+    const commentPaginationContainer = document.getElementById('comment-pagination-container');  // Get container
+    commentPaginationContainer.innerHTML = ''; // Clear existing pagination
+
+    if (totalPages <= 1) {
+        return; // No pagination needed
+    }
+
+    const prevButton = document.createElement('button');
+    prevButton.textContent = 'Previous';
+    prevButton.disabled = currentPage === 1;
+    prevButton.addEventListener('click', () => {
+        loadPostDetails(postId, currentPage - 1);
+    });
+    commentPaginationContainer.appendChild(prevButton);
+
+    const nextButton = document.createElement('button');
+    nextButton.textContent = 'Next';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.addEventListener('click', () => {
+        loadPostDetails(postId, currentPage + 1);
+    });
+    commentPaginationContainer.appendChild(nextButton);
+}
+
 // Add event listener to the post details container (event delegation)
 postDetailsContainer.addEventListener('click', async (event) => {
     if (event.target.classList.contains('vote-button')) {
