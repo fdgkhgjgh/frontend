@@ -6,29 +6,19 @@ const commentsList = document.getElementById('comments-list');
 const addCommentForm = document.getElementById('add-comment-form');
 const commentMessage = document.getElementById('comment-message');
 const commentsSection = document.getElementById('comments-section');
-const commentPaginationContainer = document.getElementById('comment-pagination-container');
-
-
-let currentPage = 1; // Track current comment page
-const commentsPerPage = 20; // Comments per page  <--- DECLARE IT HERE
-
 
 // --- Load Post Details and Comments ---
-async function loadPostDetails(postId, page = 1) {
+async function loadPostDetails(postId) {
     try {
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}?page=${page}&limit=${window.commentsPerPage}`); //USE WINDOW.
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}`);
         if (!response.ok) {
             throw new Error(`Failed to fetch post: ${response.status}`);
         }
-        const data = await response.json();
-        const post = data.post;
-        const comments = data.comments;
-        const totalPages = data.totalPages;
-
+        const post = await response.json();
         console.log("Fetched post details:", post);
         displayPostDetails(post);
-        displayComments(comments, page, window.commentsPerPage); // Pass page and limit  //USE WINDOW.
-        displayCommentPagination(totalPages, page, postId);  // Display pagination controls
+        displayComments(post.comments);
+
     } catch (error) {
         console.error('Error loading post details:', error);
         postDetailsContainer.innerHTML = '<p>Error loading post details.</p>';
@@ -191,21 +181,17 @@ if (addCommentForm) {
 }
 
 // Function to display comments
-function displayComments(comments, page = 1, limit = 20) {
+function displayComments(comments) {
     commentsList.innerHTML = ''; // Clear existing comments
     if (!comments || comments.length === 0) {
         commentsList.innerHTML = '<li>No comments yet.</li>';
         return;
     }
-
-    const startIndex = (page - 1) * limit; // Calculate the starting index
-
-    comments.forEach((comment, index) => { // Use index in forEach
-        const commentNumber = startIndex + index + 1; // Calculate comment number
+    comments.forEach(comment => {
         const commentItem = document.createElement('li');
 
         //Add image element
-        let commentContent = `${commentNumber}. ${comment.author?.username || "Unknown"}: ${comment.text} -- ${formatDate(comment.createdAt)}`; // Check before rendering
+        let commentContent = `${comment.author?.username || "Unknown"}: ${comment.text} -- ${formatDate(comment.createdAt)}`; // Check before rendering
         if (comment.imageUrl) {
             const imgElement = document.createElement('img');
             imgElement.src = comment.imageUrl;
@@ -245,35 +231,10 @@ function displayComments(comments, page = 1, limit = 20) {
           loadReplies(comment._id, repliesContainer) //Call this one.
 
         commentsList.appendChild(commentItem);
+
+
     });
 }
-
-// Function to display pagination controls
-function displayCommentPagination(totalPages, currentPage, postId) {
-    const commentPaginationContainer = document.getElementById('comment-pagination-container');  // Get container
-    commentPaginationContainer.innerHTML = ''; // Clear existing pagination
-
-    if (totalPages <= 1) {
-        return; // No pagination needed
-    }
-
-    const prevButton = document.createElement('button');
-    prevButton.textContent = 'Previous';
-    prevButton.disabled = currentPage === 1;
-    prevButton.addEventListener('click', () => {
-        loadPostDetails(postId, currentPage - 1);
-    });
-    commentPaginationContainer.appendChild(prevButton);
-
-    const nextButton = document.createElement('button');
-    nextButton.textContent = 'Next';
-    nextButton.disabled = currentPage === totalPages;
-    nextButton.addEventListener('click', () => {
-        loadPostDetails(postId, currentPage + 1);
-    });
-    commentPaginationContainer.appendChild(nextButton);
-}
-
 // Add event listener to the post details container (event delegation)
 postDetailsContainer.addEventListener('click', async (event) => {
     if (event.target.classList.contains('vote-button')) {
