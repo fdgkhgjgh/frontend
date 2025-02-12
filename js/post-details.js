@@ -66,22 +66,24 @@ function displayPostDetails(post) {
 
             // *** ADD THE CLICK LISTENER HERE ***
             imgElement.addEventListener('click', () => {
+                console.log("Thumbnail image clicked!"); // ADDED LOGGING HERE
+
                 const modal = document.getElementById('image-modal');
                 const modalImage = document.getElementById('modal-image');
                 const closeButton = document.querySelector('.close-button');
-            
+
                 modalImage.src = imgElement.src;
                 modal.style.display = 'flex';
-            
+
                 console.log("Modal element:", modal);
                 console.log("Modal Image element:", modalImage);
                 console.log("Close Button element:", closeButton);
-            
+
                 // Close the modal button logic.
                 closeButton.addEventListener('click', () => {
                     modal.style.display = 'none';
                 });
-            
+
                 // NEW: Close the modal when the image itself is clicked
                 if (modalImage) {  // Check if modalImage exists
                   console.log("Attaching click listener to modalImage");
@@ -93,7 +95,7 @@ function displayPostDetails(post) {
                 } else {
                   console.log("Modal image element not found!");
                 }
-            
+
                 // Close the modal by clicking the modal background.
                 modal.addEventListener('click', (event) => {
                     if (event.target.id === 'image-modal') {
