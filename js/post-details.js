@@ -69,20 +69,24 @@ function displayPostDetails(post) {
                 const modal = document.getElementById('image-modal');
                 const modalImage = document.getElementById('modal-image');
                 const closeButton = document.querySelector('.close-button');
-
-                modalImage.src = imgElement.src;  // Set the modal image source
-                modal.style.display = 'flex'; // Show the modal
-
-                //Close the model button logic.
+            
+                modalImage.src = imgElement.src;
+                modal.style.display = 'flex';
+            
+                // Close the modal button logic.
                 closeButton.addEventListener('click', () => {
                     modal.style.display = 'none';
                 });
-
-                const modalContent = document.querySelector('.modal-content'); // Get the modal content
-
-                //Close the model clicking outside the image.
-                modalContent.addEventListener('click', (event) => {
-                    if (event.target === modalContent) {
+            
+                // NEW: Close the modal when the image itself is clicked
+                modalImage.addEventListener('click', (event) => {
+                    modal.style.display = 'none';
+                    event.stopPropagation(); // Prevent the click from propagating to the modal
+                });
+            
+                // Close the modal by clicking the modal background.
+                modal.addEventListener('click', (event) => {
+                    if (event.target.id === 'image-modal') {
                         modal.style.display = 'none';
                     }
                 });
