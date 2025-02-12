@@ -348,47 +348,7 @@ html, body {
   text-align: center;
   padding: 2px 0;
 }
-/* Style for the pagination container */
-#comment-pagination-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
 
-/* Basic button styles */
-#comment-pagination-container button {
-  padding: 8px 12px;
-  margin: 0 5px;
-  border: 1px solid #ddd;
-  background-color: #f8f8f8;
-  color: #555;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-/* Hover state for buttons */
-#comment-pagination-container button:hover {
-  background-color: #ddd;
-}
-
-/* Style for the active (current) page button */
-#comment-pagination-container button.active {
-  background-color: #4CAF50;
-  color: white;
-  border-color: #4CAF50;
-}
-
-/* Style for disabled buttons (e.g., previous on first page) */
-#comment-pagination-container button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-#comment-pagination-container button:disabled:hover {
-  background-color: #f8f8f8; /* keep the original background */
-}
 /* Image Modal Styles */
 .modal {
   position: fixed;
@@ -421,7 +381,6 @@ html, body {
   position: absolute;
   top: 10px;
   right: 10px;
-  color: rgb(113, 23, 23);
   font-size: 30px;
   font-weight: bold;
   cursor: pointer;
