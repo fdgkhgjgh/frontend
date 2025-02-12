@@ -389,3 +389,46 @@ html, body {
 #comment-pagination-container button:disabled:hover {
   background-color: #f8f8f8; /* keep the original background */
 }
+/* Image Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Dark semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of everything */
+}
+
+.modal-content {
+  position: relative; /* Needed for close button positioning */
+  max-width: 90%; /* Adjust as needed */
+  max-height: 90%; /* Adjust as needed */
+  overflow: auto; /* In case the image is too large */
+}
+
+#modal-image {
+  display: block; /* Remove any default inline spacing */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Make sure the image fits within the modal */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1001; /* Ensure it's above the image */
+}
+
+/* Dark Mode adjustments for modal */
+.dark-mode .modal {
+  background-color: rgba(0, 0, 0, 0.9); /* Even darker background */
+}

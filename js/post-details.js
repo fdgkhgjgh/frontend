@@ -63,6 +63,30 @@ function displayPostDetails(post) {
             imgElement.style.maxWidth = '100%';
             imgElement.style.maxHeight = '300px'; //Adjust max height
             imgElement.style.marginBottom = '10px'; //Optional spacing
+
+            // *** ADD THE CLICK LISTENER HERE ***
+            imgElement.addEventListener('click', () => {
+                const modal = document.getElementById('image-modal');
+                const modalImage = document.getElementById('modal-image');
+                const closeButton = document.querySelector('.close-button');
+
+                modalImage.src = imgElement.src;  // Set the modal image source
+                modal.style.display = 'flex'; // Show the modal
+
+                //Close the model button logic.
+                closeButton.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+
+                //Close the model clicking outside the image.
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+            // *** END CLICK LISTENER ***
+
             imgContainer.appendChild(imgElement);
         });
         contentContainer.appendChild(imgContainer);
