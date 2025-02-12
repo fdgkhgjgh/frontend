@@ -73,16 +73,26 @@ function displayPostDetails(post) {
                 modalImage.src = imgElement.src;
                 modal.style.display = 'flex';
             
+                console.log("Modal element:", modal);
+                console.log("Modal Image element:", modalImage);
+                console.log("Close Button element:", closeButton);
+            
                 // Close the modal button logic.
                 closeButton.addEventListener('click', () => {
                     modal.style.display = 'none';
                 });
             
                 // NEW: Close the modal when the image itself is clicked
-                modalImage.addEventListener('click', (event) => {
-                    modal.style.display = 'none';
-                    event.stopPropagation(); // Prevent the click from propagating to the modal
-                });
+                if (modalImage) {  // Check if modalImage exists
+                  console.log("Attaching click listener to modalImage");
+                  modalImage.addEventListener('click', (event) => {
+                      console.log("Modal image clicked!");
+                      modal.style.display = 'none';
+                      event.stopPropagation(); // Prevent the click from propagating to the modal
+                  });
+                } else {
+                  console.log("Modal image element not found!");
+                }
             
                 // Close the modal by clicking the modal background.
                 modal.addEventListener('click', (event) => {
