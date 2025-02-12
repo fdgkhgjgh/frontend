@@ -27,7 +27,16 @@ async function loadPosts(page = 1) {
         const totalPages = data.totalPages; // Get total pages
         console.log('Posts:', posts); // Log the parsed posts data
         console.log('totalPages:', totalPages); // Log the parsed posts data
-        displayPosts(posts);
+
+        // Fetch user notifications (assuming you have an endpoint for this)
+        const notificationsResponse = await fetch(`${API_BASE_URL}/users/notifications`);
+        if (!notificationsResponse.ok) {
+            console.error('Failed to fetch user notifications:', notificationsResponse.status);
+        }
+        const usersWithNotifications = await notificationsResponse.json();
+
+        // Pass both posts and notifications to display function
+        displayPosts(posts, usersWithNotifications);
         displayPagination(totalPages, page); // Display pagination controls
 
     } catch (error) {
@@ -36,7 +45,7 @@ async function loadPosts(page = 1) {
     }
 }
 // function displayPosts.
-function displayPosts(posts) {
+function displayPosts(posts, usersWithNotifications) {
     postList.innerHTML = ''; // Clear existing posts
     posts.forEach(post => {
         const postElement = document.createElement('div');
@@ -55,7 +64,21 @@ function displayPosts(posts) {
 
         // --- Author and Date ---
         const authorDateElement = document.createElement('p');
-        authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
+        
+        // Find the user in the notifications array to get the notification count
+        const userWithNotification = usersWithNotifications.find(user => user.username === post.author.username);
+        let authorName = post.author.username;
+        
+        if (userWithNotification && userWithNotification.notificationCount > 0) {
+            const notificationBadge = document.createElement('span');
+            notificationBadge.textContent = userWithNotification.notificationCount;
+            notificationBadge.style.color = 'red';
+            notificationBadge.style.marginLeft = '5px';
+            authorName = `${post.author.username} `;
+            authorName += notificationBadge.outerHTML;
+        }
+        
+        authorDateElement.innerHTML = `By: ${authorName} on ${formatDate(post.createdAt)}`;
 
         // --- Content ---
         const contentElement = document.createElement('p');
@@ -65,6 +88,7 @@ function displayPosts(posts) {
         const titleFileContainer = document.createElement('div');
         titleFileContainer.classList.add('title-file-container');
         titleFileContainer.appendChild(titleElement);
+
 
         // --- Images (Right Side) ---
         //Modified this images showing here .
