@@ -78,9 +78,11 @@ function displayPostDetails(post) {
                     modal.style.display = 'none';
                 });
 
+                const modalContent = document.querySelector('.modal-content'); // Get the modal content
+
                 //Close the model clicking outside the image.
-                modal.addEventListener('click', (event) => {
-                    if (event.target === modal) {
+                modalContent.addEventListener('click', (event) => {
+                    if (event.target === modalContent) {
                         modal.style.display = 'none';
                     }
                 });
