@@ -112,6 +112,19 @@ async function deletePost(postId, postElement) {
     }
 }
 
+//notification clear
+document.addEventListener('DOMContentLoaded', async () => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    await fetch(`${API_BASE_URL}/auth/reset-notifications`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+
+    document.getElementById('notification-badge')?.remove(); // Clear the red number
+});
+
 // No DOMContentLoaded here ,because we have add it in profile.html
 //Export loadUserProfile ,if you want to use other place.
 export {loadUserProfile}

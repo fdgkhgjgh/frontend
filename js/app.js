@@ -308,14 +308,29 @@ if (createPostFormMain) {
     });
 }
 //Update header to show username.
-function updateHeader() {
+async function updateHeader() {
     const username = localStorage.getItem('username');
     const userId = localStorage.getItem('userId'); // Get the logged-in user's ID
     const loginLink = document.querySelector('a[href="login.html"]');
     const registerLink = document.querySelector('a[href="register.html"]');
 
     if (username && userId) { // Check for both username *and* userId
-         // User is logged in, Create link with username
+        // Fetch unread notifications count from backend
+        let unreadCount = 0;
+        try {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const response = await fetch(`${API_BASE_URL}/auth/notifications`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                unreadCount = data.unreadNotifications || 0;
+            }
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+        }
+
+        // User is logged in, Create link with username
         const usernameDisplay = document.createElement('span');
         usernameDisplay.id = 'user-info';
 
@@ -326,19 +341,37 @@ function updateHeader() {
         usernameDisplay.textContent = 'Logged in as: ';  //Text before link
         usernameDisplay.appendChild(userLink);           // Put link in the span.
 
-        if(loginLink) {
+        // Create a red notification badge if unreadCount > 0
+        if (unreadCount > 0) {
+            const notificationBadge = document.createElement('span');
+            notificationBadge.id = 'notification-badge';
+            notificationBadge.textContent = unreadCount;
+            notificationBadge.style.color = 'white';
+            notificationBadge.style.backgroundColor = 'red';
+            notificationBadge.style.borderRadius = '50%';
+            notificationBadge.style.padding = '3px 6px';
+            notificationBadge.style.marginLeft = '5px';
+            notificationBadge.style.fontSize = '12px';
+            notificationBadge.style.fontWeight = 'bold';
+            notificationBadge.style.minWidth = '18px';
+            notificationBadge.style.textAlign = 'center';
+
+            userLink.appendChild(notificationBadge); // Attach badge to username
+        }
+
+        if (loginLink) {
             loginLink.style.display = 'none';
         }
-        if(registerLink) {
+        if (registerLink) {
             registerLink.style.display = 'none';
         }
 
         const logoutButton = document.getElementById('logout-button');
-        if(logoutButton) {
+        if (logoutButton) {
             logoutButton.style.display = 'inline-block';
         }
 
-        // Check if element exists before to appendChild.
+        // Append username display to nav
         const navElement = document.querySelector('header nav');
         if (navElement) {
             navElement.appendChild(usernameDisplay);
@@ -349,14 +382,14 @@ function updateHeader() {
         if (usernameDisplay) {
             usernameDisplay.remove();
         }
-        if(loginLink) {
-            loginLink.style.display = 'inline-block'
-         }
-        if(registerLink){
-           registerLink.style.display = 'inline-block'
+        if (loginLink) {
+            loginLink.style.display = 'inline-block';
+        }
+        if (registerLink) {
+            registerLink.style.display = 'inline-block';
         }
         const logoutButton = document.getElementById('logout-button');
-        if(logoutButton) {
+        if (logoutButton) {
             logoutButton.style.display = 'none';
         }
     }
