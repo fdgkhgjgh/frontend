@@ -413,7 +413,6 @@ window.addEventListener('storage', (event) => {
     }
 });
 
-
 socket.on('newNotification', async () => {
     console.log("Received new notification update!");
     await updateHeader(); // Re-run updateHeader to update the red number
