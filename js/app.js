@@ -12,6 +12,7 @@ postList.parentNode.insertBefore(paginationContainer, postList.nextSibling); //I
 const createPostFormMain = document.getElementById('create-post-form-main');
 const createPostMessageMain = document.getElementById('create-post-message-main');
 const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; //  Or your Render backend URL
+const socket = io(API_BASE_URL); // Connect to WebSocket server
 
 let currentPage = 1; // Track the current page
 
@@ -412,7 +413,6 @@ window.addEventListener('storage', (event) => {
     }
 });
 
-const socket = io(API_BASE_URL); // Connect to WebSocket server
 
 socket.on('newNotification', async () => {
     console.log("Received new notification update!");
