@@ -141,8 +141,18 @@ async function fetchResponses(responseContainer) {
         const data = await response.json();
         console.log("New responses:", data); // Debugging
 
+        responseContainer.innerHTML = ''; // Clear existing messages
         if (data.unreadNotifications > 0) {
-            responseContainer.innerHTML = `<p>You have ${data.unreadNotifications} new responses!</p>`;
+            // Loop through each notification and display the details
+            data.notifications.forEach(notification => {
+                const notificationElement = document.createElement('p');
+                notificationElement.innerHTML = `
+                    You have a new reply on your comment: "${notification.commentText}"<br>
+                    From: ${notification.replyAuthor}<br>
+                    Reply: ${notification.replyText}<br><br>
+                `;
+                responseContainer.appendChild(notificationElement);
+            });
         } else {
             responseContainer.innerHTML = "<p>No new responses.</p>";
         }
