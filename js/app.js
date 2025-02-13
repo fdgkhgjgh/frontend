@@ -402,3 +402,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateHeader(); // Update header to show username.
     loadPosts();
 });
+
+const socket = io(API_BASE_URL); // Connect to WebSocket server
+
+socket.on('newNotification', async () => {
+    console.log("Received new notification update!");
+    await updateHeader(); // Re-run updateHeader to update the red number
+});

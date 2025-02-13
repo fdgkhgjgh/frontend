@@ -114,9 +114,7 @@ async function deletePost(postId, postElement) {
 
 //notification clear
 document.addEventListener('DOMContentLoaded', async () => {
-    const userId = localStorage.getItem('userId');
-    if (!userId) return;
-
+    await fetchResponses(); // Fetch new responses
     await fetch(`${API_BASE_URL}/auth/reset-notifications`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
@@ -124,6 +122,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('notification-badge')?.remove(); // Clear the red number
 });
+
+//shows responses
+async function fetchResponses() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    const response = await fetch(`${API_BASE_URL}/auth/notifications`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    const data = await response.json();
+    console.log("New responses:", data); // Debugging
+
+    const responseContainer = document.getElementById('response-container'); // A div in profile.html
+    responseContainer.innerHTML = ""; // Clear old responses
+
+    if (data.unreadNotifications > 0) {
+        responseContainer.innerHTML = `<p>You have ${data.unreadNotifications} new responses!</p>`;
+    } else {
+        responseContainer.innerHTML = "<p>No new responses.</p>";
+    }
+}
 
 // No DOMContentLoaded here ,because we have add it in profile.html
 //Export loadUserProfile ,if you want to use other place.
