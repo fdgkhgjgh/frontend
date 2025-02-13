@@ -139,18 +139,27 @@ async function fetchResponses(responseContainer) {
         });
 
         const data = await response.json();
-        console.log("New responses:", data); // Debugging
+        console.log("New responses:", data);
 
         responseContainer.innerHTML = ''; // Clear existing messages
         if (data.unreadNotifications > 0) {
-            // Loop through each notification and display the details
             data.notifications.forEach(notification => {
-                const notificationElement = document.createElement('p');
-                notificationElement.innerHTML = `
-                    You have a new reply on your comment: "${notification.commentText}"<br>
-                    From: ${notification.replyAuthor}<br>
-                    Reply: ${notification.replyText}<br><br>
-                `;
+                let notificationElement = document.createElement('p');
+
+                if (notification.type === 'reply') {
+                    notificationElement.innerHTML = `
+                        You have a new reply on your comment: "${notification.commentText}"<br>
+                        From: ${notification.replyAuthor}<br>
+                        Reply: ${notification.replyText}<br><br>
+                    `;
+                } else if (notification.type === 'comment') {
+                    notificationElement.innerHTML = `
+                        New comment on your post "${notification.postTitle}"<br>
+                        From: ${notification.commentAuthor}<br>
+                        Comment: ${notification.commentText}<br><br>
+                    `;
+                }
+
                 responseContainer.appendChild(notificationElement);
             });
         } else {
@@ -158,7 +167,7 @@ async function fetchResponses(responseContainer) {
         }
     } catch (error) {
         console.error("Error fetching responses:", error);
-        responseContainer.innerHTML = "<p>Error loading responses.</p>";  //Display error.
+        responseContainer.innerHTML = "<p>Error loading responses.</p>";
     }
 }
 
