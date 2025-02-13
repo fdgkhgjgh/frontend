@@ -2,6 +2,7 @@
 import { formatDate } from './utils.js'; // Import the formatDate function
 import { checkLoginStatus } from './auth.js'; // Import checkLoginStatus
 import { getUnreadNotifications } from './notifications.js';
+import { io } from 'socket.io-client';
 
 
 const postList = document.getElementById('post-list');
