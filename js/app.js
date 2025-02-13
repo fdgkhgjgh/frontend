@@ -1,6 +1,8 @@
 // frontend/js/app.js
 import { formatDate } from './utils.js'; // Import the formatDate function
 import { checkLoginStatus } from './auth.js'; // Import checkLoginStatus
+import { getUnreadNotifications } from './notifications.js';
+
 
 const postList = document.getElementById('post-list');
 const paginationContainer = document.createElement('div'); // Create a container for pagination
