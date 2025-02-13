@@ -1,4 +1,5 @@
 // frontend/js/app.js
+import { io } from 'socket.io-client';
 import { formatDate } from './utils.js'; // Import the formatDate function
 import { checkLoginStatus } from './auth.js'; // Import checkLoginStatus
 import { getUnreadNotifications } from './notifications.js';
