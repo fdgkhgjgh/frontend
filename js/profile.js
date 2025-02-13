@@ -120,7 +120,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
 
-    document.getElementById('notification-badge')?.remove(); // Clear the red number
+    // document.getElementById('notification-badge')?.remove(); // Remove the red number -- DON'T REMOVE IT HERE.
+
+    // NEW:  Set a localStorage flag to signal the main page to refresh.
+    localStorage.setItem('notificationUpdateNeeded', 'true');
 });
 
 //shows responses

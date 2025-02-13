@@ -403,6 +403,15 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPosts();
 });
 
+// NEW: Listen for localStorage changes.
+window.addEventListener('storage', (event) => {
+    if (event.key === 'notificationUpdateNeeded' && event.newValue === 'true') {
+        updateHeader(); // Refresh the header.
+         localStorage.removeItem('notificationUpdateNeeded'); // Clear the flag.
+         document.getElementById('notification-badge')?.remove();  //Then remove it here.
+    }
+});
+
 const socket = io(API_BASE_URL); // Connect to WebSocket server
 
 socket.on('newNotification', async () => {
