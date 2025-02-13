@@ -406,9 +406,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // NEW: Listen for localStorage changes.
 window.addEventListener('storage', (event) => {
     if (event.key === 'notificationUpdateNeeded' && event.newValue === 'true') {
-        updateHeader(); // Refresh the header.
-         localStorage.removeItem('notificationUpdateNeeded'); // Clear the flag.
-         document.getElementById('notification-badge')?.remove();  //Then remove it here.
+        setTimeout(() => {
+            updateHeader(); // Refresh the header.
+            localStorage.removeItem('notificationUpdateNeeded'); // Clear the flag.
+            document.getElementById('notification-badge')?.remove();  //Then remove it here.
+        }, 0); // Small delay (0ms should be sufficient)
     }
 });
 

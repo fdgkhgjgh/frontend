@@ -71,6 +71,7 @@ if (loginForm) {
                   localStorage.setItem('token', data.token);
                   localStorage.setItem('userId', data.userId);
                   localStorage.setItem('username', data.username); // ADD THIS LINE
+                  localStorage.setItem('isLoggedIn', 'true'); // Set isLoggedIn
                   window.location.href = 'index.html';
                 } else {
                     loginMessage.textContent = data.message;
