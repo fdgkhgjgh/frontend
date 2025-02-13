@@ -140,13 +140,11 @@ async function fetchResponses(responseContainer) {
         });
 
         const data = await response.json();
-        console.log("New responses:", data);
 
         responseContainer.innerHTML = ''; // Clear existing messages
         if (data.unreadNotifications > 0) {
             data.notifications.forEach(notification => {
-                let notificationElement = document.createElement('p');
-
+                const notificationElement = document.createElement('p');
                 if (notification.type === 'reply') {
                     notificationElement.innerHTML = `
                         You have a new reply on your comment: "${notification.commentText}"<br>
@@ -155,12 +153,11 @@ async function fetchResponses(responseContainer) {
                     `;
                 } else if (notification.type === 'comment') {
                     notificationElement.innerHTML = `
-                        New comment on your post "${notification.postTitle}"<br>
+                        You have a new comment on your post: "${notification.postTitle}"<br>
                         From: ${notification.commentAuthor}<br>
                         Comment: ${notification.commentText}<br><br>
                     `;
                 }
-
                 responseContainer.appendChild(notificationElement);
             });
         } else {
