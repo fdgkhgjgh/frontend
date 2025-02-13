@@ -8,8 +8,7 @@ const userPostsContainer = document.getElementById('user-posts');
 async function loadUserProfile() {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
-     const username = localStorage.getItem('username');
-
+    const username = localStorage.getItem('username');
 
     if (!userId || !token) {
         // Redirect to login if not logged in
@@ -17,34 +16,32 @@ async function loadUserProfile() {
         return;
     }
 
-   try {
-    //Display username.
-     if (username) {
-        userInfo.textContent = `Welcome, ${username}!`;
-      }
+    try {
+        //Display username.
+        if (username) {
+            userInfo.textContent = `Welcome, ${username}!`;
+        }
 
-    // Fetch user's posts (we need a new backend endpoint for this)
-    const response = await fetch(`${API_BASE_URL}/posts/user/${userId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        },
-    });
+        // Fetch user's posts (we need a new backend endpoint for this)
+        const response = await fetch(`${API_BASE_URL}/posts/user/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
 
         if (!response.ok) {
-             const data = await response.json() //Get response message
+            const data = await response.json() //Get response message
             throw new Error(`Failed to fetch user posts: ${data.message}`);
         }
 
-         const posts = await response.json();
-         displayUserPosts(posts);
+        const posts = await response.json();
+        displayUserPosts(posts);
 
-
-   } catch(error) {
-     console.error("Error loading user profile:", error);
-     userPostsContainer.innerHTML = `<p>Error: ${error.message}</p>`; // Display error message
-   }
+    } catch (error) {
+        console.error("Error loading user profile:", error);
+        userPostsContainer.innerHTML = `<p>Error: ${error.message}</p>`; // Display error message
+    }
 }
-
 
 function displayUserPosts(posts) {
     userPostsContainer.innerHTML = ''; // Clear existing posts
@@ -61,7 +58,7 @@ function displayUserPosts(posts) {
 
         const titleElement = document.createElement('h2');
         titleElement.textContent = post.title;
-		postElement.appendChild(titleElement);
+        postElement.appendChild(titleElement);
 
         const contentElement = document.createElement('p');
         contentElement.textContent = post.content.substring(0, 150);;
@@ -69,7 +66,7 @@ function displayUserPosts(posts) {
 
         const dateElement = document.createElement('p');
         dateElement.textContent = `Posted on: ${formatDate(post.createdAt)}`;
-		postElement.appendChild(dateElement)
+        postElement.appendChild(dateElement)
         // Add a Delete button
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
@@ -85,8 +82,8 @@ function displayUserPosts(posts) {
 
 // Reuse the deletePost function from app.js (you might want to move it to a separate utils.js file)
 async function deletePost(postId, postElement) {
-      const isConfirm = confirm("Are you sure you want to delete this post ?")
-    if(!isConfirm) return;
+    const isConfirm = confirm("Are you sure you want to delete this post ?")
+    if (!isConfirm) return;
 
     try {
         const token = localStorage.getItem('token');
@@ -101,10 +98,10 @@ async function deletePost(postId, postElement) {
 
         if (response.ok) {
             // Remove the post element from the DOM
-			alert(data.message)
+            alert(data.message)
             postElement.remove();  // Remove post from the profile view.
         } else {
-          alert(`Error: ${data.message}`) //Show detail failed message.
+            alert(`Error: ${data.message}`) //Show detail failed message.
         }
     } catch (error) {
         console.error('Error deleting post:', error);
@@ -114,40 +111,47 @@ async function deletePost(postId, postElement) {
 
 //notification clear
 document.addEventListener('DOMContentLoaded', async () => {
-    await fetchResponses(); // Fetch new responses
+    const responseContainer = document.getElementById('response-container');  // Get the container BEFORE fetchResponses
+    if (!responseContainer) {
+        console.error("response-container element not found in profile.html");
+        return; // Exit if the element doesn't exist
+    }
+
+    await fetchResponses(responseContainer); // Fetch new responses
+
     await fetch(`${API_BASE_URL}/auth/reset-notifications`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
 
-    // document.getElementById('notification-badge')?.remove(); // Remove the red number -- DON'T REMOVE IT HERE.
-
-    // NEW:  Set a localStorage flag to signal the main page to refresh.
+    // document.getElementById('notification-badge')?.remove(); //Remove.  -- HANDLED IN app.js
     localStorage.setItem('notificationUpdateNeeded', 'true');
 });
 
 //shows responses
-async function fetchResponses() {
+async function fetchResponses(responseContainer) {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const response = await fetch(`${API_BASE_URL}/auth/notifications`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/notifications`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-    const data = await response.json();
-    console.log("New responses:", data); // Debugging
+        const data = await response.json();
+        console.log("New responses:", data); // Debugging
 
-    const responseContainer = document.getElementById('response-container'); // A div in profile.html
-    responseContainer.innerHTML = ""; // Clear old responses
-
-    if (data.unreadNotifications > 0) {
-        responseContainer.innerHTML = `<p>You have ${data.unreadNotifications} new responses!</p>`;
-    } else {
-        responseContainer.innerHTML = "<p>No new responses.</p>";
+        if (data.unreadNotifications > 0) {
+            responseContainer.innerHTML = `<p>You have ${data.unreadNotifications} new responses!</p>`;
+        } else {
+            responseContainer.innerHTML = "<p>No new responses.</p>";
+        }
+    } catch (error) {
+        console.error("Error fetching responses:", error);
+        responseContainer.innerHTML = "<p>Error loading responses.</p>";  //Display error.
     }
 }
 
 // No DOMContentLoaded here ,because we have add it in profile.html
 //Export loadUserProfile ,if you want to use other place.
-export {loadUserProfile}
+export { loadUserProfile }
