@@ -140,6 +140,7 @@ async function fetchResponses(responseContainer) {
         });
 
         const data = await response.json();
+        console.log("New responses:", data); // Debugging
 
         responseContainer.innerHTML = ''; // Clear existing messages
         if (data.unreadNotifications > 0) {
@@ -165,7 +166,7 @@ async function fetchResponses(responseContainer) {
         }
     } catch (error) {
         console.error("Error fetching responses:", error);
-        responseContainer.innerHTML = "<p>Error loading responses.</p>";
+        responseContainer.innerHTML = "<p>Error loading responses.</p>";  //Display error.
     }
 }
 
