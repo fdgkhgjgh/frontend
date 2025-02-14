@@ -152,13 +152,13 @@ if (addCommentForm) {
         e.preventDefault();
 
         const commentText = document.getElementById('comment-text').value;
-        const commentImage = document.getElementById('comment-image').files[0];
+        const commentImage = document.getElementById('comment-file').files[0];
         const postId = new URLSearchParams(window.location.search).get('id');
 
         const formData = new FormData();
         formData.append('text', commentText);
         if (commentImage) {
-            formData.append('image', commentImage);
+            formData.append('file', commentImage);
         }
 
         try {
@@ -185,7 +185,7 @@ if (addCommentForm) {
                 commentMessage.textContent = "Add comment success!";
                 commentMessage.style.color = 'green';
                 document.getElementById('comment-text').value = '';
-                document.getElementById('comment-image').value = '';
+                document.getElementById('comment-file').value = '';
                 loadPostDetails(postId)
             }
 
@@ -207,20 +207,32 @@ function displayComments(comments) {
     comments.forEach(comment => {
         const commentItem = document.createElement('li');
 
-        //Add image element
+        //Add file element
         let commentContent = `${comment.author?.username || "Unknown"}: ${comment.text} -- ${formatDate(comment.createdAt)}`; // Check before rendering
+        let mediaElement = null;
+
         if (comment.imageUrl) {
-            const imgElement = document.createElement('img');
-            imgElement.src = comment.imageUrl;
-            imgElement.alt = "Comment Image"; //Add alt
-            imgElement.style.maxWidth = '100%';  // Set maxWidth
-            imgElement.style.height = 'auto';    //Keep ratio
-            commentItem.appendChild(imgElement);  //Append image first .
+            mediaElement = document.createElement('img');
+            mediaElement.src = comment.imageUrl;
+            mediaElement.alt = "Comment Image"; //Add alt
+            mediaElement.style.maxWidth = '100%';  // Set maxWidth
+            mediaElement.style.height = 'auto';    //Keep ratio
+        } else if (comment.videoUrl) {
+            mediaElement = document.createElement('video');
+            mediaElement.src = comment.videoUrl;
+            mediaElement.alt = "Comment Video";
+            mediaElement.controls = true;
+            mediaElement.style.maxWidth = '100%';
+            mediaElement.style.maxHeight = '300px';
         }
+
+        if (mediaElement) {
+            commentItem.appendChild(mediaElement);
+        }
+
         const textElement = document.createElement('p');
         textElement.textContent = commentContent;
         commentItem.appendChild(textElement); // Then append text content.
-
         //Add delete button.
         const currentUserId = localStorage.getItem('userId');
         if (currentUserId && currentUserId === comment.author?._id.toString()) {
@@ -232,20 +244,20 @@ function displayComments(comments) {
             });
             commentItem.appendChild(deleteButton);
         }
-          // Add reply button
-          const replyButton = document.createElement('button');
-          replyButton.classList.add('reply-button');
-          replyButton.textContent = 'Reply';
-          replyButton.dataset.commentId = comment._id; //Set the comment id
-          commentItem.appendChild(replyButton);
+        // Add reply button
+        const replyButton = document.createElement('button');
+        replyButton.classList.add('reply-button');
+        replyButton.textContent = 'Reply';
+        replyButton.dataset.commentId = comment._id; //Set the comment id
+        commentItem.appendChild(replyButton);
 
-           //Replies container
-          const repliesContainer = document.createElement('div');
-          repliesContainer.classList.add('replies-container');
-          repliesContainer.id = `replies-${comment._id}`; //Unique ID for each comment.
-          commentItem.appendChild(repliesContainer);
+        //Replies container
+        const repliesContainer = document.createElement('div');
+        repliesContainer.classList.add('replies-container');
+        repliesContainer.id = `replies-${comment._id}`; //Unique ID for each comment.
+        commentItem.appendChild(repliesContainer);
 
-          loadReplies(comment._id, repliesContainer) //Call this one.
+        loadReplies(comment._id, repliesContainer) //Call this one.
 
         commentsList.appendChild(commentItem);
 
