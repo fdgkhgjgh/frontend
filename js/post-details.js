@@ -43,9 +43,32 @@ function displayPostDetails(post) {
     const authorDateElement = document.createElement('p');
     authorDateElement.textContent = `By: ${post.author?.username || "Unknown"} on ${formatDate(post.createdAt)}`; //Use optional chaining
     contentContainer.appendChild(authorDateElement);
-
+    
+   // content showing 
     const contentElement = document.createElement('p');
-    contentElement.textContent = post.content;
+    if (post.content) {
+        // Split content into lines
+        const lines = post.content.split('\n');
+        const maxLineChars = 45;
+        const formattedContent = lines.map(line => {
+            // Further split each line if it's longer than 45 characters
+            let formattedLine = '';
+            while (line.length > 0) {
+                // Take the first 45 characters or less
+                const segment = line.slice(0, maxLineChars);
+                // Add to formatted line with a newline
+                formattedLine += segment + '\n';
+                // Remove the segment from the original line
+                line = line.slice(maxLineChars);
+            }
+            // Trim the last newline character
+            return formattedLine.trimEnd();
+        }).join('\n'); // Join all formatted lines
+
+        contentElement.textContent = formattedContent;
+    } else {
+        contentElement.textContent = ''; // or some placeholder if content is empty
+    }
     contentContainer.appendChild(contentElement);
 
     // --- Images ---
