@@ -152,11 +152,22 @@ function displayPosts(posts) {
 
         contentContainer.appendChild(voteContainer);
 
+        
+        // ***ADD PIN/UNPIN BUTTON HERE***
+        const pinButton = document.createElement('button');
+        pinButton.textContent = post.pinned ? 'Unpin' : 'Pin';
+        pinButton.classList.add('pin-button');
+        pinButton.dataset.postId = post._id;
+        pinButton.addEventListener('click', (event) => {
+            pinUnpinPost(post._id, event.target); // Pass the post ID and the button element
+        });
+        contentContainer.appendChild(pinButton);
 
         // --- Combine Everything ---
         postElement.appendChild(contentContainer);
         postList.appendChild(postElement);
-    });
+
+    });  // <--- CLOSING CURLY BRACE for forEach LOOP
 }
 // Function to display pagination controls
 function displayPagination(totalPages, currentPage) {
@@ -401,4 +412,34 @@ window.addEventListener('storage', (event) => {
         }, 0); // Small delay (0ms should be sufficient)
     }
 });
+
+async function pinUnpinPost(postId, buttonElement) {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert("You must be logged in to pin/unpin a post.");
+            return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}/pin`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            buttonElement.textContent = data.pinned ? 'Unpin' : 'Pin'; // Update button text
+            loadPosts(); // Reload posts to reflect the change in order
+        } else {
+            alert(data.message);
+        }
+
+    } catch (error) {
+        console.error('Error pinning/unpinning post:', error);
+        alert("An error occurred while pinning/unpinning the post.");
+    }
+}
 
