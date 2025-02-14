@@ -61,7 +61,24 @@ function displayPosts(posts) {
 
         // --- Content ---
         const contentElement = document.createElement('p');
-        contentElement.textContent = post.content;
+        if (post.content) {
+            // Split content into lines
+            const lines = post.content.split('\n');
+            let firstLine = lines[0].trim(); // Get the first line and trim it
+
+            // Limit each line to 50 characters
+            const maxLineChars = 50;
+            if (firstLine.length > maxLineChars) {
+                firstLine = firstLine.substring(0, maxLineChars) + '...';
+            } else if (post.content.length > firstLine.length) { // If there's more content
+                firstLine += '...'; // Add ellipsis to suggest there's more
+            }
+
+            contentElement.textContent = firstLine;
+        } else {
+            contentElement.textContent = ''; // or some placeholder if content is empty
+        }
+
 
         // --- New Container for Title and Files ---
         const titleFileContainer = document.createElement('div');
