@@ -61,7 +61,7 @@ function displayPosts(posts) {
 
         // --- Content ---
         const contentElement = document.createElement('p');
-        contentElement.textContent = post.content.substring(0, 250); // Show a  preview
+        contentElement.textContent = post.content;
 
         // --- New Container for Title and Files ---
         const titleFileContainer = document.createElement('div');
@@ -152,18 +152,6 @@ function displayPosts(posts) {
 
         contentContainer.appendChild(voteContainer);
 
-        // --- Delete Button---
-         const currentUserId = localStorage.getItem('userId');
-        if (currentUserId && currentUserId === post.author._id.toString()) {
-            // Only show the delete button if the current user is the author
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.classList.add('delete-button'); // Add a class for styling
-            deleteButton.addEventListener('click', () => {
-                deletePost(post._id, postElement); // Pass the post ID *and* the element
-            });
-            contentContainer.appendChild(deleteButton); // Append to content container.
-        }
 
         // --- Combine Everything ---
         postElement.appendChild(contentContainer);
