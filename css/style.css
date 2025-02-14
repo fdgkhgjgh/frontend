@@ -144,10 +144,10 @@ textarea {
 
 button[type="submit"] {
   background-color: #4CAF50;
-  color: white;
-  padding: 3px 6px;
+  color: blue;
+  padding: 7px 14px;
   border: none;
-  border-radius: 2px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
