@@ -152,13 +152,13 @@ if (addCommentForm) {
         e.preventDefault();
 
         const commentText = document.getElementById('comment-text').value;
-        const commentImage = document.getElementById('comment-file').files[0];
+        const commentFile = document.getElementById('comment-file').files[0];
         const postId = new URLSearchParams(window.location.search).get('id');
 
         const formData = new FormData();
         formData.append('text', commentText);
-        if (commentImage) {
-            formData.append('file', commentImage);
+        if (commentFile) {
+            formData.append('file', commentFile);
         }
 
         try {
@@ -169,7 +169,7 @@ if (addCommentForm) {
                 return;
             }
 
-            const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, { // CORRECTED THIS LINE
+            const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
