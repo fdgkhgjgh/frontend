@@ -66,8 +66,8 @@ function displayPosts(posts) {
             const lines = post.content.split('\n');
             let firstLine = lines[0].trim(); // Get the first line and trim it
 
-            // Limit each line to 50 characters
-            const maxLineChars = 50;
+            // Limit each line to 45 characters
+            const maxLineChars = 45;
             if (firstLine.length > maxLineChars) {
                 firstLine = firstLine.substring(0, maxLineChars) + '...';
             } else if (post.content.length > firstLine.length) { // If there's more content
