@@ -204,8 +204,15 @@ function displayComments(comments) {
         commentsList.innerHTML = '<li>No comments yet.</li>';
         return;
     }
-    comments.forEach(comment => {
+    comments.forEach((comment, index) => { // <--- ADDED INDEX HERE
         const commentItem = document.createElement('li');
+        commentItem.classList.add('comment-item'); // ADDED CLASS
+
+        // Add comment number
+        const commentNumber = document.createElement('span');  // Create a span element
+        commentNumber.classList.add('comment-number');  //Add comment-number class.
+        commentNumber.textContent = `${index + 1}.`;  // Number, starting from 1
+        commentItem.appendChild(commentNumber);  //Add the number to the comment item
 
         //Add file element
         let commentContent = `${comment.author?.username || "Unknown"}: ${comment.text} -- ${formatDate(comment.createdAt)}`; // Check before rendering

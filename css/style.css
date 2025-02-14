@@ -399,3 +399,17 @@ html, body {
       max-height: 95%; /* Adjust for smaller screens */
   }
 }
+
+/* Style for comment number */
+.comment-item {
+  position: relative; /* Set position to relative for absolute positioning of the number */
+  padding-left: 25px; /* Add padding to the left to make space for the number */
+}
+
+.comment-number {
+  position: absolute; /* Absolute position relative to the comment item */
+  left: 0; /* Position it at the left */
+  top: 0; /* Position it at the top */
+  font-size: 0.8em; /* Adjust font size for better appearance */
+  color: #777; /* Use a muted color */
+}
