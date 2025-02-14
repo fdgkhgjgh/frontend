@@ -74,3 +74,21 @@ color: #fff;
 .dark-mode .replies-container {
   color: rgb(113, 23, 23);
 }
+
+/* Styles for replies container in dark mode */
+.dark-mode .replies-container {
+  border-left: 1px solid #555; /* Adjust border color */
+  color: #eee; /* Adjust text color */
+}
+
+/* Styles for individual replies in dark mode */
+.dark-mode .reply {
+  background-color: #333; /* Adjust background color */
+  color: #eee; /* Adjust text color */
+}
+
+/* Adjust color of ellipsis if it exists */
+.dark-mode .overlapped-replies::after {
+  background: linear-gradient(to top, rgba(51,51,51,1), rgba(51,51,51,0)); /* Adjust background gradient (using #333) */
+  color: #eee; /* Adjust ellipsis color */
+}
