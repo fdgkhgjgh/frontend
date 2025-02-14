@@ -154,14 +154,17 @@ function displayPosts(posts) {
 
         
         // ***ADD PIN/UNPIN BUTTON HERE***
-        const pinButton = document.createElement('button');
-        pinButton.textContent = post.pinned ? 'Unpin' : 'Pin';
-        pinButton.classList.add('pin-button');
-        pinButton.dataset.postId = post._id;
-        pinButton.addEventListener('click', (event) => {
-            pinUnpinPost(post._id, event.target); // Pass the post ID and the button element
-        });
-        contentContainer.appendChild(pinButton);
+        const currentUserId = localStorage.getItem('userId');
+        if (currentUserId && post.author && post.author._id && currentUserId === post.author._id.toString()) {
+            const pinButton = document.createElement('button');
+            pinButton.textContent = post.pinned ? 'Unpin' : 'Pin';
+            pinButton.classList.add('pin-button');
+            pinButton.dataset.postId = post._id;
+            pinButton.addEventListener('click', (event) => {
+                pinUnpinPost(post._id, event.target); // Pass the post ID and the button element
+            });
+            contentContainer.appendChild(pinButton);
+        }
 
         // --- Combine Everything ---
         postElement.appendChild(contentContainer);
