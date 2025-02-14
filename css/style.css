@@ -27,7 +27,9 @@ nav a, nav button {
   border-radius: 2px;
   background-color: #fff;
 }
-nav button:hover, nav a:hover {
+
+nav button:hover,
+nav a:hover {
   background-color: #ddd;
 }
 
@@ -49,12 +51,12 @@ nav button:hover, nav a:hover {
   flex-direction: column;
 }
 
-/*Image Container*/
+/* Image Container */
 .image-container {
-  width: 150px;  /* Fixed width for the image container */
+  width: 150px;   /* Fixed width for the image container */
   display: flex; /* Use flexbox to center image */
   align-items: center; /* Center vertically */
-  justify-content: center;/* Center horizontally */
+  justify-content: center; /* Center horizontally */
 }
 
 .image-container img {
@@ -64,7 +66,6 @@ nav button:hover, nav a:hover {
   display: block;
   border-radius: 4px; /* Optional: Rounded corners */
 }
-
 
 /* --- Vote Container and Buttons --- */
 .vote-container {
@@ -83,12 +84,11 @@ nav button:hover, nav a:hover {
   font-size: 16px;
   line-height: 1;
   color: #333; /* Default text color (change as needed) */
-   /* Remove default button styles that can interfere */
-   -webkit-appearance: none;
+  /* Remove default button styles that can interfere */
+  -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   margin: 0; /* Remove default margin */
-
 }
 
 .vote-button:hover {
@@ -96,29 +96,29 @@ nav button:hover, nav a:hover {
 }
 
 .vote-count {
-    margin-right: 10px; /*Keep space*/
+  margin-right: 10px; /*Keep space*/
 }
 
 /* Specific button styles (optional, but good for visual distinction) */
 .like-button {
   /* Example: Green for like */
- color: #4CAF50;
+  color: #4CAF50;
 }
 
 .dislike-button {
   /* Example: Red for dislike */
   color: #f44336;
-
 }
-.delete-button{
-    margin-top: auto; /* Push the delete button to the bottom */
-    align-self: flex-start; /* Align to the start (left) of its container */
-    background-color: #f44336;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+
+.delete-button {
+  margin-top: auto; /* Push the delete button to the bottom */
+  align-self: flex-start; /* Align to the start (left) of its container */
+  background-color: #f44336;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 /* --- Form Styles (General) --- */
@@ -144,7 +144,7 @@ textarea {
 
 button[type="submit"] {
   background-color: #4CAF50;
-  color: blue;
+  color: blue; /* <----- HERE */
   padding: 7px 14px;
   border: none;
   border-radius: 6px;
@@ -155,9 +155,110 @@ button[type="submit"]:hover {
   background-color: #45a049;
 }
 
+/*Comment list*/
+.comment-item {
+  position: relative;   /* For positioning the comment number */
+  padding: 10px;          /* Add some padding around the comment content */
+  margin-bottom: 5px;    /* Add space between comments */
+  border: 1px solid #ddd; /* Add a subtle border */
+  border-radius: 4px;    /* Optional: Round the corners */
+  background-color: #f9f9f9; /* Optional: Light background color */
+  padding-left: 35px;
+}
+
+.comment-number {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 0.8em;
+  color: #777;
+  padding: 10px;
+}
+
+/* Style for reply button */
+.reply-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Style for reply-container */
+.replies-container {
+  margin-left: 20px;   /* Indent replies */
+  margin-top: 5px;
+  border-left: 1px solid #ccc; /* Vertical line to connect replies */
+  padding-left: 10px;
+}
+
+.reply {
+  margin-bottom: 5px;
+  padding: 5px;
+  background-color: #f9f9f9;
+  border-radius: 3px;
+}
+
+.overlapped-replies {
+  max-height: 100px;  /* Adjust as needed */
+  overflow: hidden;
+  position: relative;
+}
+
+.overlapped-replies::after {
+  content: "...";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  text-align: center;
+  padding: 2px 0;
+}
+
+/* --- Modal styles --- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Dark semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of everything */
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90%; /* Reduced from 95% */
+  max-height: 90%; /* Reduced from 95% */
+  overflow: auto;
+}
+
+#modal-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* VERY IMPORTANT! */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1001; /* Ensure it's above the image */
+}
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
+
   .post {
       flex-direction: column; /* Stack content on small screens */
       padding: 10px; /* Reduce padding */
@@ -177,48 +278,19 @@ button[type="submit"]:hover {
       margin-right: 0; /* Remove unnecessary spacing */
   }
 
-  nav a, nav button {
+  nav a,
+  nav button {
       width: 100%;
       padding: 10px; /* Better touch target */
       font-size: 16px; /* Increase readability */
   }
 }
 
-/* --- Modal styles (Keep ,but move them to bottom) --- */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  max-width: 80%;
-  width: 400px; /* Adjust width as needed */
-}
-
-.close-button {
-  float: right;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-}
-#comment-text{
-  min-height: 80px;
-}
-
-html, body {
-  overflow-x: hidden;
-  max-width: 100vw;
+@media (max-width: 600px) {
+  .modal-content {
+      max-width: 95%; /* Adjust for smaller screens */
+      max-height: 95%; /* Adjust for smaller screens */
+  }
 }
 
 /* Add these new styles to your style.css */
@@ -232,7 +304,7 @@ html, body {
 .title-image-container h2 {
   margin: 0; /* Reset default heading margins */
   flex: 1; /* Allow the title to take up remaining space */
-  text-align: left;  /* Ensure the title is left-aligned within its space */
+  text-align: left;   /* Ensure the title is left-aligned within its space */
 }
 
 .title-image-container .image-container {
@@ -289,121 +361,4 @@ html, body {
 
 #pagination-container button:disabled:hover {
   background-color: #f8f8f8; /* keep the original background */
-}
-
-
-/* Style for reply button */
-.reply-button {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 3px;
-  font-size: 14px;
-  margin-top: 5px;
-}
-
-/*Style for reply-container */
-.replies-container {
-  margin-left: 20px; /* Indent replies */
-  margin-top: 5px;
-  border-left: 1px solid #ccc; /* Vertical line to connect replies */
-  padding-left: 10px;
-}
-
-.reply {
-  margin-bottom: 5px;
-  padding: 5px;
-  background-color: #f9f9f9;
-  border-radius: 3px;
-}
-
-.overlapped-replies {
-  max-height: 100px; /* Adjust as needed */
-  overflow: hidden;
-  position: relative;
-}
-
-.overlapped-replies::after {
-  content: "...";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
-  text-align: center;
-  padding: 2px 0;
-}
-
-/* Image Modal Styles */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8); /* Dark semi-transparent background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Ensure it's on top of everything */
-}
-
-.modal-content {
-  position: relative;
-  max-width: 90%; /* Reduced from 95% */
-  max-height: 90%; /* Reduced from 95% */
-  overflow: auto;
-}
-
-#modal-image {
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain; /* VERY IMPORTANT! */
-}
-
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 30px;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 1001; /* Ensure it's above the image */
-}
-
-/* Dark Mode adjustments for modal */
-.dark-mode .modal {
-  background-color: rgba(0, 0, 0, 0.9); /* Even darker background */
-}
-
-/* Media query for smaller screens (example) */
-@media (max-width: 600px) {
-  .modal-content {
-      max-width: 95%; /* Adjust for smaller screens */
-      max-height: 95%; /* Adjust for smaller screens */
-  }
-}
-
-
-/* Style for comment items (general) */
-.comment-item {
-  position: relative;  /* For positioning the comment number */
-  padding: 10px;      /* Add some padding around the comment content */
-  margin-bottom: 5px;   /* Add space between comments */
-  border: 1px solid #ddd; /* Add a subtle border */
-  border-radius: 4px;   /* Optional: Round the corners */
-  background-color: #f9f9f9; /* Optional: Light background color */
-  padding-left: 35px;
-}
-
-/* Style for comment number */
-.comment-number {
-  position: absolute;
-  left: 0;
-  top: 0;
-  font-size: 0.8em;
-  color: #777;
-  padding: 10px;
 }
