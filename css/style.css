@@ -291,20 +291,6 @@ html, body {
   background-color: #f8f8f8; /* keep the original background */
 }
 
-/* frontend/css/style.css */
-/* Style for comment number */
-.comment-item {
-  position: relative; /* Set position to relative for absolute positioning of the number */
-  padding-left: 25px; /* Add padding to the left to make space for the number */
-}
-
-.comment-number {
-  position: absolute; /* Absolute position relative to the comment item */
-  left: 0; /* Position it at the left */
-  top: 0; /* Position it at the top */
-  font-size: 0.8em; /* Adjust font size for better appearance */
-  color: #777; /* Use a muted color */
-}
 
 /* Style for reply button */
 .reply-button {
@@ -400,16 +386,24 @@ html, body {
   }
 }
 
-/* Style for comment number */
+
+/* Style for comment items (general) */
 .comment-item {
-  position: relative; /* Set position to relative for absolute positioning of the number */
-  padding-left: 25px; /* Add padding to the left to make space for the number */
+  position: relative;  /* For positioning the comment number */
+  padding: 10px;      /* Add some padding around the comment content */
+  margin-bottom: 5px;   /* Add space between comments */
+  border: 1px solid #ddd; /* Add a subtle border */
+  border-radius: 4px;   /* Optional: Round the corners */
+  background-color: #f9f9f9; /* Optional: Light background color */
+  padding-left: 35px;
 }
 
+/* Style for comment number */
 .comment-number {
-  position: absolute; /* Absolute position relative to the comment item */
-  left: 0; /* Position it at the left */
-  top: 0; /* Position it at the top */
-  font-size: 0.8em; /* Adjust font size for better appearance */
-  color: #777; /* Use a muted color */
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 0.8em;
+  color: #777;
+  padding: 10px;
 }

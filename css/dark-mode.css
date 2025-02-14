@@ -92,3 +92,10 @@ color: #fff;
   background: linear-gradient(to top, rgba(51,51,51,1), rgba(51,51,51,0)); /* Adjust background gradient (using #333) */
   color: #eee; /* Adjust ellipsis color */
 }
+
+/* Dark mode styles for comment items */
+.dark-mode .comment-item {
+  border: 1px solid #555; /* Adjust border color */
+  background-color: #333; /* Adjust background color */
+  color: #eee; /* Adjust text color for contrast */
+}
