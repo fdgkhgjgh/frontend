@@ -142,18 +142,6 @@ textarea {
   box-sizing: border-box;
 }
 
-button[type="submit"] {
-  background-color: #4CAF50;
-  color: blue; /* <----- HERE */
-  padding: 7px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-button[type="submit"]:hover {
-  background-color: #45a049;
-}
 
 /*Comment list*/
 .comment-item {
