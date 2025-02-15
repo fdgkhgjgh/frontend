@@ -454,7 +454,6 @@ async function loadReplies(commentId, repliesContainer) {
     }
   
     try {
-<<<<<<< HEAD
       console.log('Comment ID before fetch:', commentId);
       const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`); // Corrected URL
       console.log('Fetch response status:', response.status);
@@ -494,34 +493,6 @@ async function loadReplies(commentId, repliesContainer) {
         repliesContainer.appendChild(viewMoreButton);
       }
   
-=======
-        console.log('Comment ID before fetch:', commentId);
-        const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`);
-        console.log('Fetch response status:', response.status);
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Failed to fetch replies: ${response.status} - ${errorData.message || 'Unknown error'}`);
-        }
-        const replies = await response.json();
-
-        console.log('Fetched replies:', replies);
-        
-        if (replies.length > 0) {
-            replies.forEach(reply => {
-                const replyElement = document.createElement('div');
-                replyElement.classList.add('reply');
-                replyElement.textContent = `${reply.author.username}: ${reply.text} -- ${formatDate(reply.createdAt)}`;
-                repliesContainer.appendChild(replyElement);
-            });
-        } else {
-            repliesContainer.textContent = "No replies yet.";
-        }
-        if (replies.length > 100) {
-            repliesContainer.classList.add('overlapped-replies');
-        }
-
->>>>>>> 0ce5fae5ad2ed4ed9c4dc5c85b7d270289be2201
     } catch (error) {
       console.error('Error loading replies:', error);
       repliesContainer.textContent = `Error loading replies: ${error.message}`;
