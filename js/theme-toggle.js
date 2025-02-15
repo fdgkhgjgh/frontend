@@ -16,8 +16,10 @@ if (themeToggle) {
 function setTheme(theme) {
   if (theme === 'dark') {
     themeStylesheet.href = 'css/dark-mode.css';
+    body.classList.add('dark-mode');
   } else {
     themeStylesheet.href = 'css/style.css';//or light-mode.css ,if you have.
+    body.classList.remove('dark-mode');
 
   }
   localStorage.setItem('theme', theme);
