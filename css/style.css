@@ -192,6 +192,7 @@ button[type="submit"]:hover {
   margin-top: 5px;
   border-left: 1px solid #ccc; /* Vertical line to connect replies */
   padding-left: 10px;
+  position: relative; /* Very important for positioning the button */
 }
 
 .reply {
@@ -204,10 +205,11 @@ button[type="submit"]:hover {
 .overlapped-replies {
   max-height: 100px;  /* Adjust as needed */
   overflow: hidden;
-  position: relative;
+  position: relative; /* Required for absolute positioning of the button */
 }
 
-.overlapped-replies::after {
+/*  Remove the pseudo-element.  We're using a button now.  It's also causing click issues */
+/* .overlapped-replies::after {
   content: "...";
   position: absolute;
   bottom: 0;
@@ -216,6 +218,24 @@ button[type="submit"]:hover {
   background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
   text-align: center;
   padding: 2px 0;
+} */
+
+/* Style the "View More" button */
+.view-more-replies-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0; /* Position at the bottom of the container */
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 10; /* Make sure it's above the content */
+  background: white; /* Or a subtle gradient */
+  /* Optional: Add a very subtle gradient to make it stand out */
+  /* background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,1)); */
+
 }
 
 /* --- Modal styles --- */

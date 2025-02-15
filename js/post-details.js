@@ -422,45 +422,58 @@ async function addReply(postId, commentId, replyText, repliesContainer) {
 // Load replies function
 async function loadReplies(commentId, repliesContainer) {
     repliesContainer.innerHTML = '';
-
+  
     // Check if commentId is a valid MongoDB ObjectId
-    if (!/^[0-9a-fA-F]{24}$/.test(commentId)) {
-        console.error('Invalid comment ID format:', commentId);
-        repliesContainer.textContent = 'Invalid comment ID format. Please try again.';
-        return;
+    if (!/^[0-9a-fA-F]{24}$/.test(commentId)) {  // Corrected ObjectId Validation
+      console.error('Invalid comment ID format:', commentId);
+      repliesContainer.textContent = 'Invalid comment ID format. Please try again.';
+      return;
     }
-
+  
     try {
-        console.log('Comment ID before fetch:', commentId);
-        const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`);
-        console.log('Fetch response status:', response.status);
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Failed to fetch replies: ${response.status} - ${errorData.message || 'Unknown error'}`);
-        }
-        const replies = await response.json();
-
-        console.log('Fetched replies:', replies);
-        
-        if (replies.length > 0) {
-            replies.forEach(reply => {
-                const replyElement = document.createElement('div');
-                replyElement.classList.add('reply');
-                replyElement.textContent = `${reply.author.username}: ${reply.text} -- ${formatDate(reply.createdAt)}`;
-                repliesContainer.appendChild(replyElement);
-            });
-        } else {
-            repliesContainer.textContent = "No replies yet.";
-        }
-        if (replies.length > 5) {
-            repliesContainer.classList.add('overlapped-replies');
-        }
-
+      console.log('Comment ID before fetch:', commentId);
+      const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`); // Corrected URL
+      console.log('Fetch response status:', response.status);
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Failed to fetch replies: ${response.status} - ${errorData.message || 'Unknown error'}`);
+      }
+      const replies = await response.json();
+  
+      console.log('Fetched replies:', replies);
+  
+      if (replies.length > 0) {
+        replies.forEach(reply => {
+          const replyElement = document.createElement('div');
+          replyElement.classList.add('reply');
+          replyElement.textContent = `${reply.author.username}: ${reply.text} -- ${formatDate(reply.createdAt)}`;
+          repliesContainer.appendChild(replyElement);
+        });
+      } else {
+        repliesContainer.textContent = "No replies yet.";
+      }
+      if (replies.length > 5) {
+        repliesContainer.classList.add('overlapped-replies');
+  
+        // Create "View More" button
+        const viewMoreButton = document.createElement('button');
+        viewMoreButton.textContent = 'View More Replies';
+        viewMoreButton.classList.add('view-more-replies-button');
+  
+        // Attach click listener to the button
+        viewMoreButton.addEventListener('click', () => {
+          repliesContainer.classList.remove('overlapped-replies'); // Remove the class that hides the content
+          viewMoreButton.style.display = 'none'; // Hide the "View More" button after click
+        });
+  
+        repliesContainer.appendChild(viewMoreButton);
+      }
+  
     } catch (error) {
-        console.error('Error loading replies:', error);
-        repliesContainer.textContent = `Error loading replies: ${error.message}`;
+      console.error('Error loading replies:', error);
+      repliesContainer.textContent = `Error loading replies: ${error.message}`;
     }
-}
+  }
 // Export
 export { loadPostDetails }
