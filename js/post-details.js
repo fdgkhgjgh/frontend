@@ -476,7 +476,7 @@ async function loadReplies(commentId, repliesContainer) {
         } else {
             repliesContainer.textContent = "No replies yet.";
         }
-        if (replies.length > 5) {
+        if (replies.length > 100) {
             repliesContainer.classList.add('overlapped-replies');
         }
 
