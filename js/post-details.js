@@ -43,9 +43,32 @@ function displayPostDetails(post) {
     const authorDateElement = document.createElement('p');
     authorDateElement.textContent = `By: ${post.author?.username || "Unknown"} on ${formatDate(post.createdAt)}`; //Use optional chaining
     contentContainer.appendChild(authorDateElement);
-
+    
+   // content showing 
     const contentElement = document.createElement('p');
-    contentElement.textContent = post.content;
+    if (post.content) {
+        // Split content into lines
+        const lines = post.content.split('\n');
+        const maxLineChars = 45;
+        const formattedContent = lines.map(line => {
+            // Further split each line if it's longer than 45 characters
+            let formattedLine = '';
+            while (line.length > 0) {
+                // Take the first 45 characters or less
+                const segment = line.slice(0, maxLineChars);
+                // Add to formatted line with a newline
+                formattedLine += segment + '\n';
+                // Remove the segment from the original line
+                line = line.slice(maxLineChars);
+            }
+            // Trim the last newline character
+            return formattedLine.trimEnd();
+        }).join('\n'); // Join all formatted lines
+
+        contentElement.textContent = formattedContent;
+    } else {
+        contentElement.textContent = ''; // or some placeholder if content is empty
+    }
     contentContainer.appendChild(contentElement);
 
     // --- Images ---
@@ -431,6 +454,7 @@ async function loadReplies(commentId, repliesContainer) {
     }
   
     try {
+<<<<<<< HEAD
       console.log('Comment ID before fetch:', commentId);
       const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`); // Corrected URL
       console.log('Fetch response status:', response.status);
@@ -470,6 +494,34 @@ async function loadReplies(commentId, repliesContainer) {
         repliesContainer.appendChild(viewMoreButton);
       }
   
+=======
+        console.log('Comment ID before fetch:', commentId);
+        const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`);
+        console.log('Fetch response status:', response.status);
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Failed to fetch replies: ${response.status} - ${errorData.message || 'Unknown error'}`);
+        }
+        const replies = await response.json();
+
+        console.log('Fetched replies:', replies);
+        
+        if (replies.length > 0) {
+            replies.forEach(reply => {
+                const replyElement = document.createElement('div');
+                replyElement.classList.add('reply');
+                replyElement.textContent = `${reply.author.username}: ${reply.text} -- ${formatDate(reply.createdAt)}`;
+                repliesContainer.appendChild(replyElement);
+            });
+        } else {
+            repliesContainer.textContent = "No replies yet.";
+        }
+        if (replies.length > 100) {
+            repliesContainer.classList.add('overlapped-replies');
+        }
+
+>>>>>>> 0ce5fae5ad2ed4ed9c4dc5c85b7d270289be2201
     } catch (error) {
       console.error('Error loading replies:', error);
       repliesContainer.textContent = `Error loading replies: ${error.message}`;
