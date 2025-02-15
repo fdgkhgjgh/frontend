@@ -274,6 +274,11 @@ async function deletePost(postId, postElement) {
 
 // --- CREATE POST FUNCTION (in index.html) ---
 if (createPostFormMain) {
+    // Get references to the button and icons
+    const createPostButton = document.getElementById('create-post-button');
+    const buttonSpinner = document.getElementById('button-spinner');
+    const buttonSuccessIcon = document.getElementById('button-success-icon');
+
     createPostFormMain.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -290,30 +295,30 @@ if (createPostFormMain) {
             formData.append('files', files[i]);
         }
 
-        //Function to set button loading state.
+        // Function to set button loading state.
         function setButtonState(state) {
             switch (state) {
                 case 'sending':
                     createPostButton.disabled = true;
-                    createPostButton.textContent = 'Sending...'; // Or just 'Sending'
-                    buttonSpinner.style.display = 'inline-block'; //Show.
-                    buttonSuccessIcon.style.display = 'none';//Hidden
+                    createPostButton.textContent = 'Sending...';
+                    buttonSpinner.style.display = 'inline-block';
+                    buttonSuccessIcon.style.display = 'none';
                     break;
                 case 'success':
                     createPostButton.textContent = 'Sent!';
                     buttonSpinner.style.display = 'none';
-                    buttonSuccessIcon.style.display = 'inline-block'; //Show.
+                    buttonSuccessIcon.style.display = 'inline-block';
                     break;
                 case 'error':
                     createPostButton.textContent = 'Error!';
                     buttonSpinner.style.display = 'none';
-                    buttonSuccessIcon.style.display = 'none';//Hide it.
+                    buttonSuccessIcon.style.display = 'none';
                     break;
                 default: // 'default' or any other state
                     createPostButton.disabled = false;
                     createPostButton.textContent = 'Send New Post';
                     buttonSpinner.style.display = 'none';
-                    buttonSuccessIcon.style.display = 'none';//Hide it.
+                    buttonSuccessIcon.style.display = 'none';
                     break;
             }
         }
@@ -327,7 +332,7 @@ if (createPostFormMain) {
             }
 
             //--- SET BUTTON TO "SENDING" STATE ---
-            setButtonState('sending');  // <--- SET THE STATE HERE
+            setButtonState('sending');
 
             const response = await fetch(`${API_BASE_URL}/posts`, {
                 method: "POST",
@@ -367,7 +372,6 @@ if (createPostFormMain) {
                 setTimeout(() => {
                     setButtonState('default');
                 }, 1500); // 1.5 seconds (adjust as needed)
-
             }
 
         } catch (error) {
@@ -376,49 +380,8 @@ if (createPostFormMain) {
             createPostMessageMain.style.color = 'red';
             setButtonState('error'); // Reset on error
             setTimeout(() => {
-                    setButtonState('default');
-                }, 1500); // 1.5 seconds (adjust as needed)
-        }
-
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                createPostMessageMain.textContent = "You must be logged in to create a post.";
-                createPostMessageMain.style.color = 'red';
-                return;
-            }
-
-            const response = await fetch(`${API_BASE_URL}/posts`, {  // <---- CORRECTED THIS LINE
-                method: "POST",
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-
-            console.log("Create Post Response:", response);
-
-            const data = await response.json();
-
-            console.log("Create Post Data:", data);
-
-            if (response.status === 429) { // Check for 429 status
-                createPostMessageMain.textContent = data.message || "Too many requests, please try again later."; // Display the rate limit message (or a default)
-                createPostMessageMain.style.color = 'red';
-            } else if (response.ok) {
-                createPostMessageMain.textContent = 'Post created successfully!';
-                createPostMessageMain.style.color = "green";
-                loadPosts();
-                createPostFormMain.reset();
-            } else {
-                createPostMessageMain.textContent = data.message || "An error occurred."; // Display the error message (or a default)
-                createPostMessageMain.style.color = 'red';
-            }
-
-        } catch (error) {
-            console.error("Create post error:", error);
-            createPostMessageMain.textContent = "An error occurred while creating post.";
-            createPostMessageMain.style.color = 'red';
+                setButtonState('default');
+            }, 1500); // 1.5 seconds (adjust as needed)
         }
     });
 }
