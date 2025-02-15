@@ -44,7 +44,16 @@
             <label for="file-main">相片 (可多选):</label>
             <input type="file" id="file-main" name="files" accept="image/*, video/*" multiple><br><br>
     
-            <button type="submit">发送新帖</button>
+            <button type="submit" id="create-post-button">
+                Send New Post
+                <span id="button-spinner" style="display: none;">
+                    <!-- You can use a simple Unicode spinner or an SVG here -->
+                    &#x21bb; <!-- Example: Unicode anticlockwise circled arrow -->
+                </span>
+                <span id="button-success-icon" style="display: none;">
+                    &#x2713;  <!-- Example: Unicode checkmark -->
+                </span>
+            </button>
         </form>
         <p id="create-post-message-main"></p>
     </section>

@@ -382,3 +382,56 @@ button[type="submit"]:hover {
 #pagination-container button:disabled:hover {
   background-color: #f8f8f8; /* keep the original background */
 }
+
+/* Style for the button in its default state */
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: blue; /* <----- HERE */
+  padding: 7px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative; /* Make the button a positioning context */
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Style for the spinner */
+#button-spinner {
+  display: none; /* Hidden by default */
+  /*position: absolute;  // Overlay the text -->  Try removing this first
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  font-size: 1em; /* Adjust as needed */
+}
+
+/* Style for the success icon */
+#button-success-icon {
+  display: none; /* Hidden by default */
+  /*position: absolute;  // Overlay the text  --> Try removing this first
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  color: green;
+  font-size: 1.2em; /* Adjust as needed */
+}
+
+/* Add a class to disable the button */
+button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Keyframes for the spinning animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Apply the animation to the spinner */
+#button-spinner {
+  animation: spin 1s linear infinite;
+}

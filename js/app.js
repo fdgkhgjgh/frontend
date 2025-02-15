@@ -2,6 +2,7 @@
 import { formatDate } from './utils.js'; // Import the formatDate function
 import { checkLoginStatus } from './auth.js'; // Import checkLoginStatus
 import { getUnreadNotifications } from './notifications.js';
+import { API_BASE_URL } from './config.js';
 
 
 const postList = document.getElementById('post-list');
@@ -11,6 +12,9 @@ postList.parentNode.insertBefore(paginationContainer, postList.nextSibling); //I
 // Create post element and relative variables.
 const createPostFormMain = document.getElementById('create-post-form-main');
 const createPostMessageMain = document.getElementById('create-post-message-main');
+const createPostButton = document.getElementById('create-post-button');  // Get the button element!
+const buttonSpinner = document.getElementById('button-spinner');
+const buttonSuccessIcon = document.getElementById('button-success-icon');
 const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; //  Or your Render backend URL
 
 let currentPage = 1; // Track the current page
@@ -284,6 +288,96 @@ if (createPostFormMain) {
 
         for (let i = 0; i < files.length; i++) {
             formData.append('files', files[i]);
+        }
+
+        //Function to set button loading state.
+        function setButtonState(state) {
+            switch (state) {
+                case 'sending':
+                    createPostButton.disabled = true;
+                    createPostButton.textContent = 'Sending...'; // Or just 'Sending'
+                    buttonSpinner.style.display = 'inline-block'; //Show.
+                    buttonSuccessIcon.style.display = 'none';//Hidden
+                    break;
+                case 'success':
+                    createPostButton.textContent = 'Sent!';
+                    buttonSpinner.style.display = 'none';
+                    buttonSuccessIcon.style.display = 'inline-block'; //Show.
+                    break;
+                case 'error':
+                    createPostButton.textContent = 'Error!';
+                    buttonSpinner.style.display = 'none';
+                    buttonSuccessIcon.style.display = 'none';//Hide it.
+                    break;
+                default: // 'default' or any other state
+                    createPostButton.disabled = false;
+                    createPostButton.textContent = 'Send New Post';
+                    buttonSpinner.style.display = 'none';
+                    buttonSuccessIcon.style.display = 'none';//Hide it.
+                    break;
+            }
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                createPostMessageMain.textContent = "You must be logged in to create a post.";
+                createPostMessageMain.style.color = 'red';
+                return;
+            }
+
+            //--- SET BUTTON TO "SENDING" STATE ---
+            setButtonState('sending');  // <--- SET THE STATE HERE
+
+            const response = await fetch(`${API_BASE_URL}/posts`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            console.log("Create Post Response:", response);
+
+            const data = await response.json();
+
+            console.log("Create Post Data:", data);
+
+            if (response.status === 429) {
+                createPostMessageMain.textContent = data.message || "Too many requests, please try again later.";
+                createPostMessageMain.style.color = 'red';
+                setButtonState('default'); // Reset on error
+            } else if (response.ok) {
+                createPostMessageMain.textContent = 'Post created successfully!';
+                createPostMessageMain.style.color = "green";
+                //--- SET BUTTON TO "SUCCESS" STATE ---
+                setButtonState('success');
+
+                loadPosts();
+                createPostFormMain.reset();
+
+                //--- RESET BUTTON AFTER A DELAY ---
+                setTimeout(() => {
+                    setButtonState('default');
+                }, 1500); // 1.5 seconds (adjust as needed)
+            } else {
+                createPostMessageMain.textContent = data.message || "An error occurred.";
+                createPostMessageMain.style.color = 'red';
+                setButtonState('error'); // Reset on error
+                setTimeout(() => {
+                    setButtonState('default');
+                }, 1500); // 1.5 seconds (adjust as needed)
+
+            }
+
+        } catch (error) {
+            console.error("Create post error:", error);
+            createPostMessageMain.textContent = "An error occurred while creating post.";
+            createPostMessageMain.style.color = 'red';
+            setButtonState('error'); // Reset on error
+            setTimeout(() => {
+                    setButtonState('default');
+                }, 1500); // 1.5 seconds (adjust as needed)
         }
 
         try {
