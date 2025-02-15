@@ -1,6 +1,7 @@
 // frontend/js/theme-toggle.js
 const themeStylesheet = document.getElementById('theme-stylesheet');
 const themeToggle = document.getElementById('theme-toggle');
+const body = document.body
 
 // Check for saved theme preference
 const currentTheme = localStorage.getItem('theme') || 'light'; // Default to light
