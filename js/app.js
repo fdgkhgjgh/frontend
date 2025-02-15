@@ -15,7 +15,6 @@ const createPostMessageMain = document.getElementById('create-post-message-main'
 const createPostButton = document.getElementById('create-post-button');  // Get the button element!
 const buttonSpinner = document.getElementById('button-spinner');
 const buttonSuccessIcon = document.getElementById('button-success-icon');
-const API_BASE_URL = 'https://backend-5be9.onrender.com/api'; //  Or your Render backend URL
 
 let currentPage = 1; // Track the current page
 
