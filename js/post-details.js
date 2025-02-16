@@ -30,7 +30,7 @@ async function loadPostDetails(postId) {
         postDetailsContainer.innerHTML = '<p>Error loading post details.</p>';
     }
 }
-
+//  display posts
 function displayPostDetails(post) {
     postDetailsContainer.innerHTML = ''; // Clear previous details
 
@@ -47,7 +47,20 @@ function displayPostDetails(post) {
 
     // --- Author and Date ---
     const authorDateElement = document.createElement('p');
-    authorDateElement.textContent = `By: ${post.author?.username || "Unknown"} on ${formatDate(post.createdAt)}`; //Use optional chaining
+    const profilePicture = document.createElement('img');
+    profilePicture.classList.add('profile-picture');
+    profilePicture.src = post.author.profilePictureUrl || 'assets/default-profile.png'; // Use a default image!
+    profilePicture.alt = `${post.author.username}'s Profile Picture`;
+    authorDateElement.appendChild(profilePicture);
+
+    const authorLink = document.createElement('a');
+    authorLink.href = `profile.html?id=${post.author._id}`; // Link to the profile page
+    authorLink.textContent = ` ${post.author.username} `; //The username here
+
+    authorDateElement.append('By:');
+    authorDateElement.appendChild(authorLink) // Link to the profile page
+    authorDateElement.append(` on ${formatDate(post.createdAt)}`);
+
     contentContainer.appendChild(authorDateElement);
     
    // content showing 

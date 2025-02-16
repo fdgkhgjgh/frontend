@@ -17,29 +17,97 @@ async function loadUserProfile() {
     }
 
     try {
-        //Display username.
-        if (username) {
-            userInfo.textContent = `Welcome, ${username}!`;
+        //Fetch the user profile
+        const response = await fetch(`${API_BASE_URL}/auth/profile/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+       if (!response.ok) {
+            const data = await response.json() //Get response message
+            throw new Error(`Failed to fetch user profile: ${data.message}`);
         }
+       const data = await response.json();
+
+        //Display the username.
+        userInfo.textContent = `Welcome, ${username}!`;
+
+        const profilePicture = document.getElementById('profile-picture');
+        profilePicture.src = data.profilePictureUrl || 'assets/default-profile.png';
+        profilePicture.alt = `${username}'s Profile Picture`;
+
 
         // Fetch user's posts (we need a new backend endpoint for this)
-        const response = await fetch(`${API_BASE_URL}/posts/user/${userId}`, {
+        const postsResponse = await fetch(`${API_BASE_URL}/posts/user/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
         });
 
-        if (!response.ok) {
-            const data = await response.json() //Get response message
+        if (!postsResponse.ok) {
+            const data = await postsResponse.json() //Get response message
             throw new Error(`Failed to fetch user posts: ${data.message}`);
         }
 
-        const posts = await response.json();
+        const posts = await postsResponse.json();
         displayUserPosts(posts);
 
     } catch (error) {
         console.error("Error loading user profile:", error);
+        document.getElementById('profile-info').innerHTML = `<p>Error: ${error.message}</p>`; // Display error message
+
         userPostsContainer.innerHTML = `<p>Error: ${error.message}</p>`; // Display error message
+    }
+}
+
+async function updateProfile(event) {
+    event.preventDefault(); // Prevent the default form submission
+    const profileMessage = document.getElementById('profile-message');
+
+    const profilePictureInput = document.getElementById('profilePicture');
+    const profilePicture = profilePictureInput.files[0];
+
+    const formData = new FormData();
+    if (profilePicture) {
+        formData.append('profilePicture', profilePicture);  // MUST MATCH BACKEND
+    }
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE_URL}/auth/profile/update`, { // Correct Route
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+            body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            profileMessage.textContent = data.message;
+            profileMessage.style.color = 'green';
+
+            // Update the profile picture in local storage
+            localStorage.setItem('profilePictureUrl', data.profilePictureUrl || null);
+
+            // Reload the profile information to display the updated picture
+            loadUserProfile();
+
+             // Also update the image in the header (if it's displayed there)
+             const headerProfilePicture = document.querySelector('header img.profile-picture'); // Adjust the selector if needed
+             if (headerProfilePicture) {
+                 headerProfilePicture.src = data.profilePictureUrl || 'assets/default-profile.png'; // Ensure it's updated in the header, too
+             }
+
+        } else {
+            profileMessage.textContent = data.message;
+            profileMessage.style.color = 'red';
+        }
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        profileMessage.textContent = 'An error occurred while updating the profile.';
+        profileMessage.style.color = 'red';
     }
 }
 
@@ -169,6 +237,4 @@ async function fetchResponses(responseContainer) {
     }
 }
 
-// No DOMContentLoaded here ,because we have add it in profile.html
-//Export loadUserProfile ,if you want to use other place.
-export { loadUserProfile }
+export { loadUserProfile, updateProfile }

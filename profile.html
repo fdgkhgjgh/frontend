@@ -14,12 +14,25 @@
             <button id="theme-toggle">日/夜模式</button>
             <button id="logout-button" style="display: none;">Logout</button>
              <a href="index.html">返回主页</a>
+             <a href="profile.html" id="profile-link" style="display: none;">Profile</a>
         </nav>
     </header>
 
     <main>
         <h1>User Profile</h1>
-        <p id="user-info"></p>
+        <div id="profile-info">
+             <img id="profile-picture" src="" alt="Profile Picture">
+            <p id="user-info"></p>
+
+        </div>
+
+        <h2>Update Profile Picture</h2>
+        <form id="update-profile-form">
+            <label for="profilePicture">New Profile Picture:</label>
+            <input type="file" id="profilePicture" name="profilePicture" accept="image/*"><br><br>
+            <button type="submit">Update Profile</button>
+        </form>
+        <p id="profile-message"></p>
 
         <h2>My Posts</h2>
         <div id="user-posts">
@@ -36,11 +49,16 @@
     <script src="js/theme-toggle.js" type="module"></script>
     <script type="module">
         import { checkLoginStatus } from './js/auth.js';
-        import { loadUserProfile } from './js/profile.js'; // IMPORT IT HERE!
+        import { loadUserProfile, updateProfile } from './js/profile.js'; // IMPORT IT HERE!
 
         document.addEventListener('DOMContentLoaded', () => {
             checkLoginStatus();
             loadUserProfile();
+
+               const updateProfileForm = document.getElementById('update-profile-form');
+                if (updateProfileForm) {
+                    updateProfileForm.addEventListener('submit', updateProfile);
+                }
         });
     </script>
 </body>

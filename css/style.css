@@ -476,3 +476,11 @@ button[type="submit"]:disabled {
 #comment-button-spinner {
   animation: spin 1s linear infinite;
 }
+
+.profile-picture {
+  width: 30px;  /* Adjust size as needed */
+  height: 30px; /* Adjust size as needed */
+  border-radius: 50%; /* Make it circular */
+  object-fit: cover; /*  Important!  Ensures the image fills the circle without distortion */
+  margin-right: 5px; /* Add spacing between image and username */
+}
