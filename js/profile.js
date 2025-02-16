@@ -82,56 +82,41 @@ async function loadUserProfile() {
     }
 }
 
-async function updateProfile(event) {
-    event.preventDefault(); // Prevent the default form submission
-    const profileMessage = document.getElementById('profile-message');
+async function loadUserProfile() {
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
 
-    const profilePictureInput = document.getElementById('profilePicture');
-    const profilePicture = profilePictureInput.files[0];
-
-    const formData = new FormData();
-    const userId = localStorage.getItem('userId'); //Always update your own profile here!!
-
-    if (profilePicture) {
-        formData.append('profilePicture', profilePicture);  // MUST MATCH BACKEND
+    if (!userId || !token) {
+        // Redirect to login if not logged in
+        window.location.href = 'login.html';
+        return;
     }
 
     try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE_URL}/auth/profile/update`, { // Correct Route
-            method: 'POST',
+        //Display username.
+        if (username) {
+            userInfo.textContent = `Welcome, ${username}!`;
+        }
+
+        // Fetch user's posts (we need a new backend endpoint for this)
+        const response = await fetch(`${API_BASE_URL}/posts/user/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
-            body: formData,
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-            profileMessage.textContent = data.message;
-            profileMessage.style.color = 'green';
-
-            // Update the profile picture in local storage
-            localStorage.setItem('profilePictureUrl', data.profilePictureUrl || null);
-
-            // Reload the profile information to display the updated picture
-            loadUserProfile();
-
-             // Also update the image in the header (if it's displayed there)
-             const headerProfilePicture = document.querySelector('header img.profile-picture'); // Adjust the selector if needed
-             if (headerProfilePicture) {
-                 headerProfilePicture.src = data.profilePictureUrl || 'assets/default-profile.png'; // Ensure it's updated in the header, too
-             }
-
-        } else {
-            profileMessage.textContent = data.message;
-            profileMessage.style.color = 'red';
+        if (!response.ok) {
+            const data = await response.json() //Get response message
+            throw new Error(`Failed to fetch user posts: ${data.message}`);
         }
+
+        const posts = await response.json();
+        displayUserPosts(posts);
+
     } catch (error) {
-        console.error('Error updating profile:', error);
-        profileMessage.textContent = 'An error occurred while updating the profile.';
-        profileMessage.style.color = 'red';
+        console.error("Error loading user profile:", error);
+        userPostsContainer.innerHTML = `<p>Error: ${error.message}</p>`; // Display error message
     }
 }
 
