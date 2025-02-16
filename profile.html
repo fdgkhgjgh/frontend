@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -48,9 +49,11 @@
     <script src="js/profile.js" type="module"></script> <!-- Add this -->
     <script src="js/theme-toggle.js" type="module"></script>
     <script type="module">
+        import { checkLoginStatus } from './js/auth.js';
         import { loadUserProfile, updateProfile } from './js/profile.js'; // IMPORT IT HERE!
 
         document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus();
             loadUserProfile();
 
                const updateProfileForm = document.getElementById('update-profile-form');
