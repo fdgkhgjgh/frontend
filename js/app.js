@@ -58,14 +58,16 @@ function displayPosts(posts) {
         titleLink.textContent = post.title; // Set the link text to the post title
         titleElement.appendChild(titleLink);   // Wrap the title text in the link
 
+         // --- Author and Date ---
+    const authorDateElement = document.createElement('p');
+    authorDateElement.append("By: "); // Add "By: " text
 
-        // Create the author link
-        const authorLink = document.createElement('a');
-        authorLink.href = `profile.html?id=${post.author._id}`; // Link to profile
-        authorLink.textContent = `By: ${post.author.username}`; // Set the link text
-
-        authorDateElement.appendChild(authorLink); // Append link to the paragraph
-        authorDateElement.append(` on ${formatDate(post.createdAt)}`); // Add date
+    // Create the author link
+    const authorLink = document.createElement('a');
+    authorLink.href = `profile.html?id=${post.author._id}`; // Link to profile
+    authorLink.textContent = `${post.author.username}`; // Set the link text
+    authorDateElement.appendChild(authorLink); // Append link to the paragraph
+    authorDateElement.append(` on ${formatDate(post.createdAt)}`); // Add date
 
         // --- Content ---
         const contentElement = document.createElement('p');
