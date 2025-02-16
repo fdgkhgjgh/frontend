@@ -15,10 +15,14 @@ async function loadUserProfile() {
     const profilePicture = document.getElementById('profile-picture');
 
     let userIdToFetch;
+    let isOwnProfile = false;  // ADDED: Flag to track if it's the logged-in user's profile
+
     if (profileId) {
         userIdToFetch = profileId; // Use userId from URL if present
+        isOwnProfile = (profileId === loggedInUserId); //Check if current viewing profile belong to login user.
     } else if (loggedInUserId) {
         userIdToFetch = loggedInUserId; // Otherwise, use logged-in user ID
+        isOwnProfile = true;  //Viewing loggin user profile so,is true.
     } else {
         window.location.href = 'login.html';
         return;
@@ -62,7 +66,13 @@ async function loadUserProfile() {
         }
 
         const posts = await postsResponse.json();
-        displayUserPosts(posts);
+        displayUserPosts(posts, isOwnProfile);  //***Pass the Flag!***
+
+        //Show/hide upload area.
+        const updateProfileSection = document.getElementById('update-profile-form');
+        if (updateProfileSection) {
+            updateProfileSection.style.display = isOwnProfile ? 'block' : 'none';
+        }
 
     } catch (error) {
         console.error("Error loading user profile:", error);
@@ -125,7 +135,7 @@ async function updateProfile(event) {
     }
 }
 
-function displayUserPosts(posts) {
+function displayUserPosts(posts, isOwnProfile) {  //***ADDED isOwnProfile as a Parameter!***
     userPostsContainer.innerHTML = ''; // Clear existing posts
 
     if (posts.length === 0) {
@@ -149,13 +159,16 @@ function displayUserPosts(posts) {
         const dateElement = document.createElement('p');
         dateElement.textContent = `Posted on: ${formatDate(post.createdAt)}`;
         postElement.appendChild(dateElement)
-        // Add a Delete button
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.addEventListener('click', () => {
-            deletePost(post._id, postElement); // You'll reuse the deletePost function from app.js
-        });
-        postElement.appendChild(deleteButton);
+
+        // Only Add a Delete button only if it's the logged-in user's profile
+        if (isOwnProfile) { // Add this Check!
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', () => {
+                deletePost(post._id, postElement); // You'll reuse the deletePost function from app.js
+            });
+            postElement.appendChild(deleteButton);
+        }
 
         userPostsContainer.appendChild(postElement);
 
