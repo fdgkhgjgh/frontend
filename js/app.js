@@ -60,7 +60,6 @@ function displayPosts(posts) {
 
         // --- Author and Date ---
         const authorDateElement = document.createElement('p');
-        authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
 
         // Create the author link
         const authorLink = document.createElement('a');
