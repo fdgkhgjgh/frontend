@@ -242,43 +242,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-async function updateHeader() {
-    // This function should be similar to the one in app.js, 
-    // but tailored for profile.js if needed. Here's a basic setup:
-    const username = localStorage.getItem('username');
-    const userId = localStorage.getItem('userId');
-    const token = localStorage.getItem('token');
-
-    if (username && userId && token) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/auth/notifications`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const data = await response.json();
-            const unreadCount = data.unreadNotifications || 0;
-
-            // Update or remove the notification badge based on unreadCount
-            const badge = document.getElementById('notification-badge');
-            if (unreadCount > 0) {
-                if (!badge) {
-                    const newBadge = document.createElement('span');
-                    newBadge.id = 'notification-badge';
-                    newBadge.textContent = unreadCount;
-                    // Style the badge here or in CSS
-                    newBadge.style = 'color: white; background-color: red; border-radius: 50%; padding: 3px 6px; margin-left: 5px; font-size: 12px; font-weight: bold; min-width: 18px; text-align: center;';
-                    document.getElementById('user-info').appendChild(newBadge);
-                } else {
-                    badge.textContent = unreadCount;
-                }
-            } else if (badge) {
-                badge.remove();
-            }
-
-        } catch (error) {
-            console.error("Failed to update header notifications:", error);
-        }
-    }
-}
 
 //shows responses
 async function fetchResponses(responseContainer) {
