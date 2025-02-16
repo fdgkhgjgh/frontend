@@ -483,6 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // NEW: Listen for localStorage changes.
 window.addEventListener('storage', (event) => {
     if (event.key === 'notificationUpdateNeeded' && event.newValue === 'true') {
+        console.log("Detected notification update needed. Refreshing header."); // ADDED LOG
         setTimeout(() => {
             updateHeader(); // Refresh the header.
             localStorage.removeItem('notificationUpdateNeeded'); // Clear the flag.

@@ -205,17 +205,28 @@ async function deletePost(postId, postElement) {
     }
 }
 
-// Notification clear and update UI
+//notification clear
 document.addEventListener('DOMContentLoaded', async () => {
+    checkLoginStatus();
+
+    try {
+        await loadUserProfile(); // Load profile *first*
+    } catch (error) {
+        console.error("Error loading user profile:", error);
+        document.getElementById('profile-info').innerHTML = `<p>Error: ${error.message}</p>`; // Display error message
+        userPostsContainer.innerHTML = `<p>Error: ${error.message}</p>`; // Display error message
+        return; // Exit if profile loading fails
+    }
+
     const responseContainer = document.getElementById('response-container');
     if (!responseContainer) {
         console.error("response-container element not found in profile.html");
         return; // Exit if the element doesn't exist
     }
 
-    try {
-        await fetchResponses(responseContainer); // Fetch new responses
+    await fetchResponses(responseContainer); // Fetch new responses
 
+    try {
         // Reset notifications on the backend
         const resetResponse = await fetch(`${API_BASE_URL}/auth/reset-notifications`, {
             method: 'POST',
@@ -224,22 +235,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!resetResponse.ok) {
             const errorData = await resetResponse.json();
-            throw new Error(`Failed to reset notifications: ${errorData.message || 'Unknown error'}`);
+            console.error("Failed to reset notifications:", errorData);
+            // Optionally display an error message to the user
         }
-
-        // Update the notification badge in the header via localStorage flag
+        // Update the notification badge in the header. This is handled in app.js, so we'll just set the flag
         localStorage.setItem('notificationUpdateNeeded', 'true');
-
-        // Optionally, update the UI immediately in profile.js as well
-        // This step ensures the user sees the change without refreshing or waiting for app.js to update
-        updateHeader(); // Assuming this function is imported or defined here
-
-        console.log('Notifications reset successfully');
-
     } catch (error) {
-        console.error('Error while clearing notifications:', error);
-        // Here you might want to display this error to the user or log it more visibly
+        console.error("Error resetting notifications:", error);
+        // Optionally display an error message to the user
     }
+
+    // Update the notification badge in the header after processing is complete
+    localStorage.setItem('notificationUpdateNeeded', 'true');
 });
 
 
