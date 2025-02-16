@@ -62,6 +62,14 @@ function displayPosts(posts) {
         const authorDateElement = document.createElement('p');
         authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
 
+        // Create the author link
+        const authorLink = document.createElement('a');
+        authorLink.href = `profile.html?id=${post.author._id}`; // Link to profile
+        authorLink.textContent = `By: ${post.author.username}`; // Set the link text
+
+        authorDateElement.appendChild(authorLink); // Append link to the paragraph
+        authorDateElement.append(` on ${formatDate(post.createdAt)}`); // Add date
+
         // --- Content ---
         const contentElement = document.createElement('p');
         if (post.content) {

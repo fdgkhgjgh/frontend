@@ -484,3 +484,12 @@ button[type="submit"]:disabled {
   object-fit: cover; /*  Important!  Ensures the image fills the circle without distortion */
   margin-right: 5px; /* Add spacing between image and username */
 }
+
+#profile-info img#profile-picture {
+  max-width: 150px; /* Adjust this value to your desired maximum width */
+  max-height: 150px; /* Adjust this value to your desired maximum height */
+  width: auto; /* Maintain aspect ratio */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 50%; /* Make it circular */
+  object-fit: cover; /* Important: Ensures the image fills the circle */
+}
