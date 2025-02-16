@@ -207,7 +207,6 @@ async function deletePost(postId, postElement) {
 
 //notification clear
 document.addEventListener('DOMContentLoaded', async () => {
-    checkLoginStatus();
 
     try {
         await loadUserProfile(); // Load profile *first*
