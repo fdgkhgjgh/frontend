@@ -58,9 +58,6 @@ function displayPosts(posts) {
         titleLink.textContent = post.title; // Set the link text to the post title
         titleElement.appendChild(titleLink);   // Wrap the title text in the link
 
-        // --- Author and Date ---
-        const authorDateElement = document.createElement('p');
-        authorDateElement.append("By: "); // Add "By: " text
 
         // Create the author link
         const authorLink = document.createElement('a');
