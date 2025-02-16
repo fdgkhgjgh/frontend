@@ -53,7 +53,15 @@
                 <!-- ADD THIS -->
                 <input type="file" id="comment-file" name="file" accept="image/*, video/*">
                 <!-- ADD THIS -->
-                <button type="submit">添加评论</button>
+                <button type="submit" id="add-comment-button">
+                    添加评论(add Comment)
+                    <span id="comment-button-spinner" style="display: none;">
+                        &#x21bb; <!-- Unicode anticlockwise circled arrow -->
+                    </span>
+                    <span id="comment-button-success-icon" style="display: none; color: green;">
+                        &#x2713;  <!-- Unicode checkmark -->
+                    </span>
+                </button>
             </form>
             <p id="comment-message"></p>
         </div>

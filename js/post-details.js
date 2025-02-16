@@ -7,6 +7,12 @@ const addCommentForm = document.getElementById('add-comment-form');
 const commentMessage = document.getElementById('comment-message');
 const commentsSection = document.getElementById('comments-section');
 
+//--- ADD COMMENT BUTTON AND STATE MANAGEMENT ---
+const addCommentButton = document.getElementById('add-comment-button');
+const commentButtonSpinner = document.getElementById('comment-button-spinner');
+const commentButtonSuccessIcon = document.getElementById('comment-button-success-icon');
+
+
 // --- Load Post Details and Comments ---
 async function loadPostDetails(postId) {
     try {
@@ -168,6 +174,35 @@ function displayPostDetails(post) {
 
 }
 
+// Function to set the comment button state
+function setCommentButtonState(state) {
+    switch (state) {
+        case 'sending':
+            addCommentButton.disabled = true;
+            addCommentButton.textContent = 'Sending...';
+            commentButtonSpinner.style.display = 'inline-block';
+            commentButtonSuccessIcon.style.display = 'none';
+            break;
+        case 'success':
+            addCommentButton.textContent = 'Commented!';
+            commentButtonSpinner.style.display = 'none';
+            commentButtonSuccessIcon.style.display = 'inline-block';
+            break;
+        case 'error':
+            addCommentButton.textContent = 'Error!';
+            commentButtonSpinner.style.display = 'none';
+            commentButtonSuccessIcon.style.display = 'none';
+            break;
+        default:
+            addCommentButton.disabled = false;
+            addCommentButton.textContent = '添加评论(add Comment)';
+            commentButtonSpinner.style.display = 'none';
+            commentButtonSuccessIcon.style.display = 'none';
+            break;
+    }
+}
+
+
 // --- Add Comment Submission ---
 
 if (addCommentForm) {
@@ -192,6 +227,9 @@ if (addCommentForm) {
                 return;
             }
 
+            //--- SET BUTTON TO "SENDING" STATE ---
+            setCommentButtonState('sending');  // <--- SET THE STATE HERE
+
             const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
                 method: 'POST',
                 headers: {
@@ -203,6 +241,7 @@ if (addCommentForm) {
             if (!response.ok) { //This to know there is an error.
                 commentMessage.textContent = "An error occurred while adding comment."
                 commentMessage.style.color = 'red'
+                setCommentButtonState('default');
             }
             else {
                 commentMessage.textContent = "Add comment success!";
@@ -210,12 +249,25 @@ if (addCommentForm) {
                 document.getElementById('comment-text').value = '';
                 document.getElementById('comment-file').value = '';
                 loadPostDetails(postId)
+
+                //--- SET BUTTON TO "SUCCESS" STATE ---
+                setCommentButtonState('success');
+
+                //--- RESET BUTTON AFTER A DELAY ---
+                setTimeout(() => {
+                    setCommentButtonState('default');
+                }, 1500); // 1.5 seconds (adjust as needed)
             }
 
         } catch (error) {
             console.error('Error adding comment:', error);
             commentMessage.textContent = "An error occurred while adding comment.";
             commentMessage.style.color = 'red';
+            setCommentButtonState('error');
+            setTimeout(() => {
+                    setCommentButtonState('default');
+                }, 1500); // 1.5 seconds (adjust as needed)
+
         }
     });
 }
