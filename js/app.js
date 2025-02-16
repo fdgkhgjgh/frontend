@@ -64,6 +64,8 @@ function displayPosts(posts) {
 
         // Create the author link
         const authorLink = document.createElement('a');
+        console.log("Checking author id and user id:", post.author._id ); //add it
+        console.log("Checking  user id:", localStorage.getItem('userId')); //add it
         authorLink.href = `profile.html?id=${post.author._id}`; // Link to profile
         authorLink.textContent = `By: ${post.author.username}`; // Set the link text
 

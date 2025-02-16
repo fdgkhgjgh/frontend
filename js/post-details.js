@@ -54,6 +54,8 @@ function displayPostDetails(post) {
     authorDateElement.appendChild(profilePicture);
 
     const authorLink = document.createElement('a');
+    console.log("Checking author id and user id:", post.author._id ); //add it
+    console.log("Checking  user id:", localStorage.getItem('userId')); //add it
     authorLink.href = `profile.html?id=${post.author._id}`; // Link to the profile page
     authorLink.textContent = ` ${post.author.username} `; //The username here
 
