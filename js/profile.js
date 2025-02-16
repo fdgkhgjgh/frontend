@@ -6,20 +6,32 @@ const userInfo = document.getElementById('user-info');
 const userPostsContainer = document.getElementById('user-posts');
 
 async function loadUserProfile() {
-    const userId = localStorage.getItem('userId');
+    const urlParams = new URLSearchParams(window.location.search);
+    const profileId = urlParams.get('id');  // Get userId from URL
+
+    const loggedInUserId = localStorage.getItem('userId'); // Get logged-in user ID
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
-    const profilePicture=document.getElementById('profile-picture');
+    const profilePicture = document.getElementById('profile-picture');
 
-    if (!userId || !token) {
-        // Redirect to login if not logged in
+    let userIdToFetch;
+    if (profileId) {
+        userIdToFetch = profileId; // Use userId from URL if present
+    } else if (loggedInUserId) {
+        userIdToFetch = loggedInUserId; // Otherwise, use logged-in user ID
+    } else {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    if (!token) {
         window.location.href = 'login.html';
         return;
     }
 
     try {
         //Fetch the user profile
-        const response = await fetch(`${API_BASE_URL}/auth/profile/${userId}`, {
+        const response = await fetch(`${API_BASE_URL}/auth/profile/${userIdToFetch}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
@@ -31,13 +43,14 @@ async function loadUserProfile() {
        const data = await response.json();
 
         //Display the username.
-        userInfo.textContent = `Welcome, ${username}!`;
+        userInfo.textContent = `Welcome, ${data.username}!`;
 
         profilePicture.src = data.profilePictureUrl || 'assets/default-profile.png';
-        profilePicture.alt = `${username}'s Profile Picture`;
+        profilePicture.alt = `${data.username}'s Profile Picture`;
+
 
         // Fetch user's posts (we need a new backend endpoint for this)
-        const postsResponse = await fetch(`${API_BASE_URL}/posts/user/${userId}`, {
+        const postsResponse = await fetch(`${API_BASE_URL}/posts/user/${userIdToFetch}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
@@ -62,10 +75,12 @@ async function loadUserProfile() {
 async function updateProfile(event) {
     event.preventDefault(); // Prevent the default form submission
     const profileMessage = document.getElementById('profile-message');
+
     const profilePictureInput = document.getElementById('profilePicture');
     const profilePicture = profilePictureInput.files[0];
+
     const formData = new FormData();
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('userId'); //Always update your own profile here!!
 
     if (profilePicture) {
         formData.append('profilePicture', profilePicture);  // MUST MATCH BACKEND
@@ -76,17 +91,29 @@ async function updateProfile(event) {
         const response = await fetch(`${API_BASE_URL}/auth/profile/update`, { // Correct Route
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
             },
             body: formData,
         });
 
         const data = await response.json();
+
         if (response.ok) {
             profileMessage.textContent = data.message;
             profileMessage.style.color = 'green';
+
+            // Update the profile picture in local storage
             localStorage.setItem('profilePictureUrl', data.profilePictureUrl || null);
+
+            // Reload the profile information to display the updated picture
             loadUserProfile();
+
+             // Also update the image in the header (if it's displayed there)
+             const headerProfilePicture = document.querySelector('header img.profile-picture'); // Adjust the selector if needed
+             if (headerProfilePicture) {
+                 headerProfilePicture.src = data.profilePictureUrl || 'assets/default-profile.png'; // Ensure it's updated in the header, too
+             }
+
         } else {
             profileMessage.textContent = data.message;
             profileMessage.style.color = 'red';
