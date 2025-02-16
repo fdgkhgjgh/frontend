@@ -30,7 +30,7 @@ async function loadPostDetails(postId) {
         postDetailsContainer.innerHTML = '<p>Error loading post details.</p>';
     }
 }
-//  display posts
+//  displayPostDetails function
 function displayPostDetails(post) {
     postDetailsContainer.innerHTML = ''; // Clear previous details
 

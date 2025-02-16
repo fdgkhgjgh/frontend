@@ -69,10 +69,10 @@ async function loadUserProfile() {
         displayUserPosts(posts, isOwnProfile);  //***Pass the Flag!***
 
         //Show/hide upload area.
-        const updateProfileSection = document.getElementById('update-profile-form');
-        if (updateProfileSection) {
-            updateProfileSection.style.display = isOwnProfile ? 'block' : 'none';
-        }
+    const updateProfileSection = document.getElementById('update-profile-form');
+    if (updateProfileSection) {
+        updateProfileSection.style.display = isOwnProfile ? 'block' : 'none';
+    }
 
     } catch (error) {
         console.error("Error loading user profile:", error);
