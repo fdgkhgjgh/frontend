@@ -60,6 +60,7 @@ function displayPosts(posts) {
 
         // --- Author and Date ---
         const authorDateElement = document.createElement('p');
+        authorDateElement.append("By: "); // Add "By: " text
 
         // Create the author link
         const authorLink = document.createElement('a');
