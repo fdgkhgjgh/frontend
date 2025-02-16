@@ -205,7 +205,7 @@ async function deletePost(postId, postElement) {
     }
 }
 
-//notification clear
+// Notification clear and update UI
 document.addEventListener('DOMContentLoaded', async () => {
     const responseContainer = document.getElementById('response-container');
     if (!responseContainer) {
@@ -213,17 +213,72 @@ document.addEventListener('DOMContentLoaded', async () => {
         return; // Exit if the element doesn't exist
     }
 
-    await fetchResponses(responseContainer); // Fetch new responses
+    try {
+        await fetchResponses(responseContainer); // Fetch new responses
 
-    // Reset notifications on the backend
-    await fetch(`${API_BASE_URL}/auth/reset-notifications`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-    });
+        // Reset notifications on the backend
+        const resetResponse = await fetch(`${API_BASE_URL}/auth/reset-notifications`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
 
-    // Update the notification badge in the header. This is handled in app.js, so we'll just set the flag
-    localStorage.setItem('notificationUpdateNeeded', 'true');
+        if (!resetResponse.ok) {
+            const errorData = await resetResponse.json();
+            throw new Error(`Failed to reset notifications: ${errorData.message || 'Unknown error'}`);
+        }
+
+        // Update the notification badge in the header via localStorage flag
+        localStorage.setItem('notificationUpdateNeeded', 'true');
+
+        // Optionally, update the UI immediately in profile.js as well
+        // This step ensures the user sees the change without refreshing or waiting for app.js to update
+        updateHeader(); // Assuming this function is imported or defined here
+
+        console.log('Notifications reset successfully');
+
+    } catch (error) {
+        console.error('Error while clearing notifications:', error);
+        // Here you might want to display this error to the user or log it more visibly
+    }
 });
+
+async function updateHeader() {
+    // This function should be similar to the one in app.js, 
+    // but tailored for profile.js if needed. Here's a basic setup:
+    const username = localStorage.getItem('username');
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+
+    if (username && userId && token) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/notifications`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            const unreadCount = data.unreadNotifications || 0;
+
+            // Update or remove the notification badge based on unreadCount
+            const badge = document.getElementById('notification-badge');
+            if (unreadCount > 0) {
+                if (!badge) {
+                    const newBadge = document.createElement('span');
+                    newBadge.id = 'notification-badge';
+                    newBadge.textContent = unreadCount;
+                    // Style the badge here or in CSS
+                    newBadge.style = 'color: white; background-color: red; border-radius: 50%; padding: 3px 6px; margin-left: 5px; font-size: 12px; font-weight: bold; min-width: 18px; text-align: center;';
+                    document.getElementById('user-info').appendChild(newBadge);
+                } else {
+                    badge.textContent = unreadCount;
+                }
+            } else if (badge) {
+                badge.remove();
+            }
+
+        } catch (error) {
+            console.error("Failed to update header notifications:", error);
+        }
+    }
+}
 
 //shows responses
 async function fetchResponses(responseContainer) {

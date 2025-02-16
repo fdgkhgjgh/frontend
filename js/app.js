@@ -385,15 +385,15 @@ if (createPostFormMain) {
         }
     });
 }
-//Update header to show username.
+// Update header to show username and manage notifications
 async function updateHeader() {
     const username = localStorage.getItem('username');
-    const userId = localStorage.getItem('userId'); // Get the logged-in user's ID
+    const userId = localStorage.getItem('userId');
     const loginLink = document.querySelector('a[href="login.html"]');
     const registerLink = document.querySelector('a[href="register.html"]');
+    const navElement = document.querySelector('header nav'); // Get the nav element once
 
-    if (username && userId) { // Check for both username *and* userId
-        // Fetch unread notifications count from backend
+    if (username && userId) { // Check if user is logged in
         let unreadCount = 0;
         try {
             const token = localStorage.getItem('token');
@@ -408,70 +408,55 @@ async function updateHeader() {
             console.error("Error fetching notifications:", error);
         }
 
-        // User is logged in, Create link with username
-        const usernameDisplay = document.createElement('span');
-        usernameDisplay.id = 'user-info';
+        // User is logged in, update the UI
+        let usernameDisplay = document.getElementById('user-info');
 
-        const userLink = document.createElement('a'); // Create the link element
-        userLink.href = `profile.html?id=${userId}`; // Set the link to profile.html with the user's ID
-        userLink.textContent = username; // The username is the link text
-
-        usernameDisplay.textContent = 'Logged in as: ';  //Text before link
-        usernameDisplay.appendChild(userLink);           // Put link in the span.
-
-        // Create a red notification badge if unreadCount > 0
-        if (unreadCount > 0) {
-            const notificationBadge = document.createElement('span');
-            notificationBadge.id = 'notification-badge';
-            notificationBadge.textContent = unreadCount;
-            notificationBadge.style.color = 'white';
-            notificationBadge.style.backgroundColor = 'red';
-            notificationBadge.style.borderRadius = '50%';
-            notificationBadge.style.padding = '3px 6px';
-            notificationBadge.style.marginLeft = '5px';
-            notificationBadge.style.fontSize = '12px';
-            notificationBadge.style.fontWeight = 'bold';
-            notificationBadge.style.minWidth = '18px';
-            notificationBadge.style.textAlign = 'center';
-
-            userLink.appendChild(notificationBadge); // Attach badge to username
-        }
-
-        if (loginLink) {
-            loginLink.style.display = 'none';
-        }
-        if (registerLink) {
-            registerLink.style.display = 'none';
-        }
-
-        const logoutButton = document.getElementById('logout-button');
-        if (logoutButton) {
-            logoutButton.style.display = 'inline-block';
-        }
-
-        // Append username display to nav
-        const navElement = document.querySelector('header nav');
-        if (navElement) {
+        if (!usernameDisplay) {
+            usernameDisplay = document.createElement('span');
+            usernameDisplay.id = 'user-info';
             navElement.appendChild(usernameDisplay);
         }
-    } else {
-        // User is not logged in, remove the username display if it exists
-        const usernameDisplay = document.getElementById('user-info');
-        if (usernameDisplay) {
-            usernameDisplay.remove();
+
+        // Clear existing children before re-adding
+        usernameDisplay.innerHTML = ''; 
+
+        usernameDisplay.textContent = 'Logged in as: ';  
+        const userLink = document.createElement('a');
+        userLink.href = `profile.html?id=${userId}`;
+        userLink.textContent = username;
+        usernameDisplay.appendChild(userLink);
+
+        // Update or remove notification badge
+        const existingBadge = document.getElementById('notification-badge');
+        if (unreadCount > 0) {
+            if (!existingBadge) {
+                const notificationBadge = document.createElement('span');
+                notificationBadge.id = 'notification-badge';
+                notificationBadge.textContent = unreadCount;
+                notificationBadge.style = 'color: white; background-color: red; border-radius: 50%; padding: 3px 6px; margin-left: 5px; font-size: 12px; font-weight: bold; min-width: 18px; text-align: center;';
+                userLink.appendChild(notificationBadge);
+            } else {
+                existingBadge.textContent = unreadCount;
+            }
+        } else if (existingBadge) {
+            existingBadge.remove();
         }
-        if (loginLink) {
-            loginLink.style.display = 'inline-block';
-        }
-        if (registerLink) {
-            registerLink.style.display = 'inline-block';
-        }
+
+        if (loginLink) loginLink.style.display = 'none';
+        if (registerLink) registerLink.style.display = 'none';
         const logoutButton = document.getElementById('logout-button');
-        if (logoutButton) {
-            logoutButton.style.display = 'none';
-        }
+        if (logoutButton) logoutButton.style.display = 'inline-block';
+
+    } else {
+        // User is not logged in
+        if (usernameDisplay) usernameDisplay.remove();
+        if (loginLink) loginLink.style.display = 'inline-block';
+        if (registerLink) registerLink.style.display = 'inline-block';
+        const logoutButton = document.getElementById('logout-button');
+        if (logoutButton) logoutButton.style.display = 'none';
     }
 }
+
 // Call checkLoginStatus and loadPosts, and updateHeader when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     checkLoginStatus(); // Now this will work correctly
@@ -483,10 +468,9 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('storage', (event) => {
     if (event.key === 'notificationUpdateNeeded' && event.newValue === 'true') {
         setTimeout(() => {
-            updateHeader(); // Refresh the header.
-            localStorage.removeItem('notificationUpdateNeeded'); // Clear the flag.
-            document.getElementById('notification-badge')?.remove();  //Then remove it here.
-        }, 0); // Small delay (0ms should be sufficient)
+            updateHeader(); // Refresh the header to clear the badge if necessary
+            localStorage.removeItem('notificationUpdateNeeded'); // Clear the flag
+        }, 0);
     }
 });
 
