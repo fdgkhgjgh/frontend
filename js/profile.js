@@ -4,6 +4,7 @@ import { API_BASE_URL } from './config.js'; //Import constant
 
 const userInfo = document.getElementById('user-info');
 const userPostsContainer = document.getElementById('user-posts');
+const responseContainer = document.getElementById('response-container'); // Get the response container -VERY IMPORTANT.
 
 async function loadUserProfile() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -52,8 +53,6 @@ async function loadUserProfile() {
         profilePicture.src = data.profilePictureUrl || 'assets/default-profile.png';
         profilePicture.alt = `${data.username}'s Profile Picture`;
 
-
-        // Fetch user's posts (we need a new backend endpoint for this)
         const postsResponse = await fetch(`${API_BASE_URL}/posts/user/${userIdToFetch}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -68,7 +67,6 @@ async function loadUserProfile() {
         const posts = await postsResponse.json();
         displayUserPosts(posts, isOwnProfile);  //***Pass the Flag!***
 
-        //Show/hide upload area.
     const updateProfileSection = document.getElementById('update-profile-form');
     if (updateProfileSection) {
         updateProfileSection.style.display = isOwnProfile ? 'block' : 'none';
@@ -76,14 +74,14 @@ async function loadUserProfile() {
 
     } catch (error) {
         console.error("Error loading user profile:", error);
-        document.getElementById('profile-info').innerHTML = `<p>Error: ${error.message}</p>`; // Display error message
+        document.getElementById('profile-info').innerHTML = `<p>Error: ${error.message}</p>`;
 
-        userPostsContainer.innerHTML = `<p>Error: ${error.message}</p>`; // Display error message
+        userPostsContainer.innerHTML = `<p>Error: ${error.message}</p>`;
     }
 }
 
 async function updateProfile(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
     const profileMessage = document.getElementById('profile-message');
 
     const profilePictureInput = document.getElementById('profilePicture');
@@ -246,19 +244,14 @@ async function fetchResponses(responseContainer) {
         console.log("Response data from /auth/notifications:", data);
 
         // Check if there's a message and display it
-        if (data && data.notifications && data.notifications.length > 0) {
-            const notificationList = document.createElement('ul');
-            data.notifications.forEach(notification => {
-                const listItem = document.createElement('li');
-                const link = document.createElement('a');
-
-                // Build URL with commentId as a hash for scrolling
-                link.href = `post-details.html?id=${notification.postId}#comment-${notification.commentId}`; //Add comment id.
-                link.textContent = notification.message;  // Set the message as the link text
-                listItem.appendChild(link);
-                notificationList.appendChild(listItem);
-            });
-            responseContainer.appendChild(notificationList); // Append list to container.
+        if (data.message && data.message !== 'No new activity') {
+            const messageElement = document.createElement('p');
+            // Create a link to the post details page
+            const linkElement = document.createElement('a');
+            linkElement.href = `post-details.html?id=${data.postId}`; // Use the postId
+            linkElement.textContent = data.message; // Set the message as the link text
+            messageElement.appendChild(linkElement);  // Append the link to the paragraph
+            responseContainer.appendChild(messageElement); // Append the paragraph to the container
         } else {
             responseContainer.innerHTML = "<p>No new activity.</p>";
         }

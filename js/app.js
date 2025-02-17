@@ -480,6 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPosts();
 });
 
+
 // NEW: Listen for localStorage changes.
 window.addEventListener('storage', (event) => {
     if (event.key === 'notificationUpdateNeeded' && event.newValue === 'true') {
