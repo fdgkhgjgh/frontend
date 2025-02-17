@@ -22,7 +22,7 @@ async function loadPosts(page = 1) {
     try {
         const limit = 8; // Number of posts per page
         const response = await fetch(`${API_BASE_URL}/posts?page=${page}&limit=${limit}`); // Use API_BASE_URL
-        console.log('Response:', response); // Log the entire response object
+        //console.log('Response:', response); // Log the entire response object
 
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
@@ -30,8 +30,8 @@ async function loadPosts(page = 1) {
         const data = await response.json(); // Parse response as JSON
         const posts = data.posts; // Get the posts
         const totalPages = data.totalPages; // Get total pages
-        console.log('Posts:', posts); // Log the parsed posts data
-        console.log('totalPages:', totalPages); // Log the parsed posts data
+        //console.log('Posts:', posts); // Log the parsed posts data
+        //console.log('totalPages:', totalPages); // Log the parsed posts data
         displayPosts(posts);
         displayPagination(totalPages, page); // Display pagination controls
 
@@ -342,11 +342,11 @@ if (createPostFormMain) {
                 body: formData
             });
 
-            console.log("Create Post Response:", response);
+            //console.log("Create Post Response:", response);
 
             const data = await response.json();
 
-            console.log("Create Post Data:", data);
+            //console.log("Create Post Data:", data);
 
             if (response.status === 429) {
                 createPostMessageMain.textContent = data.message || "Too many requests, please try again later.";
@@ -484,7 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // NEW: Listen for localStorage changes.
 window.addEventListener('storage', (event) => {
     if (event.key === 'notificationUpdateNeeded' && event.newValue === 'true') {
-        console.log("Detected notification update needed. Refreshing header."); // ADDED LOG
+        //console.log("Detected notification update needed. Refreshing header."); // ADDED LOG
         setTimeout(() => {
             updateHeader(); // Refresh the header.
             localStorage.removeItem('notificationUpdateNeeded'); // Clear the flag.

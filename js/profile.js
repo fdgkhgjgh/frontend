@@ -238,14 +238,14 @@ async function fetchResponses(responseContainer) {
         });
 
         const data = await response.json();
-        console.log("full data in fetchResponses():", data); // Check full data
+        //console.log("full data in fetchResponses():", data); // Check full data
 
         responseContainer.innerHTML = ''; // Clear existing messages
-        console.log("Response data from /auth/notifications:", data);
+        //console.log("Response data from /auth/notifications:", data);
 
         // Check if there's a message and display it
         if (data.message && data.message !== 'No new activity') {
-            console.log("There was activity from this notif!");
+            //console.log("There was activity from this notif!");
             const messageElement = document.createElement('p');
             // Create a link to the post details page
             const linkElement = document.createElement('a');
@@ -255,7 +255,7 @@ async function fetchResponses(responseContainer) {
             responseContainer.appendChild(messageElement); // Append the paragraph to the container
             // Now we know the message has been appended.
         } else {
-            console.log("There was NO activity from this notif!");
+            //console.log("There was NO activity from this notif!");
             responseContainer.innerHTML = "<p>No new activity.</p>";
         }
 

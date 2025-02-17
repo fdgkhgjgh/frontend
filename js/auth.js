@@ -61,9 +61,9 @@ if (loginForm) {
                     body: JSON.stringify({ username, password }),
                 });
 
-                console.log('Login Response:', response);
+                //console.log('Login Response:', response);
                 const data = await response.json();
-                console.log('Login Data:', data);
+                //console.log('Login Data:', data);
 
                 if (response.ok) {
                   loginMessage.textContent = data.message;

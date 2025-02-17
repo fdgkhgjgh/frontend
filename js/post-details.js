@@ -21,7 +21,7 @@ async function loadPostDetails(postId) {
             throw new Error(`Failed to fetch post: ${response.status}`);
         }
         const post = await response.json();
-        console.log("Fetched post details:", post);
+        //console.log("Fetched post details:", post);
         displayPostDetails(post);
         displayComments(post.comments);
 
@@ -417,7 +417,7 @@ async function deleteComment(commentId, commentElement) {
         if (response.ok) {
             // Remove the comment element from the DOM
             commentElement.remove();
-            console.log(data.message) // show message for success.
+            //console.log(data.message) // show message for success.
         } else {
             alert(data.message);
         }
@@ -519,9 +519,9 @@ async function loadReplies(commentId, repliesContainer) {
     }
   
     try {
-      console.log('Comment ID before fetch:', commentId);
+      //console.log('Comment ID before fetch:', commentId);
       const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`); // Corrected URL
-      console.log('Fetch response status:', response.status);
+      //console.log('Fetch response status:', response.status);
   
       if (!response.ok) {
         const errorData = await response.json();
@@ -529,7 +529,7 @@ async function loadReplies(commentId, repliesContainer) {
       }
       const replies = await response.json();
   
-      console.log('Fetched replies:', replies);
+      //console.log('Fetched replies:', replies);
   
       if (replies.length > 0) {
         replies.forEach(reply => {
