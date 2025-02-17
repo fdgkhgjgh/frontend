@@ -487,9 +487,11 @@ window.addEventListener('storage', (event) => {
         setTimeout(() => {
             updateHeader(); // Refresh the header.
             localStorage.removeItem('notificationUpdateNeeded'); // Clear the flag.
-             const badge = document.getElementById('notification-badge'); // Get the element
+            const badge = document.getElementById('notification-badge'); // Get the element
             if (badge) { // Check if it exists before trying to remove
-                badge.remove();  //Then remove it here.
+               badge.remove();  //Then remove it here.
+            } else {
+                updateHeader(); // Refresh the header *again* if badge not present
             }
         }, 0); // Small delay (0ms should be sufficient)
     }
