@@ -228,46 +228,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 //shows responses
 async function fetchResponses(responseContainer) {
-    const token = localStorage.getItem('token');
-    if (!token) return;
+    const { count, notifications } = await getUnreadNotifications();
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/auth/notifications`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+    responseContainer.innerHTML = ''; // Clear existing messages
+
+    if (count > 0) {
+        notifications.forEach(notification => {
+            let link;
+            if (notification.type === 'reply') {
+                link = `post-details.html?id=${notification.postId}#comment-${notification.commentId}`;
+                responseContainer.innerHTML += `<p>You have new replies to your <a href="${link}">comment</a></p>`;
+            } else if (notification.type === 'comment') {
+                link = `post-details.html?id=${notification.postId}`;
+                responseContainer.innerHTML += `<p>You have new comments on your <a href="${link}">post</a></p>`;
+            }
         });
-
-        const data = await response.json();
-        console.log("Response data from /auth/notifications:", data); // ADD LOGGING HERE
-
-        responseContainer.innerHTML = ''; // Clear existing messages
-
-        if (data && data.notifications && data.notifications.length > 0) {
-            console.log("Notifications array:", data.notifications);  // <-- ADD THIS LINE
-
-            const ul = document.createElement('ul');
-            data.notifications.forEach(notification => {
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-
-                a.textContent = notification.message;
-                a.href = `post-details.html?id=${notification.postId}`;  // Link to post details page
-                 //Add comment id to link path ,so can scroll to comment
-                if (notification.commentId) {
-                    a.href += `#comment-${notification.commentId}`;
-                }
-
-                li.appendChild(a);
-                ul.appendChild(li);
-            });
-            responseContainer.appendChild(ul); // Append the list to the container
-
-        } else {
-            responseContainer.innerHTML = "<p>No new responses.</p>";
-        }
-
-    } catch (error) {
-        console.error("Error fetching responses:", error);
-        responseContainer.innerHTML = "<p>Error loading responses.</p>";
+    } else {
+        responseContainer.innerHTML = "<p>No new responses.</p>";
     }
 }
 

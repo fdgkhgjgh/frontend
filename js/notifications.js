@@ -2,12 +2,15 @@ import { API_BASE_URL } from './config.js';
 
 export async function getUnreadNotifications() {
   const token = localStorage.getItem('token');
-  if (!token) return 0;
+  if (!token) return { count: 0, notifications: [] };
 
   const response = await fetch(`${API_BASE_URL}/auth/notifications`, {
-    headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${token}` }
   });
 
   const data = await response.json();
-  return data.unreadNotifications || 0;
+  return {
+      count: data.unreadNotifications,
+      notifications: data.notifications || []
+  };
 }
