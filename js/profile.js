@@ -239,6 +239,8 @@ async function fetchResponses(responseContainer) {
         const data = await response.json();
 
         responseContainer.innerHTML = ''; // Clear existing messages
+        // ADD LOGGING HERE
+        console.log("Response data from /auth/notifications:", data);
         if (data.unreadNotifications > 0) {
             responseContainer.innerHTML = `<p>${data.message}</p>`; // Display the message
         } else {
