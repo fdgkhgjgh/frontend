@@ -213,15 +213,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         return; // Exit if the element doesn't exist
     }
 
-    await fetchResponses(responseContainer); // Fetch new responses
+    // Fetch notifications first
+    await fetchResponses(responseContainer);
 
     // Reset notifications on the backend
+    const token = localStorage.getItem('token');
     await fetch(`${API_BASE_URL}/auth/reset-notifications`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${token}` }
     });
 
-    // Update the notification badge in the header. This is handled in app.js, so we'll just set the flag
+    // Update the notification badge in the header
     localStorage.setItem('notificationUpdateNeeded', 'true');
 });
 
