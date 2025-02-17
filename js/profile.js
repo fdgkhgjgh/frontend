@@ -242,6 +242,8 @@ async function fetchResponses(responseContainer) {
         responseContainer.innerHTML = ''; // Clear existing messages
 
         if (data && data.notifications && data.notifications.length > 0) {
+            console.log("Notifications array:", data.notifications);  // <-- ADD THIS LINE
+
             const ul = document.createElement('ul');
             data.notifications.forEach(notification => {
                 const li = document.createElement('li');
