@@ -526,4 +526,3 @@ async function pinUnpinPost(postId, buttonElement) {
         alert("An error occurred while pinning/unpinning the post.");
     }
 }
-
