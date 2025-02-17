@@ -237,18 +237,10 @@ async function fetchResponses(responseContainer) {
         });
 
         const data = await response.json();
+        console.log("Response data from /auth/notifications:", data); // ADD LOGGING HERE
 
-        responseContainer.innerHTML = ''; // Clear existing messages
-        // ADD LOGGING HERE
-        console.log("Response data from /auth/notifications:", data);
-        if (data.unreadNotifications > 0) {
-            responseContainer.innerHTML = `<p>${data.message}</p>`; // Display the message
-        } else {
-            responseContainer.innerHTML = "<p>No new responses.</p>";
-        }
     } catch (error) {
         console.error("Error fetching responses:", error);
-        responseContainer.innerHTML = "<p>Error loading responses.</p>";
     }
 }
 
