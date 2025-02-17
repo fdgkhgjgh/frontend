@@ -245,6 +245,7 @@ async function fetchResponses(responseContainer) {
 
         // Check if there's a message and display it
         if (data.message && data.message !== 'No new activity') {
+            console.log("There was activity from this notif!");
             const messageElement = document.createElement('p');
             // Create a link to the post details page
             const linkElement = document.createElement('a');
@@ -253,6 +254,7 @@ async function fetchResponses(responseContainer) {
             messageElement.appendChild(linkElement);  // Append the link to the paragraph
             responseContainer.appendChild(messageElement); // Append the paragraph to the container
         } else {
+            console.log("There was NO activity from this notif!");
             responseContainer.innerHTML = "<p>No new activity.</p>";
         }
 
