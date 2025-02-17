@@ -207,23 +207,24 @@ async function deletePost(postId, postElement) {
 
 //notification clear
 document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
     const responseContainer = document.getElementById('response-container');
     if (!responseContainer) {
         console.error("response-container element not found in profile.html");
         return; // Exit if the element doesn't exist
     }
 
-    // Fetch notifications first
-    await fetchResponses(responseContainer);
+    await fetchResponses(responseContainer); // Fetch new responses
 
     // Reset notifications on the backend
-    const token = localStorage.getItem('token');
     await fetch(`${API_BASE_URL}/auth/reset-notifications`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
 
-    // Update the notification badge in the header
+    // Update the notification badge in the header. This is handled in app.js, so we'll just set the flag
     localStorage.setItem('notificationUpdateNeeded', 'true');
 });
 
