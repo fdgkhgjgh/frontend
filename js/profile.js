@@ -240,23 +240,7 @@ async function fetchResponses(responseContainer) {
 
         responseContainer.innerHTML = ''; // Clear existing messages
         if (data.unreadNotifications > 0) {
-            data.notifications.forEach(notification => {
-                const notificationElement = document.createElement('p');
-                if (notification.type === 'reply') {
-                    notificationElement.innerHTML = `
-                        You have a new reply on your comment: "${notification.commentText}"<br>
-                        From: ${notification.replyAuthor}<br>
-                        Reply: ${notification.replyText}<br><br>
-                    `;
-                } else if (notification.type === 'comment') {
-                    notificationElement.innerHTML = `
-                        You have a new comment on your post: "${notification.postTitle}"<br>
-                        From: ${notification.commentAuthor}<br>
-                        Comment: ${notification.commentText}<br><br>
-                    `;
-                }
-                responseContainer.appendChild(notificationElement);
-            });
+            responseContainer.innerHTML = `<p>${data.message}</p>`; // Display the message
         } else {
             responseContainer.innerHTML = "<p>No new responses.</p>";
         }
