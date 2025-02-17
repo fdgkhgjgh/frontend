@@ -238,9 +238,9 @@ async function fetchResponses(responseContainer) {
         });
 
         const data = await response.json();
+        console.log("full data in fetchResponses():", data); // Check full data
 
         responseContainer.innerHTML = ''; // Clear existing messages
-        // ADD LOGGING HERE
         console.log("Response data from /auth/notifications:", data);
 
         // Check if there's a message and display it
@@ -253,6 +253,7 @@ async function fetchResponses(responseContainer) {
             linkElement.textContent = data.message; // Set the message as the link text
             messageElement.appendChild(linkElement);  // Append the link to the paragraph
             responseContainer.appendChild(messageElement); // Append the paragraph to the container
+            // Now we know the message has been appended.
         } else {
             console.log("There was NO activity from this notif!");
             responseContainer.innerHTML = "<p>No new activity.</p>";
