@@ -237,14 +237,28 @@ async function fetchResponses(responseContainer) {
         });
 
         const data = await response.json();
+        console.log("Response data from /auth/notifications:", data); // ADD LOGGING HERE
 
         responseContainer.innerHTML = ''; // Clear existing messages
-        // ADD LOGGING HERE
-        console.log("Response data from /auth/notifications:", data);
 
-        // Check if there's a message and display it
-        if (data && data.message) {
-            responseContainer.innerHTML = `<p>${data.message}</p>`; // Display the message
+        if (data && data.notifications && data.notifications.length > 0) {
+            const ul = document.createElement('ul');
+            data.notifications.forEach(notification => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+
+                a.textContent = notification.message;
+                a.href = `post-details.html?id=${notification.postId}`;  // Link to post details page
+                 //Add comment id to link path ,so can scroll to comment
+                if (notification.commentId) {
+                    a.href += `#comment-${notification.commentId}`;
+                }
+
+                li.appendChild(a);
+                ul.appendChild(li);
+            });
+            responseContainer.appendChild(ul); // Append the list to the container
+
         } else {
             responseContainer.innerHTML = "<p>No new responses.</p>";
         }
