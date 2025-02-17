@@ -1,6 +1,7 @@
 // frontend/js/profile.js
 import { formatDate } from './utils.js';
 import { API_BASE_URL } from './config.js'; //Import constant
+import { getUnreadNotifications } from './notifications.js';
 
 const userInfo = document.getElementById('user-info');
 const userPostsContainer = document.getElementById('user-posts');
@@ -230,23 +231,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 //shows responses
 async function fetchResponses(responseContainer) {
-    const { count, notifications } = await getUnreadNotifications();
-
-    responseContainer.innerHTML = ''; // Clear existing messages
-
-    if (count > 0) {
-        notifications.forEach(notification => {
-            let link;
-            if (notification.type === 'reply') {
-                link = `post-details.html?id=${notification.postId}#comment-${notification.commentId}`;
-                responseContainer.innerHTML += `<p>You have new replies to your <a href="${link}">comment</a></p>`;
-            } else if (notification.type === 'comment') {
-                link = `post-details.html?id=${notification.postId}`;
-                responseContainer.innerHTML += `<p>You have new comments on your <a href="${link}">post</a></p>`;
-            }
-        });
-    } else {
-        responseContainer.innerHTML = "<p>No new responses.</p>";
+    try {
+        const { count, notifications } = await getUnreadNotifications();
+        
+        responseContainer.innerHTML = ''; // Clear existing messages
+        
+        if (count > 0) {
+            notifications.forEach(notification => {
+                let message = 'You have new activity!';
+                if (notification.type === 'reply') {
+                    message = `You have new replies to your comment.`;
+                } else if (notification.type === 'comment') {
+                    message = "You have new activity on your posts!";
+                }
+                responseContainer.innerHTML += `<p>${message}</p>`;
+            });
+        } else {
+            responseContainer.innerHTML = "<p>No new responses.</p>";
+        }
+    } catch (error) {
+        console.error("Error fetching responses:", error);
+        responseContainer.innerHTML = "<p>Error loading responses.</p>";
     }
 }
 
