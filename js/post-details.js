@@ -90,64 +90,54 @@ function displayPostDetails(post) {
     }
     contentContainer.appendChild(contentElement);
 
+    // --- Media Container (Handles both Images and Videos) ---
+    const mediaContainer = document.createElement('div');
+    mediaContainer.classList.add('media-container'); // Common container for images AND videos
+
     // --- Images ---
     if (post.imageUrls && post.imageUrls.length > 0) {
         const imgContainer = document.createElement('div');
-        imgContainer.classList.add('image-container');
-        imgContainer.style.display = 'flex'; //Use flex display.
-        imgContainer.style.flexDirection = 'column'; //Vertical align.
-        imgContainer.style.alignItems = 'center';   //Center images.
-
+        imgContainer.classList.add('multi-image-container');  // This class for layout
         post.imageUrls.forEach(imageUrl => {
             const imgElement = document.createElement('img');
             imgElement.src = imageUrl;
             imgElement.alt = "Post Image";
-            imgElement.style.maxWidth = '100%';
-            imgElement.style.maxHeight = '300px'; //Adjust max height
-            imgElement.style.marginBottom = '10px'; //Optional spacing
-
-            // *** ADD THE CLICK LISTENER HERE ***
+            imgElement.classList.add('post-image'); // Style individual image
             imgElement.addEventListener('click', () => {
                 const modal = document.getElementById('image-modal');
                 const modalImage = document.getElementById('modal-image');
                 const closeButton = document.querySelector('.close-button');
-            
                 modalImage.src = imgElement.src;
                 modal.style.display = 'flex';
-            
-                // Close the modal button logic.
                 closeButton.addEventListener('click', () => {
                     modal.style.display = 'none';
                 });
             });
-            // *** END CLICK LISTENER ***
-
             imgContainer.appendChild(imgElement);
         });
-        contentContainer.appendChild(imgContainer);
+        mediaContainer.appendChild(imgContainer); // Add images to the MEDIA CONTAINER!
     }
 
     //Videos
     if (post.videoUrls && post.videoUrls.length > 0) {
         const videoContainer = document.createElement('div');
-        videoContainer.classList.add('video-container');
-        videoContainer.style.display = 'flex';
-        videoContainer.style.flexDirection = 'column';
-        videoContainer.style.alignItems = 'center';
-
+        videoContainer.classList.add('multi-video-container'); //Layout class name.
         post.videoUrls.forEach(videoUrl => {
             const videoElement = document.createElement('video');
             videoElement.src = videoUrl;
             videoElement.alt = "Post Video";
             videoElement.controls = true; //Enable video controls.
-            videoElement.style.maxWidth = '100%';
-            videoElement.style.maxHeight = '300px';
-            videoElement.style.marginBottom = '10px';
-
+            videoElement.classList.add('post-video'); //Style for videos.
             videoContainer.appendChild(videoElement);
         });
-        contentContainer.appendChild(videoContainer);
+        mediaContainer.appendChild(videoContainer); //Add videos to media container.
     }
+
+    // Add the media container to the content (only if there are images OR videos)
+    if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
+        contentContainer.appendChild(mediaContainer);
+    }
+
     // --- Like/Dislike Buttons ---
     const voteContainer = document.createElement('div');
     voteContainer.classList.add('vote-container');

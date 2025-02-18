@@ -493,3 +493,44 @@ button[type="submit"]:disabled {
   border-radius: 50%; /* Make it circular */
   object-fit: cover; /* Important: Ensures the image fills the circle */
 }
+
+/* Common container for media (images and videos) */
+.media-container {
+  margin-bottom: 10px;
+  /* Add other common styles here if needed */
+}
+
+/* Multi-image container styles */
+.multi-image-container {
+  display: flex;            /* Arrange images in a row */
+  flex-wrap: wrap;          /* Allow images to wrap to the next line if needed */
+  justify-content: flex-start; /* Align images to the left */
+  align-items: flex-start;
+  gap: 10px;                /* Space between images */
+}
+
+/* Individual image styles */
+.multi-image-container .post-image {
+  max-width: 30%;           /* Each image takes up approximately 30% of the container */
+  max-height: 200px;
+  height: auto;
+  object-fit: cover;       /* Maintain aspect ratio and fill the container */
+  border-radius: 5px;      /* Optional: Add rounded corners */
+}
+
+/* Multi-video container styles (similar to image container) */
+.multi-video-container {
+  display: flex; /*Arrange videos in a row*/
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Individual video styles */
+.multi-video-container .post-video {
+  max-width: 30%; /* Adjust as needed */
+  max-height: 200px;
+  width: auto;
+  border-radius: 5px;
+}
