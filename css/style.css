@@ -563,15 +563,15 @@ button[type="submit"]:disabled {
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
   color: white;
   border: none;
-  padding: 10px;
+  padding: 1px;
   cursor: pointer;
   z-index: 1002;          /* Ensure buttons are above the images */
 }
 
 #prev-button {
-  left: 10px;
+  left: 1px;
 }
 
 #next-button {
-  right: 10px;
+  right: 1px;
 }
