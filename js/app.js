@@ -89,15 +89,14 @@ function displayPosts(posts) {
         titleFileContainer.classList.add('title-file-container');
         titleFileContainer.appendChild(titleElement);
 
-
-        // --- Images (Right Side) ---
-        //Modified this images showing here .
-        if (post.imageUrls && post.imageUrls.length > 0) {   //Check if has images.
+        // --- Display only the *first* file (image or video) ---
+        if (post.imageUrls && post.imageUrls.length > 0) {
+            // Display the first image
             const imgContainer = document.createElement('div');
             imgContainer.classList.add('image-container');
-            imgContainer.style.display = 'flex'; //Use flex display.
-            imgContainer.style.flexDirection = 'column'; //Vertical align.
-            imgContainer.style.alignItems = 'center';   //Center images.
+            imgContainer.style.display = 'flex';
+            imgContainer.style.flexDirection = 'column';
+            imgContainer.style.alignItems = 'center';
 
             const firstImageUrl = post.imageUrls[0]; // Get the *first* image URL
 
@@ -110,29 +109,28 @@ function displayPosts(posts) {
             imgContainer.appendChild(imgElement);
 
             titleFileContainer.appendChild(imgContainer);
-        }
-
-        //Display videos
-        if (post.videoUrls && post.videoUrls.length > 0) {
+        } else if (post.videoUrls && post.videoUrls.length > 0) {
+            // If no images, display the first video
             const videoContainer = document.createElement('div');
             videoContainer.classList.add('video-container');
             videoContainer.style.display = 'flex';
             videoContainer.style.flexDirection = 'column';
             videoContainer.style.alignItems = 'center';
 
-            post.videoUrls.forEach(videoUrl => {
-                const videoElement = document.createElement('video');
-                videoElement.src = videoUrl;
-                videoElement.alt = post.title;
-                videoElement.controls = true; //Enable video controls.
-                videoElement.style.maxWidth = '100%';
-                videoElement.style.maxHeight = '300px';
-                videoElement.style.marginBottom = '5px';
+            const firstVideoUrl = post.videoUrls[0];
 
-                videoContainer.appendChild(videoElement);
-            });
-            titleFileContainer.appendChild(videoContainer)
+            const videoElement = document.createElement('video');
+            videoElement.src = firstVideoUrl;
+            videoElement.alt = post.title;
+            videoElement.controls = true; //Enable video controls.
+            videoElement.style.maxWidth = '100%';
+            videoElement.style.maxHeight = '300px';
+            videoElement.style.marginBottom = '5px';
+
+            videoContainer.appendChild(videoElement);
+            titleFileContainer.appendChild(videoContainer);
         }
+
         contentContainer.appendChild(titleFileContainer)
         contentContainer.appendChild(authorDateElement);
         contentContainer.appendChild(contentElement);
