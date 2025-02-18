@@ -37,6 +37,7 @@ function displayPostDetails(post) {
     const postElement = document.createElement('div');
     postElement.classList.add('post');
 
+
     // --- Main Container for Content ---
     const contentContainer = document.createElement('div');
     contentContainer.classList.add('post-content');
