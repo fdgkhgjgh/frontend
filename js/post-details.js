@@ -105,13 +105,37 @@ function displayPostDetails(post) {
             imgElement.classList.add('post-image'); // Style individual image
             imgElement.addEventListener('click', () => {
                 const modal = document.getElementById('image-modal');
-                const modalImage = document.getElementById('modal-image');
+                const modalImageContainer = document.getElementById('modal-image-container');
                 const closeButton = document.querySelector('.close-button');
-                modalImage.src = imgElement.src;
+
+                // Clear existing images
+                modalImageContainer.innerHTML = '';
+
+                // Create and append images to modal
+                post.imageUrls.forEach(imageUrl => {
+                    const modalImg = document.createElement('img');
+                    modalImg.src = imageUrl;
+                    modalImg.alt = "Full Size Image";
+                    modalImageContainer.appendChild(modalImg);
+                });
+
                 modal.style.display = 'flex';
+
                 closeButton.addEventListener('click', () => {
                     modal.style.display = 'none';
                 });
+
+                  //Next Button
+                const nextButton = document.getElementById('next-button');
+                  nextButton.addEventListener('click', () => {
+                       modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
+                    });
+
+                  //Previous Button
+                  const prevButton = document.getElementById('prev-button');
+                  prevButton.addEventListener('click', () => {
+                        modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
+                  });
             });
             imgContainer.appendChild(imgElement);
         });

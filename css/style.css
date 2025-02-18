@@ -534,3 +534,44 @@ button[type="submit"]:disabled {
   width: auto;
   border-radius: 5px;
 }
+
+/* Style for the modal image carousel */
+#modal-image-carousel {
+  position: relative;   /* For positioning navigation buttons */
+}
+
+#modal-image-container {
+  display: flex;         /* Arrange images in a row */
+  overflow-x: auto;      /* Enable horizontal scrolling */
+  scroll-snap-type: x mandatory; /* Enable scroll snapping */
+  -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+}
+
+#modal-image-container img {
+  width: 100%;         /* Each image takes up the full width */
+  max-height: 80vh;      /* Limit maximum height to 80% of the viewport height */
+  object-fit: contain;   /* Maintain aspect ratio and fit within the container */
+  scroll-snap-align: start; /* Snap to the start of each image */
+}
+
+/*Basic button styles*/
+#prev-button,
+#next-button {
+  position: absolute;   /* Position over the images */
+  top: 50%;             /* Vertically center */
+  transform: translateY(-50%); /* Adjust for height */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1002;          /* Ensure buttons are above the images */
+}
+
+#prev-button {
+  left: 10px;
+}
+
+#next-button {
+  right: 10px;
+}
