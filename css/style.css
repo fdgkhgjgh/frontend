@@ -491,8 +491,8 @@ button[type="submit"]:disabled {
 
 /* Specific style for profile pictures on the post details page */
 #post-details-container .profile-picture {
-  width: 60px;
-  height: 60px;
+  width: 120px;
+  height: 120px;
 }
 
 @media (max-width: 768px) {
