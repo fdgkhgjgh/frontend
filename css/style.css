@@ -592,3 +592,22 @@ button[type="submit"]:disabled {
 #next-button {
   right: 1px;
 }
+
+/*Style the link*/
+.comment-item a {
+  color: blue; /* Or your preferred link color */
+  text-decoration: none; /* Remove underline */
+}
+/*Style on hover*/
+.comment-item a:hover {
+  text-decoration: underline; /* Add underline on hover */
+}
+
+.reply a {
+  color: blue; /* Or your preferred link color */
+  text-decoration: none; /* Remove underline */
+}
+/*Style on hover*/
+.reply a:hover {
+  text-decoration: underline; /* Add underline on hover */
+}

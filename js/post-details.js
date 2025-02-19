@@ -351,8 +351,15 @@ function displayComments(comments) {
         }
 
         const textElement = document.createElement('p');
-        textElement.textContent = commentContent;
-        commentItem.appendChild(textElement); // Then append text content.
+        const usernameLink = document.createElement('a');  // Create an <a> tag
+        usernameLink.href = `profile.html?id=${comment.author._id}`; // Set the href to the profile page
+        usernameLink.textContent = comment.author?.username || "Unknown"; // Set the link text to the username
+
+        textElement.append(usernameLink);  // Append the <a> tag to the <p>
+        textElement.append(`: ${comment.text} -- ${formatDate(comment.createdAt)}`); // Add the rest of the comment content
+
+        commentItem.appendChild(textElement); // Then append the <p> with the <a> and text content.
+
         //Add delete button.
         const currentUserId = localStorage.getItem('userId');
         if (currentUserId && currentUserId === comment.author?._id.toString()) {
@@ -568,8 +575,14 @@ async function loadReplies(commentId, repliesContainer) {
            profilePicture.alt = `${reply.author?.username}'s Profile Picture`;  //Also use ? to prevent errors
            replyElement.appendChild(profilePicture);
 
-          replyElement.textContent = `${reply.author.username}: ${reply.text} -- ${formatDate(reply.createdAt)}`;
-          repliesContainer.appendChild(replyElement);
+           //NEW CODE HERE!
+           const usernameLink = document.createElement('a');  // Create an <a> tag
+           usernameLink.href = `profile.html?id=${reply.author._id}`; // Set the href to the profile page
+           usernameLink.textContent = reply.author?.username || "Unknown"; // Set the link text to the username
+
+           replyElement.append(usernameLink);  // Append the <a> tag to the <p>
+           replyElement.append(`: ${reply.text} -- ${formatDate(reply.createdAt)}`); // Add the rest of the comment content
+           repliesContainer.appendChild(replyElement);
         });
       } else {
         repliesContainer.textContent = "No replies yet.";
