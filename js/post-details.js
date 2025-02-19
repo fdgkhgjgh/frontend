@@ -58,7 +58,6 @@ function displayPostDetails(post) {
     authorLink.href = `profile.html?id=${post.author._id}`; // Link to the profile page
     authorLink.textContent = ` ${post.author.username} `; //The username here
 
-    authorDateElement.append('By:');
     authorDateElement.appendChild(authorLink) // Link to the profile page
     authorDateElement.append(` on ${formatDate(post.createdAt)}`);
 
