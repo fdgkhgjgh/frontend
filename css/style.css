@@ -482,11 +482,24 @@ button[type="submit"]:disabled {
 }
 
 .profile-picture {
-  width: 30px;  /* Adjust size as needed */
-  height: 30px; /* Adjust size as needed */
-  border-radius: 50%; /* Make it circular */
-  object-fit: cover; /*  Important!  Ensures the image fills the circle without distortion */
-  margin-right: 5px; /* Add spacing between image and username */
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 5px;
+}
+
+/* Specific style for profile pictures on the post details page */
+#post-details-container .profile-picture {
+  width: 60px;
+  height: 60px;
+}
+
+@media (max-width: 768px) {
+  #post-details-container .profile-picture {
+    width: 40px;  /* Smaller on smaller screens */
+    height: 40px;
+  }
 }
 
 #profile-info img#profile-picture {

@@ -63,6 +63,10 @@ function displayPostDetails(post) {
     authorDateElement.append(` on ${formatDate(post.createdAt)}`);
 
     contentContainer.appendChild(authorDateElement);
+
+    //... the contentContainer element IS added to the postElement, which is added to postDetailsContainer.
+    postElement.appendChild(contentContainer);
+    postDetailsContainer.appendChild(postElement);
     
    // content showing 
     const contentElement = document.createElement('p');
@@ -317,6 +321,13 @@ function displayComments(comments) {
         commentNumber.textContent = `${index + 1}.`;  // Number, starting from 1
         commentItem.appendChild(commentNumber);  //Add the number to the comment item
 
+        // --- ADD PROFILE PICTURE HERE ---
+        const profilePicture = document.createElement('img');
+        profilePicture.classList.add('profile-picture');
+        profilePicture.src = comment.author?.profilePictureUrl || 'assets/default-profile.png'; // Use a default image!
+        profilePicture.alt = `${comment.author?.username}'s Profile Picture`;  //Also use ? to prevent errors
+        commentItem.appendChild(profilePicture);
+
         //Add file element
         let commentContent = `${comment.author?.username || "Unknown"}: ${comment.text} -- ${formatDate(comment.createdAt)}`; // Check before rendering
         let mediaElement = null;
@@ -550,6 +561,14 @@ async function loadReplies(commentId, repliesContainer) {
         replies.forEach(reply => {
           const replyElement = document.createElement('div');
           replyElement.classList.add('reply');
+
+           // --- ADD PROFILE PICTURE HERE ---
+           const profilePicture = document.createElement('img');
+           profilePicture.classList.add('profile-picture');
+           profilePicture.src = reply.author?.profilePictureUrl || 'assets/default-profile.png'; // Use a default image!
+           profilePicture.alt = `${reply.author?.username}'s Profile Picture`;  //Also use ? to prevent errors
+           replyElement.appendChild(profilePicture);
+
           replyElement.textContent = `${reply.author.username}: ${reply.text} -- ${formatDate(reply.createdAt)}`;
           repliesContainer.appendChild(replyElement);
         });
