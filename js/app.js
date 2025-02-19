@@ -147,41 +147,6 @@ function displayPosts(posts) {
         contentContainer.appendChild(authorDateElement);
         contentContainer.appendChild(contentElement);
 
-        // --- Like/Dislike Buttons ---
-        const voteContainer = document.createElement('div');
-        voteContainer.classList.add('vote-container');
-
-        const likeButton = document.createElement('button');
-        likeButton.classList.add('vote-button', 'like-button');
-        likeButton.innerHTML = '&#x25B2;'; // Up arrow (▲) -  Use HTML entities for special characters
-        likeButton.dataset.postId = post._id; //Set id for like button.
-        likeButton.dataset.voteType = "upvote" //Set vote type for like button.
-        voteContainer.appendChild(likeButton);
-
-         //Upvotes span tag.
-        const upvoteCount = document.createElement('span');
-        upvoteCount.classList.add('vote-count');
-        upvoteCount.id = `upvote-count-${post._id}`;
-        upvoteCount.textContent = post.upvotes; //Set default upvotes.
-        voteContainer.appendChild(upvoteCount);
-
-
-        const dislikeButton = document.createElement('button');
-        dislikeButton.classList.add('vote-button', 'dislike-button');
-        dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
-        dislikeButton.dataset.postId = post._id; //Set id for dislike button.
-        dislikeButton.dataset.voteType = "downvote" //Set vote type for dislike button.
-        voteContainer.appendChild(dislikeButton);
-
-         //Downvotes span tag.
-        const downvoteCount = document.createElement('span');
-        downvoteCount.classList.add('vote-count');
-        downvoteCount.id = `downvote-count-${post._id}`;
-        downvoteCount.textContent = post.downvotes; //Set default downvotes.
-        voteContainer.appendChild(downvoteCount);
-
-
-        contentContainer.appendChild(voteContainer);
 
         
         // ***ADD PIN/UNPIN BUTTON HERE***
