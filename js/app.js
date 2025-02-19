@@ -59,7 +59,7 @@ function displayPosts(posts) {
 
         // Add Comment Count to the Title Link
         const commentCountSpan = document.createElement('span');
-        commentCountSpan.textContent = ` (Comments: ${post.totalComments})`;
+        commentCountSpan.textContent = ` ( ${post.totalComments})`;
         commentCountSpan.style.fontWeight = 'normal'; // Optional: remove bolding if desired
         titleLink.appendChild(commentCountSpan);
 
