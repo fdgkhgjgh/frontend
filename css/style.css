@@ -329,6 +329,10 @@ textarea {
   flex-direction: column; /* Revert to column layout for other content */
 }
 
+.post h2 a {
+  display: inline-block; /* or inline-flex */
+}
+
 /* Styles for the pagination container */
 #pagination-container {
   display: flex;

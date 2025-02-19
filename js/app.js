@@ -56,6 +56,13 @@ function displayPosts(posts) {
         const titleLink = document.createElement('a'); // Create an <a> tag
         titleLink.href = `post-details.html?id=${post._id}`; // Set the link to the details page
         titleLink.textContent = post.title; // Set the link text to the post title
+
+        // Add Comment Count to the Title Link
+        const commentCountSpan = document.createElement('span');
+        commentCountSpan.textContent = ` (Comments: ${post.totalComments})`;
+        commentCountSpan.style.fontWeight = 'normal'; // Optional: remove bolding if desired
+        titleLink.appendChild(commentCountSpan);
+
         titleElement.appendChild(titleLink);   // Wrap the title text in the link
 
         // --- Author and Date ---
@@ -86,7 +93,6 @@ function displayPosts(posts) {
          // ADD THIS CODE: Display total comments
          const commentCountElement = document.createElement('p');
          commentCountElement.textContent = `Comments: ${post.totalComments}`;
-         contentContainer.appendChild(commentCountElement);
  
 
 
