@@ -83,6 +83,12 @@ function displayPosts(posts) {
             contentElement.textContent = ''; // or some placeholder if content is empty
         }
 
+         // ADD THIS CODE: Display total comments
+         const commentCountElement = document.createElement('p');
+         commentCountElement.textContent = `Comments: ${post.totalComments}`;
+         contentContainer.appendChild(commentCountElement);
+ 
+
 
         // --- New Container for Title and Files ---
         const titleFileContainer = document.createElement('div');
