@@ -172,7 +172,7 @@ function displayPostDetails(post) {
 
     const likeButton = document.createElement('button');
     likeButton.classList.add('vote-button', 'like-button');
-    likeButton.innerHTML = '&#x25B2;'; // Up arrow (▲)
+    likeButton.innerHTML = '👍'; // Thumbs Up Emoji
     likeButton.dataset.postId = post._id;
     likeButton.dataset.voteType = "upvote";
     voteContainer.appendChild(likeButton);
@@ -186,7 +186,7 @@ function displayPostDetails(post) {
 
     const dislikeButton = document.createElement('button');
     dislikeButton.classList.add('vote-button', 'dislike-button');
-    dislikeButton.innerHTML = '&#x25BC;'; // Down arrow (▼)
+    dislikeButton.innerHTML = '👎';
     dislikeButton.dataset.postId = post._id;
     dislikeButton.dataset.voteType = "downvote";
     voteContainer.appendChild(dislikeButton);
