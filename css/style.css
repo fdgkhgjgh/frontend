@@ -611,3 +611,14 @@ button[type="submit"]:disabled {
 .reply a:hover {
   text-decoration: underline; /* Add underline on hover */
 }
+
+/* Change the color of post titles on the main page */
+.post-content h2 a {  /* <--- More specific selector */
+  color: #b56407; /* Or your desired color (e.g., black) */
+  text-decoration: none; /* Remove underline if desired */
+}
+
+.post-content h2 a:hover {
+  color: #555;  /* A darker shade on hover, for example */
+  text-decoration: underline;  /* Add underline on hover */
+}

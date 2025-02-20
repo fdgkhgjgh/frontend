@@ -138,3 +138,12 @@ font-size: 0.8em;
 .dark-mode .close-button {
   color: rgb(113, 23, 23); /* Or any other color */
 }
+
+/* Change the color of post titles on the main page in dark mode */
+.dark-mode .post-content h2 a {
+  color: #eee; /* A lighter color for dark mode */
+}
+
+.dark-mode .post-content h2 a:hover {
+  color: #fff; /*Even lighter on hover*/
+}
