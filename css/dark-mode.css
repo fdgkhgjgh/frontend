@@ -147,3 +147,7 @@ font-size: 0.8em;
 .dark-mode .post-content h2 a:hover {
   color: #fff; /*Even lighter on hover*/
 }
+
+#post-details-container .post .post-content p a {
+  color: rgb(234, 234, 25); /* Set the desired yellow color */
+}
