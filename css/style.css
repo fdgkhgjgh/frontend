@@ -102,12 +102,12 @@ nav a:hover {
 /* Specific button styles (optional, but good for visual distinction) */
 .like-button {
   /* Example: Green for like */
-  color: #4CAF50;
+  color: #4CAF50; /* Keep, adjust, or remove */
 }
 
 .dislike-button {
   /* Example: Red for dislike */
-  color: #f44336;
+  color: #f44336; /* Keep, adjust, or remove */
 }
 
 .delete-button {
