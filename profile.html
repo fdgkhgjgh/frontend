@@ -30,7 +30,15 @@
         <form id="update-profile-form">
             <label for="profilePicture">New Profile Picture:</label>
             <input type="file" id="profilePicture" name="profilePicture" accept="image/*"><br><br>
-            <button type="submit">Update Profile</button>
+            <button type="submit">
+                Update Profile(上传)
+                <span id="button-spinner" style="display: none;">
+                    &#x21bb; <!-- Unicode anticlockwise circled arrow -->
+                </span>
+                <span id="button-success-icon" style="display: none; color: green;">
+                    &#x2713;  <!-- Unicode checkmark -->
+                </span>
+            </button>
         </form>
         <p id="profile-message"></p>
 

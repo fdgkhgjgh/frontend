@@ -5,6 +5,12 @@ import { API_BASE_URL } from './config.js'; //Import constant
 const userInfo = document.getElementById('user-info');
 const userPostsContainer = document.getElementById('user-posts');
 const responseContainer = document.getElementById('response-container'); // Get the response container -VERY IMPORTANT.
+const updateProfileForm = document.getElementById('update-profile-form'); // Get the form
+
+// Get references to the button and icons
+const updateProfileButton = updateProfileForm.querySelector('button[type="submit"]'); //VERY important
+const buttonSpinner = document.getElementById('button-spinner');
+const buttonSuccessIcon = document.getElementById('button-success-icon');
 
 async function loadUserProfile() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -94,6 +100,9 @@ async function updateProfile(event) {
         formData.append('profilePicture', profilePicture);  // MUST MATCH BACKEND
     }
 
+     //--- SET BUTTON TO "SENDING" STATE ---
+    setButtonState('sending');
+
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE_URL}/auth/profile/update`, { // Correct Route
@@ -116,20 +125,63 @@ async function updateProfile(event) {
             // Reload the profile information to display the updated picture
             loadUserProfile();
 
-             // Also update the image in the header (if it's displayed there)
-             const headerProfilePicture = document.querySelector('header img.profile-picture'); // Adjust the selector if needed
-             if (headerProfilePicture) {
-                 headerProfilePicture.src = data.profilePictureUrl || 'assets/default-profile.png'; // Ensure it's updated in the header, too
-             }
+            // Also update the image in the header (if it's displayed there)
+            const headerProfilePicture = document.querySelector('header img.profile-picture'); // Adjust the selector if needed
+            if (headerProfilePicture) {
+                headerProfilePicture.src = data.profilePictureUrl || 'assets/default-profile.png'; // Ensure it's updated in the header, too
+            }
+               //--- SET BUTTON TO "SUCCESS" STATE ---
+               setButtonState('success');
+                setTimeout(() => {
+                    setButtonState('default');
+                }, 1500); // 1.5 seconds (adjust as needed)
 
         } else {
             profileMessage.textContent = data.message;
             profileMessage.style.color = 'red';
+              //--- SET BUTTON TO "error" STATE ---
+               setButtonState('error');
+                setTimeout(() => {
+                    setButtonState('default');
+                }, 1500); // 1.5 seconds (adjust as needed)
         }
     } catch (error) {
         console.error('Error updating profile:', error);
         profileMessage.textContent = 'An error occurred while updating the profile.';
         profileMessage.style.color = 'red';
+          //--- SET BUTTON TO "error" STATE ---
+               setButtonState('error');
+                setTimeout(() => {
+                    setButtonState('default');
+                }, 1500); // 1.5 seconds (adjust as needed)
+    }
+}
+
+//running circle button
+function setButtonState(state) {
+    switch (state) {
+        case 'sending':
+            updateProfileButton.disabled = true;
+            updateProfileButton.textContent = 'Updating...';
+            buttonSpinner.style.display = 'inline-block';
+            buttonSuccessIcon.style.display = 'none';
+            break;
+        case 'success':
+            updateProfileButton.textContent = 'Updated!';
+            buttonSpinner.style.display = 'none';
+            buttonSuccessIcon.style.display = 'inline-block';
+            break;
+        case 'error':
+            updateProfileButton.textContent = 'Error!';
+            buttonSpinner.style.display = 'none';
+            buttonSuccessIcon.style.display = 'none';
+            break;
+        default: // 'default' or any other state
+            updateProfileButton.disabled = false;
+            updateProfileButton.textContent = 'Update Profile';
+            buttonSpinner.style.display = 'none';
+            buttonSuccessIcon.style.display = 'none';
+            break;
     }
 }
 
