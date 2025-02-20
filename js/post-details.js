@@ -523,11 +523,11 @@ function showReplyForm(commentId) {
         const postId = new URLSearchParams(window.location.search).get('id'); // Post id
 
         //Call addReply function .
-        addReply(postId, commentId, replyText, repliesContainer);
+        addReply(postId, commentId, replyText, repliesContainer, setReplyButtonState);
     });
 }
 // Function to add a reply
-async function addReply(postId, commentId, replyText, repliesContainer) {
+async function addReply(postId, commentId, replyText, repliesContainer, setReplyButtonState) {
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -536,9 +536,8 @@ async function addReply(postId, commentId, replyText, repliesContainer) {
             return;
         }
 
-        //---SET BUTTON TO "SENDING" STATE---
+         //---SET BUTTON TO "SENDING" STATE---
         setReplyButtonState('sending');
-
 
         const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies`, {
             method: 'POST',
