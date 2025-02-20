@@ -151,3 +151,23 @@ font-size: 0.8em;
 #post-details-container .post .post-content p a {
   color: rgb(234, 234, 25); /* Set the desired yellow color */
 }
+
+/* Style usernames in comments (dark mode) */
+.dark-mode .comment-item a {
+  color: yellow; /* Set to yellow or your desired color */
+}
+
+.dark-mode .comment-item a:hover {
+  color: lightyellow; /* Lighter yellow on hover for better visibility */
+  text-decoration: underline; /* Keep the underline on hover */
+}
+
+/* Style usernames in replies (dark mode) */
+.dark-mode .reply a {
+  color: yellow; /* Set to yellow or your desired color */
+}
+
+.dark-mode .reply a:hover {
+  color: lightyellow; /* Lighter yellow on hover for better visibility */
+  text-decoration: underline; /* Keep the underline on hover */
+}
