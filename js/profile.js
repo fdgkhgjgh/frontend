@@ -266,17 +266,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         return; // Exit if the element doesn't exist
     }
 
-    await fetchResponses(responseContainer); // Fetch new responses
 
-    // Reset notifications on the backend
-    await fetch(`${API_BASE_URL}/auth/reset-notifications`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-    });
+    // Reset notifications on the backend, unconditionally
+    try {
+        await fetch(`${API_BASE_URL}/auth/reset-notifications`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
 
-    // Update the notification badge in the header. This is handled in app.js, so we'll just set the flag
-    localStorage.setItem('notificationUpdateNeeded', 'true');
+        // Update the notification badge in the header. This is handled in app.js, so we'll just set the flag
+        localStorage.setItem('notificationUpdateNeeded', 'true');
+
+        await fetchResponses(responseContainer); // Fetch new responses, after resetting
+    } catch (error) {
+        console.error("Error resetting notifications:", error);
+    }
 });
+
 
 
 //shows responses
@@ -295,20 +301,22 @@ async function fetchResponses(responseContainer) {
         responseContainer.innerHTML = ''; // Clear existing messages
         //console.log("Response data from /auth/notifications:", data);
 
+         if (data.message) {
+            responseContainer.innerHTML = "<p>No new activity.</p>";
+        }
         // Check if there's a message and display it
-        if (data.message && data.message !== 'No new activity') {
+        if (data.notifications && data.notifications.length > 0) {
+            data.notifications.forEach(notification => {
+
             //console.log("There was activity from this notif!");
             const messageElement = document.createElement('p');
             // Create a link to the post details page
             const linkElement = document.createElement('a');
-            linkElement.href = `post-details.html?id=${data.postId}`; // Use the postId
-            linkElement.textContent = data.message; // Set the message as the link text
+            linkElement.href = `post-details.html?id=${notification.postId}`; // Use the postId
+            linkElement.textContent = notification.message; // Set the message as the link text
             messageElement.appendChild(linkElement);  // Append the link to the paragraph
             responseContainer.appendChild(messageElement); // Append the paragraph to the container
-            // Now we know the message has been appended.
-        } else {
-            //console.log("There was NO activity from this notif!");
-            responseContainer.innerHTML = "<p>No new activity.</p>";
+             });
         }
 
     } catch (error) {
