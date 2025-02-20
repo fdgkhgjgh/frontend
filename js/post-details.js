@@ -479,10 +479,37 @@ function showReplyForm(commentId) {
     replyTextarea.placeholder = 'Write your reply...';
     replyForm.appendChild(replyTextarea);
 
+      //---ADD SPINNER HTML HERE---
     const replyButton = document.createElement('button');
     replyButton.type = 'submit';
-    replyButton.textContent = 'Submit Reply';
+    replyButton.innerHTML = `Submit Reply
+            <span id="reply-button-spinner" style="display: none;">
+                &#x21bb; <!-- Unicode anticlockwise circled arrow -->
+            </span>
+        `;
     replyForm.appendChild(replyButton);
+
+      // Get references to the button and spinner (after they're created)
+    const replyButtonSpinner = replyForm.querySelector('#reply-button-spinner');
+
+     //---SET BUTTON STATE FUNCTION---
+      function setReplyButtonState(state) {
+        switch (state) {
+            case 'sending':
+                replyButton.disabled = true;
+                replyButton.textContent = 'Sending...';
+                replyButtonSpinner.style.display = 'inline-block';
+                break;
+            case 'default':
+                replyButton.disabled = false;
+                replyButton.innerHTML = `Submit Reply
+                        <span id="reply-button-spinner" style="display: none;">
+                            &#x21bb; <!-- Unicode anticlockwise circled arrow -->
+                        </span>`;
+                replyButtonSpinner.style.display = 'none';
+                break;
+        }
+    }
 
     // Add the form to the replies container
     const repliesContainer = document.getElementById(`replies-${commentId}`);
@@ -508,6 +535,10 @@ async function addReply(postId, commentId, replyText, repliesContainer) {
             commentMessage.style.color = 'red';
             return;
         }
+
+        //---SET BUTTON TO "SENDING" STATE---
+        setReplyButtonState('sending');
+
 
         const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies`, {
             method: 'POST',
@@ -537,6 +568,9 @@ async function addReply(postId, commentId, replyText, repliesContainer) {
         console.error('Error adding reply:', error);
         commentMessage.textContent = "An error occurred while adding the reply.";
         commentMessage.style.color = 'red';
+    } finally {
+           //---RESET BUTTON TO DEFAULT STATE---
+        setReplyButtonState('default');
     }
 }
 // Load replies function
