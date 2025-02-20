@@ -582,6 +582,19 @@ async function loadReplies(commentId, repliesContainer) {
 
            replyElement.append(usernameLink);  // Append the <a> tag to the <p>
            replyElement.append(`: ${reply.text} -- ${formatDate(reply.createdAt)}`); // Add the rest of the comment content
+
+            // --- ADD DELETE BUTTON HERE ---
+            const currentUserId = localStorage.getItem('userId');
+            if (currentUserId && currentUserId === reply.author?._id.toString()) {
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.classList.add('delete-button');
+                deleteButton.dataset.replyId = reply._id; // Store reply ID as dataset
+                deleteButton.addEventListener('click', (event) => {
+                    deleteReply(reply._id, replyElement, commentId); // Pass commentId here
+                });
+                replyElement.appendChild(deleteButton);
+            }
            repliesContainer.appendChild(replyElement);
         });
       } else {
@@ -609,5 +622,40 @@ async function loadReplies(commentId, repliesContainer) {
       repliesContainer.textContent = `Error loading replies: ${error.message}`;
     }
   }
+
+  //delete reply
+  async function deleteReply(replyId, replyElement, commentId) {
+    const postId = new URLSearchParams(window.location.search).get('id'); // Get post ID
+
+    const confirmDelete = confirm("Are you sure you want to delete this reply?");
+    if (!confirmDelete) return;
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies/${replyId}`, { // Corrected URL
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Remove the reply element from the DOM
+            replyElement.remove();
+            commentMessage.textContent = data.message; // Display a message.
+            commentMessage.style.color = 'green';
+        } else {
+            commentMessage.textContent = `Error: ${data.message}`;
+            commentMessage.style.color = 'red';
+        }
+    } catch (error) {
+        console.error('Error deleting reply:', error);
+        commentMessage.textContent = "An error occurred while deleting the reply.";
+        commentMessage.style.color = 'red';
+    }
+}
+
 // Export
 export { loadPostDetails }
