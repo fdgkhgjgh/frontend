@@ -649,3 +649,70 @@ button[type="submit"]:disabled {
   color: rgb(224, 106, 9); /* Lighter blue on hover for better visibility */
   text-decoration: underline; /* Keep the underline on hover */
 }
+
+/* New container for Title and Author/Date  */
+.text-info-container {
+  flex: 1;  /* Takes up most of the space */
+  display: flex; /* Enable flexbox for vertical alignment */
+  flex-direction: column; /* Stack title and author/date vertically */
+  justify-content: space-between; /* Distribute space between title and author/date */
+}
+
+.text-info-container h2 {
+  /* Two-line title */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  display: -moz-box; /* For Firefox */
+  display: -ms-flexbox; /* For IE 10 */
+  display: -webkit-flex; /* For Safari */
+  display: flex;
+  -webkit-line-clamp: 2; /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  line-clamp: 2; /* Standard property for line-clamp */
+  box-orient: vertical;
+  max-width: 100%; /* Take up the available width */
+  line-height: 1.2em; /* Adjust as needed */
+  height: 2.4em;  /* 2 * line-height (for 2 lines) */
+}
+
+/* Restrict title line length to 27 characters (adjust if needed) */
+.text-info-container h2 a {
+  word-break: break-word;  /* Break long words */
+}
+
+/* Author/Date styling */
+.text-info-container p {
+  font-size: 0.8em; /* Smaller font size */
+  color: #777;
+}
+
+/* Styles for the image on the post list */
+.post-list-image {
+  width: 100px;    /* Fixed width for image */
+  height: 100px;   /* Fixed height for image */
+  object-fit: cover; /* Crop/scale image to fill the space */
+  border-radius: 5px; /* Rounded corners */
+  margin-left: 10px; /* Spacing between text and image */
+}
+
+/* Styles for the video on the post list */
+.post-list-video {
+  width: 100px;    /* Fixed width for video */
+  height: 100px;   /* Fixed height for video */
+  object-fit: cover; /* Crop/scale video to fill the space */
+  border-radius: 5px; /* Rounded corners */
+  margin-left: 10px; /* Spacing between text and video */
+}
+
+
+.post-content {
+  display: flex; /* Enable flexbox */
+  align-items: center; /* Vertically align items */
+  margin-bottom: 10px; /* Spacing between posts */
+  padding: 10px;        /* Add some padding around the content */
+}
+.title-file-container {
+  display: flex; /* Enable flexbox */
+  align-items: center; /* Vertically align items */
+}
