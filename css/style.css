@@ -45,10 +45,10 @@ nav a:hover {
 }
 
 .post-content {
-  flex: 1; /* Take up remaining space */
-  margin-right: 20px; /* Spacing between content and image */
-  display: flex;
-  flex-direction: column;
+  display: flex; /* Enable flexbox */
+  align-items: center; /* Vertically align items */
+  margin-bottom: 10px; /* Spacing between posts */
+  padding: 10px;        /* Add some padding around the content */
 }
 
 /* Image Container */
@@ -282,9 +282,6 @@ textarea {
       height: auto;
   }
 
-  .post-content {
-      margin-right: 0; /* Remove unnecessary spacing */
-  }
 
   nav a,
   nav button {
@@ -325,9 +322,6 @@ textarea {
   height: auto;
 }
 
-.post-content {
-  flex-direction: column; /* Revert to column layout for other content */
-}
 
 .post h2 a {
   display: inline-block; /* or inline-flex */
@@ -705,13 +699,6 @@ button[type="submit"]:disabled {
   margin-left: 10px; /* Spacing between text and video */
 }
 
-
-.post-content {
-  display: flex; /* Enable flexbox */
-  align-items: center; /* Vertically align items */
-  margin-bottom: 10px; /* Spacing between posts */
-  padding: 10px;        /* Add some padding around the content */
-}
 .title-file-container {
   display: flex; /* Enable flexbox */
   align-items: center; /* Vertically align items */
