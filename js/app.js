@@ -50,6 +50,10 @@ function displayPosts(posts) {
         // --- Main Container for Content ---
         const contentContainer = document.createElement('div');
         contentContainer.classList.add('post-content');
+                // --- New Container for Title and Files ---
+        const titleFileContainer = document.createElement('div');
+        titleFileContainer.classList.add('title-file-container');
+
 
         // --- Title (NOW CLICKABLE) ---
         const titleElement = document.createElement('h2');
@@ -103,6 +107,8 @@ function displayPosts(posts) {
         if (mediaElement) {
             titleFileContainer.appendChild(mediaElement);
         }
+
+        contentContainer.appendChild(titleFileContainer);
 
         // ***ADD PIN/UNPIN BUTTON HERE***
         const currentUserId = localStorage.getItem('userId');
