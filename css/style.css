@@ -44,12 +44,6 @@ nav a:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.post-content {
-  display: flex; /* Enable flexbox */
-  align-items: center; /* Vertically align items */
-  margin-bottom: 10px; /* Spacing between posts */
-  padding: 10px;        /* Add some padding around the content */
-}
 
 /* Image Container */
 .image-container {
@@ -645,14 +639,14 @@ button[type="submit"]:disabled {
 }
 
 /* New container for Title and Author/Date  */
-.text-info-container {
-  flex: 1;  /* Takes up most of the space */
-  display: flex; /* Enable flexbox for vertical alignment */
-  flex-direction: column; /* Stack title and author/date vertically */
-  justify-content: space-between; /* Distribute space between title and author/date */
+.main-post-list .text-info-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.text-info-container h2 {
+.main-post-list .text-info-container h2 {
   /* Two-line title */
   overflow: hidden;
   text-overflow: ellipsis;
@@ -661,44 +655,53 @@ button[type="submit"]:disabled {
   display: -ms-flexbox; /* For IE 10 */
   display: -webkit-flex; /* For Safari */
   display: flex;
-  -webkit-line-clamp: 2; /* Number of lines to show */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   line-clamp: 2; /* Standard property for line-clamp */
   box-orient: vertical;
-  max-width: 100%; /* Take up the available width */
-  line-height: 1.2em; /* Adjust as needed */
-  height: 2.4em;  /* 2 * line-height (for 2 lines) */
+  max-width: 100%;
+  line-height: 1.2em;
+  height: 2.4em;
 }
 
 /* Restrict title line length to 27 characters (adjust if needed) */
-.text-info-container h2 a {
-  word-break: break-word;  /* Break long words */
+.main-post-list .text-info-container h2 a {
+  word-break: break-word;
 }
 
 /* Author/Date styling */
-.text-info-container p {
-  font-size: 0.8em; /* Smaller font size */
+.main-post-list .text-info-container p {
+  font-size: 0.8em;
   color: #777;
 }
 
 /* Styles for the image on the post list */
-.post-list-image {
-  width: 100px;    /* Fixed width for image */
-  height: 100px;   /* Fixed height for image */
-  object-fit: cover; /* Crop/scale image to fill the space */
-  border-radius: 5px; /* Rounded corners */
-  margin-left: 10px; /* Spacing between text and image */
+.main-post-list .post-list-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-left: 10px;
 }
 
 /* Styles for the video on the post list */
-.post-list-video {
-  width: 100px;    /* Fixed width for video */
-  height: 100px;   /* Fixed height for video */
-  object-fit: cover; /* Crop/scale video to fill the space */
-  border-radius: 5px; /* Rounded corners */
-  margin-left: 10px; /* Spacing between text and video */
+.main-post-list .post-list-video {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-left: 10px;
 }
 
+/* Main Page Post Content */
+.main-post-list .post-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+/* title file container */
 .title-file-container {
   display: flex; /* Enable flexbox */
   align-items: center; /* Vertically align items */
