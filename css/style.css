@@ -263,7 +263,7 @@ textarea {
 
   .post {
       flex-direction: column; /* Stack content on small screens */
-      padding: 10px; /* Reduce padding */
+      padding: 2px; /* Reduce padding */
   }
 
   .image-container {
