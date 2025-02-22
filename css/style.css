@@ -39,7 +39,7 @@ nav a:hover {
   background-color: #e6e6e6;
   border: 1px solid #ddd;
   margin-bottom: 3px;
-  padding: 2px;
+  padding: 0.5px;
   border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -263,7 +263,7 @@ textarea {
 
   .post {
       flex-direction: column; /* Stack content on small screens */
-      padding: 2px; /* Reduce padding */
+      padding: 0.5px; /* Reduce padding */
   }
 
   .image-container {
@@ -698,7 +698,7 @@ button[type="submit"]:disabled {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
-  padding: 2px;
+  padding: 0.5px;
 }
 
 /* title file container */
