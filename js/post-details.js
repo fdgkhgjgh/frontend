@@ -435,6 +435,11 @@ postDetailsContainer.addEventListener('click', async (event) => {
 
 async function deleteComment(commentId, commentElement) {
     const postId = new URLSearchParams(window.location.search).get('id');
+    // *** ADD CONFIRMATION DIALOG HERE ***
+    const confirmDelete = confirm("Are you sure you want to delete this comment?");
+    if (!confirmDelete) {
+        return; // If the user cancels, exit the function
+    }
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}`, {
