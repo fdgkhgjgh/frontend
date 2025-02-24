@@ -235,19 +235,21 @@ function setCommentButtonState(state) {
 
 
 // --- Add Comment Submission ---
-
 if (addCommentForm) {
     addCommentForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const commentText = document.getElementById('comment-text').value;
-        const commentFile = document.getElementById('comment-file').files[0];
+        const commentFilesInput = document.getElementById('comment-files');
+        const commentFiles = commentFilesInput.files; // Get the files
         const postId = new URLSearchParams(window.location.search).get('id');
 
         const formData = new FormData();
         formData.append('text', commentText);
-        if (commentFile) {
-            formData.append('file', commentFile);
+
+        // Append each file to the FormData
+        for (let i = 0; i < commentFiles.length; i++) {
+            formData.append('files', commentFiles[i]); // Use the same field name "files"
         }
 
         try {
