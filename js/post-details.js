@@ -708,5 +708,50 @@ async function loadReplies(commentId, repliesContainer) {
     }
 }
 
+//Click to zoom in
+commentsList.addEventListener('click', (event) => {
+    if (event.target.tagName === 'IMG' && event.target.classList.contains('post-image')) {
+        const imageUrls = [];
+
+        // Get the image URLs from the comment
+        let currentElement = event.target.parentElement;
+        while (currentElement && !currentElement.classList.contains('comment-item')) {
+            currentElement = currentElement.parentElement;
+        }
+
+        if (currentElement) {
+            const imageElements = currentElement.querySelectorAll('img.post-image');
+            imageElements.forEach(img => {
+                imageUrls.push(img.src);
+            });
+        }
+
+        if (imageUrls.length > 0) {
+            // Show the modal
+            const modal = document.getElementById('comment-image-modal');
+            const modalImageContainer = document.getElementById('modal-image-container');
+            const closeButton = document.querySelector('.close-button');
+
+            // Clear existing images
+            modalImageContainer.innerHTML = '';
+
+            // Create and append images to modal
+            imageUrls.forEach(imageUrl => {
+                const modalImg = document.createElement('img');
+                modalImg.src = imageUrl;
+                modalImg.alt = "Full Size Image";
+                modalImageContainer.appendChild(modalImg);
+            });
+
+            modal.style.display = 'flex';
+
+            closeButton.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+        }
+    }
+});
+
 // Export
 export { loadPostDetails }
