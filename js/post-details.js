@@ -240,7 +240,9 @@ if (addCommentForm) {
         e.preventDefault();
 
         const commentText = document.getElementById('comment-text').value;
-        const commentFiles = document.getElementById('comment-file').files; // Get the files
+        const commentFile = document.getElementById('comment-file'); //Get the file
+        const commentFiles = commentFile ? commentFile.files : []; // Get the files if commentFile is not null, otherwise assign an empty array
+
         const postId = new URLSearchParams(window.location.search).get('id');
 
         const formData = new FormData();
