@@ -240,8 +240,15 @@ if (addCommentForm) {
         e.preventDefault();
 
         const commentText = document.getElementById('comment-text').value;
-        const commentFilesInput = document.getElementById('comment-files');
-        const commentFiles = commentFilesInput.files; // Get the files
+        const commentFilesInput = document.getElementById('comment-files'); // id=comment-files
+
+        // Check if commentFilesInput exists before proceeding
+        if (!commentFilesInput) {
+            console.error("Element with ID 'comment-files' not found in the DOM.");
+            return; // Exit the function if the element is missing
+        }
+
+        const commentFiles = commentFilesInput.files;
         const postId = new URLSearchParams(window.location.search).get('id');
 
         const formData = new FormData();
