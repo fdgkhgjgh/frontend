@@ -252,7 +252,7 @@ if (addCommentForm) {
                 formData.append('files', commentFile.files[i]);
             }
         }
-        console.log("FormData:", formData);
+        //console.log("FormData:", formData);
 
         try {
             const token = localStorage.getItem('token');
@@ -743,7 +743,10 @@ commentsList.addEventListener('click', (event) => {
                 modalImageContainer.appendChild(modalImg);
             });
 
-            modal.style.display = 'flex';
+            //check the modal before accessing property!!!
+            if (modal) {
+             modal.style.display = 'flex'; // THIS LINE IS THE PROBLEM!!!!
+            }
 
             closeButton.addEventListener('click', () => {
                 modal.style.display = 'none';
