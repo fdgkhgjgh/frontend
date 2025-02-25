@@ -286,8 +286,12 @@ if (addCommentForm) {
             else {
                 commentMessage.textContent = "Add comment success!";
                 commentMessage.style.color = 'green';
-                document.getElementById('comment-text').value = '';
-                document.getElementById('comment-file').value = '';
+                //document.getElementById('comment-text').value = '';
+                //if (commentFilesInput){  // add a verification before setting value
+                //    commentFilesInput.value = '';  // change to commentFilesInput, not comment-file
+                //}
+                commentFilesInput.value = null; // reset the files
+
                 loadPostDetails(postId)
 
                 //--- SET BUTTON TO "SUCCESS" STATE ---
@@ -339,36 +343,25 @@ function displayComments(comments) {
         //Add file element
         let commentContent = `${comment.author?.username || "Unknown"}: ${comment.text} -- ${formatDate(comment.createdAt)}`; // Check before rendering
         let mediaElement = null;
+         //let mediaElement = null;
 
-         // Add images in a container
-        if (comment.imageUrls && comment.imageUrls.length > 0) {
-            const imgContainer = document.createElement('div');
-            imgContainer.classList.add('multi-image-container');  // Use the same class
-            comment.imageUrls.forEach(imageUrl => {
-                const imgElement = document.createElement('img');
-                imgElement.src = imageUrl;
-                imgElement.alt = "Comment Image"; //Add alt
-                imgElement.style.maxWidth = '100%';  // Set maxWidth
-                imgElement.style.height = 'auto';    //Keep ratio
-                imgContainer.appendChild(imgElement);
-            });
-            commentItem.appendChild(imgContainer);
+         if (comment.imageUrl) {
+            mediaElement = document.createElement('img');
+            mediaElement.src = comment.imageUrl;
+            mediaElement.alt = "Comment Image"; //Add alt
+            mediaElement.style.maxWidth = '100%';  // Set maxWidth
+            mediaElement.style.height = 'auto';    //Keep ratio
+        } else if (comment.videoUrl) {
+            mediaElement = document.createElement('video');
+            mediaElement.src = comment.videoUrl;
+            mediaElement.alt = "Comment Video";
+            mediaElement.controls = true;
+            mediaElement.style.maxWidth = '100%';
+            mediaElement.style.maxHeight = '300px';
         }
 
-        // Add videos in a container
-        if (comment.videoUrls && comment.videoUrls.length > 0) {
-            const videoContainer = document.createElement('div');
-            videoContainer.classList.add('multi-video-container');  // Use the same class
-            comment.videoUrls.forEach(videoUrl => {
-                const videoElement = document.createElement('video');
-                videoElement.src = videoUrl;
-                videoElement.alt = "Comment Video";
-                videoElement.controls = true;
-                videoElement.style.maxWidth = '100%';
-                videoElement.style.maxHeight = '300px';
-                videoContainer.appendChild(videoElement);
-            });
-            commentItem.appendChild(videoContainer);
+        if (mediaElement) {
+            commentItem.appendChild(mediaElement);
         }
 
         const textElement = document.createElement('p');
