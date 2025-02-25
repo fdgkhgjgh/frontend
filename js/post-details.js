@@ -240,23 +240,15 @@ if (addCommentForm) {
         e.preventDefault();
 
         const commentText = document.getElementById('comment-text').value;
-        const commentFilesInput = document.getElementById('comment-files'); // id=comment-files
-
-        // Check if commentFilesInput exists before proceeding
-        if (!commentFilesInput) {
-            console.error("Element with ID 'comment-files' not found in the DOM.");
-            return; // Exit the function if the element is missing
-        }
-
-        const commentFiles = commentFilesInput.files;
+        const commentFiles = document.getElementById('comment-file').files; // Get the files
         const postId = new URLSearchParams(window.location.search).get('id');
 
         const formData = new FormData();
         formData.append('text', commentText);
 
-        // Append each file to the FormData
+        // Append each file to the FormData object
         for (let i = 0; i < commentFiles.length; i++) {
-            formData.append('files', commentFiles[i]); // Use the same field name "files"
+            formData.append('files', commentFiles[i]); // Use the 'files' name
         }
 
         try {
@@ -340,30 +332,7 @@ function displayComments(comments) {
         profilePicture.alt = `${comment.author?.username}'s Profile Picture`;  //Also use ? to prevent errors
         commentItem.appendChild(profilePicture);
 
-        //Add file element
-        let commentContent = `${comment.author?.username || "Unknown"}: ${comment.text} -- ${formatDate(comment.createdAt)}`; // Check before rendering
-        let mediaElement = null;
-         //let mediaElement = null;
-
-         if (comment.imageUrl) {
-            mediaElement = document.createElement('img');
-            mediaElement.src = comment.imageUrl;
-            mediaElement.alt = "Comment Image"; //Add alt
-            mediaElement.style.maxWidth = '100%';  // Set maxWidth
-            mediaElement.style.height = 'auto';    //Keep ratio
-        } else if (comment.videoUrl) {
-            mediaElement = document.createElement('video');
-            mediaElement.src = comment.videoUrl;
-            mediaElement.alt = "Comment Video";
-            mediaElement.controls = true;
-            mediaElement.style.maxWidth = '100%';
-            mediaElement.style.maxHeight = '300px';
-        }
-
-        if (mediaElement) {
-            commentItem.appendChild(mediaElement);
-        }
-
+        // --- ADD PROFILE PICTURE HERE ---
         const textElement = document.createElement('p');
         const usernameLink = document.createElement('a');  // Create an <a> tag
         usernameLink.href = `profile.html?id=${comment.author._id}`; // Set the href to the profile page
@@ -373,6 +342,41 @@ function displayComments(comments) {
         textElement.append(`: ${comment.text} -- ${formatDate(comment.createdAt)}`); // Add the rest of the comment content
 
         commentItem.appendChild(textElement); // Then append the <p> with the <a> and text content.
+
+         // Add image display logic (similar to post detail, using the multi-image-container)
+        if (comment.imageUrls && comment.imageUrls.length > 0) {
+            const imgContainer = document.createElement('div');
+            imgContainer.classList.add('multi-image-container');
+
+            comment.imageUrls.forEach(imageUrl => {
+                const imgElement = document.createElement('img');
+                imgElement.src = imageUrl;
+                imgElement.alt = "Comment Image";
+                imgElement.classList.add('post-image'); // Use same style as post image
+                imgElement.style.maxWidth = '100%';  // Set maxWidth
+                imgElement.style.height = 'auto';    //Keep ratio
+                imgContainer.appendChild(imgElement);
+            });
+            commentItem.appendChild(imgContainer);
+        }
+
+         // Add video display logic
+        if (comment.videoUrls && comment.videoUrls.length > 0) {
+            const videoContainer = document.createElement('div');
+            videoContainer.classList.add('multi-video-container');
+
+            comment.videoUrls.forEach(videoUrl => {
+                const videoElement = document.createElement('video');
+                videoElement.src = videoUrl;
+                videoElement.alt = "Comment Video";
+                videoElement.controls = true;
+                videoElement.classList.add('post-video'); // Use same style as post video
+                videoElement.style.maxWidth = '100%';
+                videoElement.style.maxHeight = '300px';
+                videoContainer.appendChild(videoElement);
+            });
+            commentItem.appendChild(videoContainer);
+        }
 
         //Add delete button.
         const currentUserId = localStorage.getItem('userId');
