@@ -252,6 +252,7 @@ if (addCommentForm) {
                 formData.append('files', commentFile.files[i]);
             }
         }
+        console.log("FormData:", formData);
 
         try {
             const token = localStorage.getItem('token');
