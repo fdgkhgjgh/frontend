@@ -241,18 +241,17 @@ if (addCommentForm) {
 
         const commentText = document.getElementById('comment-text').value;
         const commentFile = document.getElementById('comment-file');
-        //const commentFiles = commentFile ? commentFile.files : [];  // Get the files if commentFile exists, otherwise an empty array
         const postId = new URLSearchParams(window.location.search).get('id');
 
         const formData = new FormData();
         formData.append('text', commentText);
 
         // Append each file to the FormData object
-         if (commentFile && commentFile.files) {
-           for (let i = 0; i < commentFile.files.length; i++) {
-                formData.append('files', commentFile.files[i]); // Use the 'files' name
-           }
-         }
+        if (commentFile && commentFile.files) {
+            for (let i = 0; i < commentFile.files.length; i++) {
+                formData.append('files', commentFile.files[i]);
+            }
+        }
 
         try {
             const token = localStorage.getItem('token');
@@ -263,50 +262,42 @@ if (addCommentForm) {
             }
 
             //--- SET BUTTON TO "SENDING" STATE ---
-            setCommentButtonState('sending');  // <--- SET THE STATE HERE
+            setCommentButtonState('sending');
 
-            const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
+            const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {  // <--- CORRECTED URL
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${token}`,  // <--- CORRECTED HEADER
                 },
                 body: formData,
             });
-            const data = await response.json(); //VERY IMPORTANTE
-            if (!response.ok) { //This to know there is an error.
-                commentMessage.textContent = "An error occurred while adding comment."
-                commentMessage.style.color = 'red'
+            const data = await response.json();
+            if (!response.ok) {
+                commentMessage.textContent = "An error occurred while adding comment.";
+                commentMessage.style.color = 'red';
                 setCommentButtonState('default');
-            }
-            else {
+            } else {
                 commentMessage.textContent = "Add comment success!";
                 commentMessage.style.color = 'green';
-                //document.getElementById('comment-text').value = '';
-                //if (commentFilesInput){  // add a verification before setting value
-                //    commentFilesInput.value = '';  // change to commentFilesInput, not comment-file
-                //}
-                commentFilesInput.value = null; // reset the files
+                document.getElementById('comment-text').value = '';
+                 if (commentFile){
+                    commentFile.value = ''; //reset the file.
+                }
 
-                loadPostDetails(postId)
-
-                //--- SET BUTTON TO "SUCCESS" STATE ---
-                setCommentButtonState('success');
-
-                //--- RESET BUTTON AFTER A DELAY ---
+                loadPostDetails(postId);
+                setCommentButtonState('success'); // Ensure this is called AFTER loadPostDetails
                 setTimeout(() => {
                     setCommentButtonState('default');
-                }, 1500); // 1.5 seconds (adjust as needed)
+                }, 1500);
             }
-
         } catch (error) {
             console.error('Error adding comment:', error);
             commentMessage.textContent = "An error occurred while adding comment.";
             commentMessage.style.color = 'red';
             setCommentButtonState('error');
             setTimeout(() => {
-                    setCommentButtonState('default');
-                }, 1500); // 1.5 seconds (adjust as needed)
-
+                setCommentButtonState('default');
+            }, 1500);
         }
     });
 }
