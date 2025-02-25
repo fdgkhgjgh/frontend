@@ -485,8 +485,8 @@ button[type="submit"]:disabled {
 
 @media (max-width: 768px) {
   #post-details-container .profile-picture {
-    width: 90px;  /* Smaller on smaller screens */
-    height: 90px;
+    width: 60px;  /* Smaller on smaller screens */
+    height: 60px;
   }
 }
 
