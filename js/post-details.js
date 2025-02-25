@@ -240,17 +240,19 @@ if (addCommentForm) {
         e.preventDefault();
 
         const commentText = document.getElementById('comment-text').value;
-        const commentFile = document.getElementById('comment-file'); // Get the file input element
-        const commentFiles = commentFile ? commentFile.files : [];  // Get the files if commentFile exists, otherwise an empty array
+        const commentFile = document.getElementById('comment-file');
+        //const commentFiles = commentFile ? commentFile.files : [];  // Get the files if commentFile exists, otherwise an empty array
         const postId = new URLSearchParams(window.location.search).get('id');
 
         const formData = new FormData();
         formData.append('text', commentText);
 
         // Append each file to the FormData object
-        for (let i = 0; i < commentFiles.length; i++) {
-            formData.append('files', commentFiles[i]); // Use the 'files' name
-        }
+         if (commentFile && commentFile.files) {
+           for (let i = 0; i < commentFile.files.length; i++) {
+                formData.append('files', commentFile.files[i]); // Use the 'files' name
+           }
+         }
 
         try {
             const token = localStorage.getItem('token');
