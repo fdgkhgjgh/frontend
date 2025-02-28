@@ -68,92 +68,121 @@
      <!-- 5. theme-toggle.js (can be anywhere, but usually best after main logic) -->
     <script src="js/theme-toggle.js" type="module"></script>
     <!--Start of Tawk.to Script-->
+    <div id="language-selector" style="margin-bottom: 10px;">
+        <label for="target-lang">Translate to: </label>
+        <select id="target-lang">
+            <option value="vi">Vietnamese</option>
+            <option value="ja">Japanese</option>
+            <option value="th">Thai</option>
+            <option value="id">Indonesian</option>
+        </select>
+    </div>
+    <div id="translated-messages" style="margin-top: 10px; padding: 10px; border: 1px solid #ccc;"></div>
+    
     <script type="text/javascript">
-        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-        (function(){
-            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-            s1.async = true;
-            s1.src = 'https://embed.tawk.to/67c1bb78d29dc8190da4e1b1/1il6c8k80';
-            s1.charset = 'UTF-8';
-            s1.setAttribute('crossorigin', '*');
-            s0.parentNode.insertBefore(s1, s0);
-        })();
-        
-        // Yandex Translate API Key
-        var yandexApiKey = 'AQVNyqnrf4liMcXwbQ7utI3iDKtOq6uFKbSogKIg';  // Replace with your actual API Key
-        var folderId = 'ajepuhsc3eilm2459qk3';  // Replace with your Yandex Folder ID
-        
-        // List of available languages
-        var languageOptions = {
-            "English": "en",
-            "Spanish": "es",
-            "French": "fr",
-            "Vietnamese": "vi",
-            "Indonesian": "id",
-            "Thai": "th",
-            "German": "de",
-            "Japanese": "ja",
-            "Korean": "ko",
-            "Russian": "ru",
-            "Arabic": "ar",
-            "Hindi": "hi",
-            "Portuguese": "pt"
-        };
-        
-        // Function to translate text using Yandex API
-        function translateText(text, targetLang, callback) {
-            var url = "https://translate.api.cloud.yandex.net/translate/v2/translate";
-        
-            fetch(url, {
-                method: "POST",
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    
+    // Yandex Translate API key and folder ID
+    const YANDEX_API_KEY = 'ajeal7lnv2b2672v0r8e'; // Replace with your Yandex API key
+    const FOLDER_ID = 'ajepuhsc3eilm2459qk3'; // Replace with your Yandex Cloud Folder ID
+    const OWNER_LANGUAGE = 'en'; // Owner sees all messages in English
+    
+    // Function to detect language using Yandex API
+    async function detectLanguage(text) {
+        const url = `https://translate.api.cloud.yandex.net/translate/v2/detect`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Api-Key " + yandexApiKey
+                    'Content-Type': 'application/json',
+                    'Authorization': `Api-Key ${YANDEX_API_KEY}`
                 },
                 body: JSON.stringify({
-                    folderId: folderId,
-                    texts: [text],
-                    targetLanguageCode: targetLang
+                    "text": text,
+                    "folderId": FOLDER_ID
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.translations && data.translations[0]) {
-                    callback(data.translations[0].text);
-                } else {
-                    callback(text); // If translation fails, return the original text
-                }
-            })
-            .catch(() => callback(text));
-        }
-        
-        // Function to ask the user for a preferred language
-        function getUserLanguage() {
-            var langList = Object.keys(languageOptions).map(lang => `${lang} (${languageOptions[lang]})`).join("\n");
-            var userChoice = prompt("Choose a language:\n" + langList, "English");
-        
-            return languageOptions[userChoice] || "en"; // Default to English if invalid choice
-        }
-        
-        // Get user's preferred language
-        var userLang = getUserLanguage();
-        
-        // Translate Incoming Messages
-        Tawk_API.onMessageReceived = function(data) {
-            translateText(data.text, userLang, function(translatedText) {
-                alert("Translated Message: " + translatedText); // Modify as needed
             });
-        };
-        
-        // Translate Outgoing Messages Before Sending
-        Tawk_API.onBeforeSendMessage = function(message) {
-            translateText(message, userLang, function(translatedMessage) {
-                Tawk_API.addMessage(translatedMessage); // Send translated message
+            const data = await response.json();
+            return data.languageCode; // e.g., 'vi', 'ja', 'th', 'id'
+        } catch (error) {
+            console.error('Language detection error:', error);
+            return 'en'; // Fallback to English
+        }
+    }
+    
+    // Function to translate text
+    async function translateText(text, targetLang, sourceLang = null) {
+        const url = `https://translate.api.cloud.yandex.net/translate/v2/translate`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Api-Key ${YANDEX_API_KEY}`
+                },
+                body: JSON.stringify({
+                    "targetLanguageCode": targetLang,
+                    "texts": [text],
+                    "folderId": FOLDER_ID,
+                    ...(sourceLang && { "sourceLanguageCode": sourceLang }) // Optional source language
+                })
             });
-        
-            return false; // Prevent the original message from being sent
+            const data = await response.json();
+            return data.translations[0].text;
+        } catch (error) {
+            console.error('Translation error:', error);
+            return text; // Return original text if translation fails
+        }
+    }
+    
+    // Load Tawk.to script
+    (function() {
+        var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/67c1bb78d29dc8190da4e1b1/1il6c8k80';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        s0.parentNode.insertBefore(s1, s0);
+    
+        // Wait for Tawk.to API to load
+        s1.onload = function() {
+            Tawk_API.onLoad = function() {
+                const translationDiv = document.getElementById('translated-messages');
+                const langSelector = document.getElementById('target-lang');
+                let visitorLang = langSelector.value; // Default to selected language (Vietnamese initially)
+    
+                // Update visitor language when selection changes
+                langSelector.addEventListener('change', function() {
+                    visitorLang = this.value;
+                    translationDiv.innerHTML += `<p>Translation language changed to: ${this.options[this.selectedIndex].text}</p>`;
+                });
+    
+                // Handle visitor messages: Translate to English for owner, and to visitor's language for display
+                Tawk_API.onChatMessageVisitor = async function(message) {
+                    const sourceLang = await detectLanguage(message); // Auto-detect visitor's language
+    
+                    // Translate to English for the owner
+                    const toEnglish = await translateText(message, OWNER_LANGUAGE, sourceLang);
+                    Tawk_API.addEvent('visitor-to-owner', toEnglish); // Send to owner in English
+                    translationDiv.innerHTML += `<p><strong>You (to Owner in English):</strong> ${toEnglish}</p>`;
+    
+                    // Show visitor their original message translated to their chosen language (if different)
+                    if (sourceLang !== visitorLang) {
+                        const toVisitorLang = await translateText(message, visitorLang, sourceLang);
+                        translationDiv.innerHTML += `<p><strong>You (in ${visitorLang}):</strong> ${toVisitorLang}</p>`;
+                    }
+                };
+    
+                // Handle owner/agent messages: Translate from English to visitor's selected language
+                Tawk_API.onChatMessageAgent = async function(message) {
+                    const sourceLang = await detectLanguage(message); // Should be 'en' typically
+                    const translatedMessage = await translateText(message, visitorLang, sourceLang);
+                    translationDiv.innerHTML += `<p><strong>Owner (in ${visitorLang}):</strong> ${translatedMessage}</p>`;
+                };
+            };
         };
-        </script>
+    })();
+    </script>
     <!--End of Tawk.to Script-->
     <script src="https://minnit.chat/js/embed.js" defer></script><minnit-chat data-chatname="https://organizations.minnit.chat/942128341530303/Main?embed" data-style="width:90%; height:500px; max-height:90vh;"></minnit-chat><p class="powered-by-minnit"><a href="https://minnit.chat" target="_blank">Embed a chatroom on your website for free with Minnit Chat</a></p>
 </body>
