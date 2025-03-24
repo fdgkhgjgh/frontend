@@ -763,10 +763,6 @@ button[type="submit"]:disabled {
   scroll-snap-align: start; /* Snap to the start of each image */
 }
 
-/* In style.css */
-.video-container {
-  position: relative; /* For overlay positioning */
-}
 
 .video-play-icon {
   position: absolute;
