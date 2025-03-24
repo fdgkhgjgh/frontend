@@ -534,8 +534,8 @@ button[type="submit"]:disabled {
 
 /* Individual video styles */
 .multi-video-container .post-video {
-  max-width: 30%; /* Adjust as needed */
-  max-height: 200px;
+  max-width: 20%; /* Adjust as needed */
+  max-height: 100px;
   width: auto;
   border-radius: 5px;
 }
@@ -761,4 +761,20 @@ button[type="submit"]:disabled {
   max-height: 80vh;      /* Limit maximum height to 80% of the viewport height */
   object-fit: contain;   /* Maintain aspect ratio and fit within the container */
   scroll-snap-align: start; /* Snap to the start of each image */
+}
+
+/* In style.css */
+.video-container {
+  position: relative; /* For overlay positioning */
+}
+
+.video-play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3em;
+  color: white;
+  opacity: 0.7;
+  cursor: pointer;
 }

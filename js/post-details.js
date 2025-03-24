@@ -147,29 +147,49 @@ function displayPostDetails(post) {
    }
 
   // Videos (using thumbnail)
-  if (post.videoUrls && post.videoUrls.length > 0) {
+if (post.videoUrls && post.videoUrls.length > 0) {
     const firstVideoUrl = post.videoUrls[0];
     const thumbnailUrl = firstVideoUrl.replace(/\.(mp4|mov|avi)$/i, '.jpg');
-
+   
+    const videoContainer = document.createElement('div'); // Container for thumbnail and overlay
+    videoContainer.style.position = 'relative'; // To allow absolute positioning of the overlay
+   
     const imgElement = document.createElement('img');
     imgElement.src = thumbnailUrl;
     imgElement.alt = "Post Video";
     imgElement.classList.add('post-image'); // Use the same class as images
-
+   
+    // Create the play icon overlay
+    const playIcon = document.createElement('div');
+    playIcon.innerHTML = '&#9658;'; // Unicode play symbol
+    playIcon.style.position = 'absolute';
+    playIcon.style.top = '50%';
+    playIcon.style.left = '50%';
+    playIcon.style.transform = 'translate(-50%, -50%)';
+    playIcon.style.fontSize = '3em';
+    playIcon.style.color = 'white';
+    playIcon.style.opacity = '0.7';
+    playIcon.style.cursor = 'pointer';
+   
+    videoContainer.appendChild(imgElement);
+    videoContainer.appendChild(playIcon);
+   
     imgElement.addEventListener('click', () => {
-        // Replace thumbnail with the actual video element
-        mediaContainer.innerHTML = ''; // Clear the thumbnail
-
+        // Replace thumbnail and overlay with the actual video element
+        mediaContainer.innerHTML = ''; // Clear the thumbnail and overlay
+   
         const videoElement = document.createElement('video');
         videoElement.src = firstVideoUrl;
         videoElement.alt = "Post Video";
         videoElement.controls = true; // Enable controls
-        videoElement.classList.add('post-video'); //Use the same class name.
+        videoElement.classList.add('post-video-fullscreen'); // Use a new class for fullscreen
         mediaContainer.appendChild(videoElement);
+        videoElement.requestFullscreen(); // Request fullscreen
+   
     });
-
-    mediaContainer.appendChild(imgElement);
-}
+   
+    mediaContainer.appendChild(videoContainer);
+   }
 
 // Add the media container to the content (only if there are images OR videos)
 if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {

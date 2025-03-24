@@ -75,26 +75,6 @@ function displayPosts(posts) {
         textInfoContainer.appendChild(titleElement);
         textInfoContainer.appendChild(authorDateElement);
 
-        // --- Content ---
-        const contentElement = document.createElement('p');
-        if (post.content) {
-            // Split content into lines
-            const lines = post.content.split('\n');
-            let firstLine = lines[0].trim(); // Get the first line and trim it
-
-            // Limit each line to 45 characters
-            const maxLineChars = 45;
-            if (firstLine.length > maxLineChars) {
-                firstLine = firstLine.substring(0, maxLineChars) + '...';
-            } else if (post.content.length > firstLine.length) { // If there's more content
-                firstLine += '...'; // Add ellipsis to suggest there's more
-            }
-
-            contentElement.textContent = firstLine;
-        } else {
-            contentElement.textContent = ''; // or some placeholder if content is empty
-        }
-
 
         // Create a container for media (image or video)
         const mediaContainer = document.createElement('div');
@@ -138,7 +118,7 @@ function displayPosts(posts) {
             contentContainer.appendChild(mediaContainer); // Image or Video Thumbnail
         }
 
-        contentContainer.appendChild(contentElement); //Finally, the text content
+        //contentContainer.appendChild(contentElement); //Finally, the text content
 
         // ***ADD PIN/UNPIN BUTTON HERE***
         const currentUserId = localStorage.getItem('userId');
