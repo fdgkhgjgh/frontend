@@ -149,25 +149,32 @@ function displayPostDetails(post) {
   // Videos (using thumbnail)
   if (post.videoUrls && post.videoUrls.length > 0) {
     const firstVideoUrl = post.videoUrls[0];
-    const thumbnailUrl = firstVideoUrl.replace(/\.(mp4|mov|avi)$/i, '.jpg'); // Basic replacement
+    const thumbnailUrl = firstVideoUrl.replace(/\.(mp4|mov|avi)$/i, '.jpg');
 
     const imgElement = document.createElement('img');
     imgElement.src = thumbnailUrl;
     imgElement.alt = "Post Video";
     imgElement.classList.add('post-image'); // Use the same class as images
+
+    imgElement.addEventListener('click', () => {
+        // Replace thumbnail with the actual video element
+        mediaContainer.innerHTML = ''; // Clear the thumbnail
+
+        const videoElement = document.createElement('video');
+        videoElement.src = firstVideoUrl;
+        videoElement.alt = "Post Video";
+        videoElement.controls = true; // Enable controls
+        videoElement.classList.add('post-video'); //Use the same class name.
+        mediaContainer.appendChild(videoElement);
+    });
+
     mediaContainer.appendChild(imgElement);
 }
 
-
 // Add the media container to the content (only if there are images OR videos)
 if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
-    contentContainer.appendChild(mediaContainer);
+contentContainer.appendChild(mediaContainer);
 }
-
-   // Add the media container to the content (only if there are images OR videos)
-   if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
-       contentContainer.appendChild(mediaContainer);
-   }
 
     // --- Like/Dislike Buttons ---
     const voteContainer = document.createElement('div');
