@@ -89,14 +89,33 @@ function displayPosts(posts) {
             mediaElement.alt = post.title;
             mediaElement.classList.add('post-list-image'); // Add a specific class for styling!
         } else if (post.videoUrls && post.videoUrls.length > 0) {
-            const firstVideoUrl = post.videoUrls[0];
+           // If no images, display the first video thumbnail
+           const videoContainer = document.createElement('div');
+           videoContainer.classList.add('video-container');
+           videoContainer.style.display = 'flex';
+           videoContainer.style.flexDirection = 'column';
+           videoContainer.style.alignItems = 'center';
 
-            mediaElement = document.createElement('video');
-            mediaElement.src = firstVideoUrl;
-            mediaElement.alt = post.title;
-            mediaElement.controls = true;
-            mediaElement.classList.add('post-list-video'); // Add a specific class for videos
-        }
+           const firstVideoUrl = post.videoUrls[0];
+
+           // Use Cloudinary's video thumbnail URL
+           const thumbnailUrl = firstVideoUrl.replace(/\.(mp4|mov|avi)$/i, '.jpg'); // Basic replacement
+
+           const imgElement = document.createElement('img');
+           imgElement.src = thumbnailUrl;
+           imgElement.alt = post.title;
+           imgElement.style.maxWidth = '100%';
+           imgElement.style.maxHeight = '150px';
+           imgElement.style.marginBottom = '5px';
+           videoContainer.appendChild(imgElement);
+
+           titleFileContainer.appendChild(videoContainer);
+       }
+
+       contentContainer.appendChild(titleFileContainer)
+       contentContainer.appendChild(authorDateElement);
+       contentContainer.appendChild(contentElement);
+
 
         // Clear existing content in titleFileContainer (important!)
         titleFileContainer.innerHTML = '';

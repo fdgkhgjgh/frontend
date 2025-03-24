@@ -95,71 +95,71 @@ function displayPostDetails(post) {
     contentContainer.appendChild(contentElement);
 
     // --- Media Container (Handles both Images and Videos) ---
-    const mediaContainer = document.createElement('div');
-    mediaContainer.classList.add('media-container'); // Common container for images AND videos
+   const mediaContainer = document.createElement('div');
+   mediaContainer.classList.add('media-container'); // Common container for images AND videos
 
-    // --- Images ---
-    if (post.imageUrls && post.imageUrls.length > 0) {
-        const imgContainer = document.createElement('div');
-        imgContainer.classList.add('multi-image-container');  // This class for layout
-        post.imageUrls.forEach(imageUrl => {
-            const imgElement = document.createElement('img');
-            imgElement.src = imageUrl;
-            imgElement.alt = "Post Image";
-            imgElement.classList.add('post-image'); // Style individual image
-            imgElement.addEventListener('click', () => {
-                const modal = document.getElementById('image-modal');
-                const modalImageContainer = document.getElementById('modal-image-container');
-                const closeButton = document.querySelector('.close-button');
+   // --- Images ---
+   if (post.imageUrls && post.imageUrls.length > 0) {
+       const imgContainer = document.createElement('div');
+       imgContainer.classList.add('multi-image-container');  // This class for layout
+       post.imageUrls.forEach(imageUrl => {
+           const imgElement = document.createElement('img');
+           imgElement.src = imageUrl;
+           imgElement.alt = "Post Image";
+           imgElement.classList.add('post-image'); // Style individual image
+           imgElement.addEventListener('click', () => {
+               const modal = document.getElementById('image-modal');
+               const modalImageContainer = document.getElementById('modal-image-container');
+               const closeButton = document.querySelector('.close-button');
 
-                // Clear existing images
-                modalImageContainer.innerHTML = '';
+               // Clear existing images
+               modalImageContainer.innerHTML = '';
 
-                // Create and append images to modal
-                post.imageUrls.forEach(imageUrl => {
-                    const modalImg = document.createElement('img');
-                    modalImg.src = imageUrl;
-                    modalImg.alt = "Full Size Image";
-                    modalImageContainer.appendChild(modalImg);
-                });
+               // Create and append images to modal
+               post.imageUrls.forEach(imageUrl => {
+                   const modalImg = document.createElement('img');
+                   modalImg.src = imageUrl;
+                   modalImg.alt = "Full Size Image";
+                   modalImageContainer.appendChild(modalImg);
+               });
 
-                modal.style.display = 'flex';
+               modal.style.display = 'flex';
 
-                closeButton.addEventListener('click', () => {
-                    modal.style.display = 'none';
-                });
+               closeButton.addEventListener('click', () => {
+                   modal.style.display = 'none';
+               });
 
-                  //Next Button
-                const nextButton = document.getElementById('next-button');
-                  nextButton.addEventListener('click', () => {
-                       modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
-                    });
+                 //Next Button
+               const nextButton = document.getElementById('next-button');
+                 nextButton.addEventListener('click', () => {
+                      modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
+                   });
 
-                  //Previous Button
-                  const prevButton = document.getElementById('prev-button');
-                  prevButton.addEventListener('click', () => {
-                        modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
-                  });
-            });
-            imgContainer.appendChild(imgElement);
-        });
-        mediaContainer.appendChild(imgContainer); // Add images to the MEDIA CONTAINER!
-    }
+                 //Previous Button
+                 const prevButton = document.getElementById('prev-button');
+                 prevButton.addEventListener('click', () => {
+                       modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
+                 });
+           });
+           imgContainer.appendChild(imgElement);
+       });
+       mediaContainer.appendChild(imgContainer); // Add images to the MEDIA CONTAINER!
+   }
 
-    //Videos
-    if (post.videoUrls && post.videoUrls.length > 0) {
-        const videoContainer = document.createElement('div');
-        videoContainer.classList.add('multi-video-container'); //Layout class name.
-        post.videoUrls.forEach(videoUrl => {
-            const videoElement = document.createElement('video');
-            videoElement.src = videoUrl;
-            videoElement.alt = "Post Video";
-            videoElement.controls = true; //Enable video controls.
-            videoElement.classList.add('post-video'); //Style for videos.
-            videoContainer.appendChild(videoElement);
-        });
-        mediaContainer.appendChild(videoContainer); //Add videos to media container.
-    }
+   //Videos
+   if (post.videoUrls && post.videoUrls.length > 0) {
+       const videoContainer = document.createElement('div');
+       videoContainer.classList.add('multi-video-container'); //Layout class name.
+       post.videoUrls.forEach(videoUrl => {
+           const videoElement = document.createElement('video');
+           videoElement.src = videoUrl;
+           videoElement.alt = "Post Video";
+           videoElement.controls = true; //Enable video controls.
+           videoElement.classList.add('post-video'); //Style for videos.
+           videoContainer.appendChild(videoElement);
+       });
+       mediaContainer.appendChild(videoContainer); //Add videos to media container.
+   }
 
     // Add the media container to the content (only if there are images OR videos)
     if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
