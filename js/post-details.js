@@ -146,20 +146,23 @@ function displayPostDetails(post) {
        mediaContainer.appendChild(imgContainer); // Add images to the MEDIA CONTAINER!
    }
 
-   //Videos
-   if (post.videoUrls && post.videoUrls.length > 0) {
-       const videoContainer = document.createElement('div');
-       videoContainer.classList.add('multi-video-container'); //Layout class name.
-       post.videoUrls.forEach(videoUrl => {
-           const videoElement = document.createElement('video');
-           videoElement.src = videoUrl;
-           videoElement.alt = "Post Video";
-           videoElement.controls = true; //Enable video controls.
-           videoElement.classList.add('post-video'); //Style for videos.
-           videoContainer.appendChild(videoElement);
-       });
-       mediaContainer.appendChild(videoContainer); //Add videos to media container.
-   }
+  // Videos (using thumbnail)
+  if (post.videoUrls && post.videoUrls.length > 0) {
+    const firstVideoUrl = post.videoUrls[0];
+    const thumbnailUrl = firstVideoUrl.replace(/\.(mp4|mov|avi)$/i, '.jpg'); // Basic replacement
+
+    const imgElement = document.createElement('img');
+    imgElement.src = thumbnailUrl;
+    imgElement.alt = "Post Video";
+    imgElement.classList.add('post-image'); // Use the same class as images
+    mediaContainer.appendChild(imgElement);
+}
+
+
+// Add the media container to the content (only if there are images OR videos)
+if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
+    contentContainer.appendChild(mediaContainer);
+}
 
    // Add the media container to the content (only if there are images OR videos)
    if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
