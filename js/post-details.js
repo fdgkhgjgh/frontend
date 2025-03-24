@@ -94,7 +94,7 @@ function displayPostDetails(post) {
     }
     contentContainer.appendChild(contentElement);
 
-    // --- Media Container (Handles both Images and Videos) ---
+   // --- Media Container (Handles both Images and Videos) ---
    const mediaContainer = document.createElement('div');
    mediaContainer.classList.add('media-container'); // Common container for images AND videos
 
@@ -161,10 +161,10 @@ function displayPostDetails(post) {
        mediaContainer.appendChild(videoContainer); //Add videos to media container.
    }
 
-    // Add the media container to the content (only if there are images OR videos)
-    if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
-        contentContainer.appendChild(mediaContainer);
-    }
+   // Add the media container to the content (only if there are images OR videos)
+   if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
+       contentContainer.appendChild(mediaContainer);
+   }
 
     // --- Like/Dislike Buttons ---
     const voteContainer = document.createElement('div');
