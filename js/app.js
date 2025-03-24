@@ -50,10 +50,6 @@ function displayPosts(posts) {
         // --- Main Container for Content ---
         const contentContainer = document.createElement('div');
         contentContainer.classList.add('post-content');
-                // --- New Container for Title and Files ---
-        const titleFileContainer = document.createElement('div');
-        titleFileContainer.classList.add('title-file-container');
-
 
         // --- Title (NOW CLICKABLE) ---
         const titleElement = document.createElement('h2');
@@ -79,55 +75,70 @@ function displayPosts(posts) {
         textInfoContainer.appendChild(titleElement);
         textInfoContainer.appendChild(authorDateElement);
 
-        // --- Display only the *first* file (image or video) ---
-        let mediaElement = null; // Use a single variable for either image or video
+        // --- Content ---
+        const contentElement = document.createElement('p');
+        if (post.content) {
+            // Split content into lines
+            const lines = post.content.split('\n');
+            let firstLine = lines[0].trim(); // Get the first line and trim it
+
+            // Limit each line to 45 characters
+            const maxLineChars = 45;
+            if (firstLine.length > maxLineChars) {
+                firstLine = firstLine.substring(0, maxLineChars) + '...';
+            } else if (post.content.length > firstLine.length) { // If there's more content
+                firstLine += '...'; // Add ellipsis to suggest there's more
+            }
+
+            contentElement.textContent = firstLine;
+        } else {
+            contentElement.textContent = ''; // or some placeholder if content is empty
+        }
+
+
+        // Create a container for media (image or video)
+        const mediaContainer = document.createElement('div');
+        mediaContainer.style.display = 'flex';
+        mediaContainer.style.flexDirection = 'column';
+        mediaContainer.style.alignItems = 'center';
+
+        let mediaElement = null;
         if (post.imageUrls && post.imageUrls.length > 0) {
-            const firstImageUrl = post.imageUrls[0]; // Get the *first* image URL
+            const firstImageUrl = post.imageUrls[0];
 
             mediaElement = document.createElement('img');
             mediaElement.src = firstImageUrl;
             mediaElement.alt = post.title;
-            mediaElement.classList.add('post-list-image'); // Add a specific class for styling!
+            mediaElement.classList.add('post-list-image');
+            mediaContainer.appendChild(mediaElement);
+
+
         } else if (post.videoUrls && post.videoUrls.length > 0) {
-           // If no images, display the first video thumbnail
-           const videoContainer = document.createElement('div');
-           videoContainer.classList.add('video-container');
-           videoContainer.style.display = 'flex';
-           videoContainer.style.flexDirection = 'column';
-           videoContainer.style.alignItems = 'center';
 
-           const firstVideoUrl = post.videoUrls[0];
+            const firstVideoUrl = post.videoUrls[0];
+            const thumbnailUrl = firstVideoUrl.replace(/\.(mp4|mov|avi)$/i, '.jpg');
 
-           // Use Cloudinary's video thumbnail URL
-           const thumbnailUrl = firstVideoUrl.replace(/\.(mp4|mov|avi)$/i, '.jpg'); // Basic replacement
+            mediaElement = document.createElement('img');
+            mediaElement.src = thumbnailUrl;
+            mediaElement.alt = post.title;
+            mediaElement.style.maxWidth = '100%';
+            mediaElement.style.maxHeight = '150px';
+            mediaElement.style.marginBottom = '5px';
+            mediaElement.classList.add('post-list-video');
+            mediaContainer.appendChild(mediaElement);
 
-           const imgElement = document.createElement('img');
-           imgElement.src = thumbnailUrl;
-           imgElement.alt = post.title;
-           imgElement.style.maxWidth = '100%';
-           imgElement.style.maxHeight = '150px';
-           imgElement.style.marginBottom = '5px';
-           videoContainer.appendChild(imgElement);
-
-           titleFileContainer.appendChild(videoContainer);
-       }
-
-       contentContainer.appendChild(titleFileContainer)
-       contentContainer.appendChild(authorDateElement);
-       contentContainer.appendChild(contentElement);
-
-
-        // Clear existing content in titleFileContainer (important!)
-        titleFileContainer.innerHTML = '';
-
-        //Append the text information and the image and video.
-        titleFileContainer.appendChild(textInfoContainer);
-
-        if (mediaElement) {
-            titleFileContainer.appendChild(mediaElement);
         }
 
-        contentContainer.appendChild(titleFileContainer);
+        //Clear existing content in contentContainer (important)
+        contentContainer.innerHTML = '';
+
+        //Append in correct order!
+        contentContainer.appendChild(textInfoContainer); //Title, Author/Date
+        if (mediaElement) {
+            contentContainer.appendChild(mediaContainer); // Image or Video Thumbnail
+        }
+
+        contentContainer.appendChild(contentElement); //Finally, the text content
 
         // ***ADD PIN/UNPIN BUTTON HERE***
         const currentUserId = localStorage.getItem('userId');
