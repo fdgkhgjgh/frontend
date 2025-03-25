@@ -536,8 +536,8 @@ button[type="submit"]:disabled {
 .multi-video-container .post-video {
   max-width: 20%; /* Adjust as needed */
   max-height: 100px;
-  width: auto;
-  border-radius: 5px;
+  width: 100px;
+  border-radius: 2px;
 }
 
 /* Style for the modal image carousel */
@@ -781,6 +781,6 @@ button[type="submit"]:disabled {
 .post-video {
   max-width: 100px;  /* Adjust as needed for initial size */
   max-height: 50px; /* Adjust as needed for initial size */
-  width: auto;
-  border-radius: 5px;
+  width: 100px;
+  border-radius: 2px;
 }
