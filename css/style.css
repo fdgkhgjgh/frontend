@@ -772,15 +772,15 @@ button[type="submit"]:disabled {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 12em;
+  font-size: 15em;
   color: white;
   opacity: 0.7;
   cursor: pointer;
 }
 
 .post-video {
-  max-width: 150px;  /* Adjust as needed for initial size */
-  max-height: 100px; /* Adjust as needed for initial size */
+  max-width: 100px;  /* Adjust as needed for initial size */
+  max-height: 50px; /* Adjust as needed for initial size */
   width: auto;
   border-radius: 5px;
 }
