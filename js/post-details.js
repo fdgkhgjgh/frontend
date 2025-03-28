@@ -189,17 +189,20 @@ function displayPostDetails(post) {
         videoElement.classList.add('post-video-fullscreen'); // Use a new class for fullscreen
 
         mediaContainer.appendChild(videoElement);
+        videoElement.style.maxWidth = '100%'; // Make video responsive
+        videoElement.style.height = 'auto';
+        videoElement.style.maxHeight = '500px';
 
         // Play the video first, then request fullscreen
         videoElement.play()
-            .then(() => {
-                console.log("Video started playing"); // Debug Log
-                return videoElement.requestFullscreen();
-            })
-            .catch(error => {
-                console.error("Error playing video:", error);
-                videoElement.requestFullscreen();  //Try fullscreen anyway.
-            });
+            //.then(() => {
+              //  console.log("Video started playing"); // Debug Log
+              //  return videoElement.requestFullscreen();
+           // })
+           // .catch(error => {
+            //    console.error("Error playing video:", error);
+            //    videoElement.requestFullscreen();  //Try fullscreen anyway.
+           // });
     };
 
     imgElement.addEventListener('click', handleClick);
@@ -775,7 +778,7 @@ commentsList.addEventListener('click', (event) => {
 
         if (imageUrls.length > 0) {
             // Show the modal
-            const modal = document.getElementById('comment-image-modal');
+            const modal = document.getElementById('image-modal');
             const modalImageContainer = document.getElementById('modal-image-container');
             const closeButton = document.querySelector('.close-button');
 

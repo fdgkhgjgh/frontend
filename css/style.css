@@ -744,6 +744,7 @@ button[type="submit"]:disabled {
   cursor: pointer;
   z-index: 1001; /* Ensure it's above the image */
 }
+
 /* Style for the modal image carousel */
 #modal-image-carousel {
   position: relative;   /* For positioning navigation buttons */
