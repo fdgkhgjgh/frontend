@@ -763,10 +763,6 @@ button[type="submit"]:disabled {
   scroll-snap-align: start; /* Snap to the start of each image */
 }
 
-.video-container {
-  position: relative; /* For overlay positioning */
-}
-
 .video-play-icon {
   position: absolute;
   top: 50%;
@@ -778,7 +774,14 @@ button[type="submit"]:disabled {
   cursor: pointer;
 }
 
+.video-container { /* Assuming you have a container around the video */
+  width: 320px; /* Fixed width */
+  height: 240px; /* Fixed height */
+  overflow: hidden; /* Prevent overflowing content */
+}
+
 .post-video {
-  width: 320px; /* Or your desired width in pixels */
-  height: auto;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Options: cover, contain, fill, none, scale-down */
 }
