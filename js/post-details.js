@@ -153,43 +153,40 @@ function displayPostDetails(post) {
 
     // --- CONTAINER FOR THUMBNAIL & ICON ---
     const videoThumbnailContainer = document.createElement('div');
-    videoThumbnailContainer.classList.add('video-thumbnail-container');  // <--- ADD THIS
+    videoThumbnailContainer.classList.add('video-thumbnail-container');
 
     const imgElement = document.createElement('img');
     imgElement.src = thumbnailUrl;
     imgElement.alt = "Post Video";
-    imgElement.style.cursor = 'pointer';  // <---- ADD THIS. Indicates it's clickable.
+    imgElement.style.cursor = 'pointer';
 
     // Create the play icon overlay
     const playIcon = document.createElement('div');
     playIcon.innerHTML = '&#9658;'; // Unicode play symbol
-    playIcon.classList.add('video-play-icon');   //Use the CSS Class for styling.
+    playIcon.classList.add('video-play-icon'); // Use the CSS Class for styling.
 
     videoThumbnailContainer.appendChild(imgElement);
     videoThumbnailContainer.appendChild(playIcon);
 
-        // Use a single click handler for both the image and the icon
+    // Use a single click handler for both the image and the icon
     const handleClick = () => {
         console.log("handleClick triggered"); // Debug log
 
-        // Replace thumbnail and overlay with the actual video element
-        mediaContainer.innerHTML = ''; // Clear the thumbnail and overlay
-
+        // Create and add video
         const videoElement = document.createElement('video');
         videoElement.src = firstVideoUrl;
         videoElement.alt = "Post Video";
         videoElement.controls = true; // Enable controls
         videoElement.classList.add('post-video-fullscreen'); // Use a new class for fullscreen
 
-        // Append the video element to the video container
+        // Clear existing content and append video element
+        mediaContainer.innerHTML = '';//Clear everything.
         mediaContainer.appendChild(videoElement);
-
-        videoElement.play()
+        videoElement.play()//Play the video
     };
 
     imgElement.addEventListener('click', handleClick);
     playIcon.addEventListener('click', handleClick);
-
     mediaContainer.appendChild(videoThumbnailContainer);
 }
 
