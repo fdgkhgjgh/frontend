@@ -157,8 +157,8 @@ function displayPostDetails(post) {
     const imgElement = document.createElement('img');
     imgElement.src = thumbnailUrl;
     imgElement.alt = "Post Video";
-    imgElement.classList.add('post-image'); // Use the same class as images
-    imgElement.style.cursor = 'pointer'; //  <---- ADD THIS.  Indicates it's clickable.
+    imgElement.classList.add('post-video'); // Use the same class as images
+    imgElement.style.cursor = 'pointer';  //  <---- ADD THIS.   Indicates it's clickable.
 
     // Create the play icon overlay
     const playIcon = document.createElement('div');
