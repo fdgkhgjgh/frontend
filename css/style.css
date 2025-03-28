@@ -536,8 +536,8 @@ button[type="submit"]:disabled {
 .multi-video-container .post-video {
   max-width: 20%; /* Adjust as needed */
   max-height: 100px;
-  width: auto;
-  border-radius: 5px;
+  width: 100px;
+  border-radius: 2px;
 }
 
 /* Style for the modal image carousel */
@@ -772,7 +772,7 @@ button[type="submit"]:disabled {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 3em;
+  font-size: 15em;
   color: white;
   opacity: 0.7;
   cursor: pointer;
