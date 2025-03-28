@@ -189,9 +189,9 @@ function displayPostDetails(post) {
         videoElement.classList.add('post-video-fullscreen'); // Use a new class for fullscreen
 
         mediaContainer.appendChild(videoElement);
-        videoElement.style.maxWidth = '100%'; // Make video responsive
+        videoElement.style.maxWidth = '40%'; // Make video responsive
         videoElement.style.height = 'auto';
-        videoElement.style.maxHeight = '500px';
+        videoElement.style.maxHeight = '130px';
 
         // Play the video first, then request fullscreen
         videoElement.play()
