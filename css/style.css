@@ -778,9 +778,7 @@ button[type="submit"]:disabled {
   cursor: pointer;
 }
 
-.post-video {
-  max-width: 150px;  /* Adjust as needed for initial size */
-  max-height: 100px; /* Adjust as needed for initial size */
-  width: auto;
-  border-radius: 5px;
+.post-video { /* Or whatever class is applied to the video element */
+  max-width: 100%; /* Make the video take up a maximum of 100% of its container */
+  height: auto; /* Maintain aspect ratio */
 }
