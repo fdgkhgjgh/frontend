@@ -179,10 +179,13 @@ function displayPostDetails(post) {
         videoElement.controls = true; // Enable controls
         videoElement.classList.add('post-video-fullscreen'); // Use a new class for fullscreen
 
-        // Clear existing content and append video element
-        mediaContainer.innerHTML = '';//Clear everything.
-        mediaContainer.appendChild(videoElement);
+        //--- INSERT VIDEO *BEFORE* THUMBNAIL CONTAINER ---
+        mediaContainer.insertBefore(videoElement, videoThumbnailContainer);
+
         videoElement.play()//Play the video
+
+        // Disable the video thumbnail
+        videoThumbnailContainer.style.display = 'none';
     };
 
     imgElement.addEventListener('click', handleClick);
@@ -192,7 +195,7 @@ function displayPostDetails(post) {
 
 // Add the media container to the content (only if there are images OR videos)
 if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
-contentContainer.appendChild(mediaContainer);
+    contentContainer.appendChild(mediaContainer);
 }
 
     // --- Like/Dislike Buttons ---

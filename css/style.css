@@ -501,8 +501,17 @@ button[type="submit"]:disabled {
 
 /* Common container for media (images and videos) */
 .media-container {
-  margin-bottom: 10px;
-  /* Add other common styles here if needed */
+  display: flex;          /* Use flexbox */
+  flex-wrap: wrap;       /* Wrap if needed */
+  align-items: flex-start; /* Align items at the top */
+}
+
+.media-container .multi-image-container {
+  flex: 1; /* Take up available space */
+}
+
+.media-container .video-thumbnail-container {
+  flex: 1;  /* Take up available space */
 }
 
 /* Multi-image container styles */
