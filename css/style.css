@@ -785,7 +785,7 @@ button[type="submit"]:disabled {
 }
 
 .video-container { /* Assuming you have a container around the video */
-  width: 320px; /* Fixed width */
+  width: 160px; /* Fixed width */
   height: 240px; /* Fixed height */
   overflow: hidden; /* Prevent overflowing content */
 }
