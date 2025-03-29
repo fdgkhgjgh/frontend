@@ -797,8 +797,8 @@ button[type="submit"]:disabled {
 }
 
 .video-thumbnail-container {
-  width: 200px;      /* Adjust as needed */
-  height: 150px;     /* Adjust as needed */
+  width: 150px;      /* Adjust as needed */
+  height: 90px;     /* Adjust as needed */
   overflow: hidden; /* Keep the video within container! */
   position: relative; /* For absolute positioning of the play icon */
   border-radius: 5px; /* Optional: Rounded corners */
