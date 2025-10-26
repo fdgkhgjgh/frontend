@@ -37,10 +37,10 @@ nav a:hover {
 .post {
   display: flex; /* Use Flexbox for layout */
   background-color: #e6e6e6;
-  border: 1px solid #ddd;
-  margin-bottom: 3px;
-  padding: 2px;
-  border-radius: 3px;
+  border: 2px solid #ddd;
+  margin-bottom: 2px;
+  padding: 0.5px;
+  border-radius: 1px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
