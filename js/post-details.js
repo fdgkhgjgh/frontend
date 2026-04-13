@@ -168,7 +168,7 @@ function displayPostDetails(post) {
     videoThumbnailContainer.appendChild(imgElement);
     videoThumbnailContainer.appendChild(playIcon);
 
-        // Use a single click handler for both the image and the icon
+    // Use a single click handler for both the image and the icon
     const handleClick = () => {
         console.log("handleClick triggered"); // Debug log
 
