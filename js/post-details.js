@@ -172,45 +172,26 @@ function displayPostDetails(post) {
     const handleClick = () => {
         console.log("handleClick triggered"); // Debug log
 
-        // 1. 创建视频元素 (播放用)
+        // Create and add video
         const videoElement = document.createElement('video');
         videoElement.src = firstVideoUrl;
-        videoElement.controls = true; 
-        videoElement.classList.add('post-video-fullscreen'); 
+        videoElement.alt = "Post Video";
+        videoElement.controls = true; // Enable controls
+        videoElement.classList.add('post-video-fullscreen'); // Use a new class for fullscreen
 
-        // 2. 创建下载按钮容器
-        const downloadContainer = document.createElement('div');
-        downloadContainer.style.marginTop = '10px';
-        downloadContainer.style.textAlign = 'center';
-
-        // 3. 生成 Cloudinary 强制下载链接 (下载用)
-        // 关键：将 /upload/ 替换为 /upload/fl_attachment/
-        const downloadUrl = firstVideoUrl.replace('/upload/', '/upload/fl_attachment/');
-
-        const downloadLink = document.createElement('a');
-        downloadLink.href = downloadUrl;
-        // 虽然有 fl_attachment，带上 download 属性也是双重保险
-        downloadLink.setAttribute('download', 'video.mp4'); 
-        
-        const downloadBtn = document.createElement('button');
-        downloadBtn.innerHTML = '📥 下载视频 (Download)';
-        downloadBtn.classList.add('vote-button'); // 复用你已有的按钮样式，或者稍后在 CSS 自定义
-        downloadBtn.style.padding = '8px 16px';
-        downloadBtn.style.cursor = 'pointer';
-
-        downloadLink.appendChild(downloadBtn);
-        downloadContainer.appendChild(downloadLink);
-
-        //--- 插入视频和下载按钮 ---
+        //--- INSERT VIDEO *BEFORE* THUMBNAIL CONTAINER ---
         mediaContainer.insertBefore(videoElement, videoThumbnailContainer);
-        mediaContainer.insertBefore(downloadContainer, videoThumbnailContainer);
 
-        videoElement.play(); // 播放视频
+        videoElement.play()//Play the video
 
-        // 隐藏缩略图
+        // Disable the video thumbnail
         videoThumbnailContainer.style.display = 'none';
     };
 
+    imgElement.addEventListener('click', handleClick);
+    playIcon.addEventListener('click', handleClick);
+    mediaContainer.appendChild(videoThumbnailContainer);
+}
 
 // Add the media container to the content (only if there are images OR videos)
 if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
