@@ -199,6 +199,12 @@ if (post.imageUrls && post.imageUrls.length > 0) {
     imgElement.addEventListener('click', handleClick);
     playIcon.addEventListener('click', handleClick);
     mediaContainer.appendChild(videoThumbnailContainer);
+      
+      const videoDownloadBtn = document.createElement('a');
+    videoDownloadBtn.href = `${API_BASE_URL}/posts/${post._id}/download?url=${encodeURIComponent(firstVideoUrl)}`;
+    videoDownloadBtn.textContent = '⬇ Download Video';
+    videoDownloadBtn.classList.add('download-btn');
+    mediaContainer.appendChild(videoDownloadBtn);
 }
 
 // Add the media container to the content (only if there are images OR videos)
