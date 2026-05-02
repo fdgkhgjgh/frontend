@@ -103,8 +103,6 @@ if (post.imageUrls && post.imageUrls.length > 0) {
     const imgContainer = document.createElement('div');
     imgContainer.classList.add('multi-image-container');
     post.imageUrls.forEach(imageUrl => {
-        const mediaWrapper = document.createElement('div');
-        mediaWrapper.classList.add('media-wrapper');
 
         const imgElement = document.createElement('img');
         imgElement.src = imageUrl;
@@ -141,11 +139,6 @@ if (post.imageUrls && post.imageUrls.length > 0) {
             });
         });
 
-        // ✅ download button inside forEach, BEFORE closing forEach
-        const downloadBtn = document.createElement('a');
-        downloadBtn.href = `${API_BASE_URL}/posts/${post._id}/download?url=${encodeURIComponent(imageUrl)}`;
-        downloadBtn.textContent = '⬇ Download';
-        downloadBtn.classList.add('download-btn');
 
        imgContainer.appendChild(imgElement);
     }); // ✅ closes forEach
