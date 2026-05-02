@@ -147,9 +147,7 @@ if (post.imageUrls && post.imageUrls.length > 0) {
         downloadBtn.textContent = '⬇ Download';
         downloadBtn.classList.add('download-btn');
 
-        mediaWrapper.appendChild(imgElement);
-        mediaWrapper.appendChild(downloadBtn);
-        imgContainer.appendChild(mediaWrapper);
+       imgContainer.appendChild(imgElement);
     }); // ✅ closes forEach
     mediaContainer.appendChild(imgContainer); // ✅ closes if
 }
