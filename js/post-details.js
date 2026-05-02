@@ -98,61 +98,60 @@ function displayPostDetails(post) {
    const mediaContainer = document.createElement('div');
    mediaContainer.classList.add('media-container'); // Common container for images AND videos
 
-   // --- Images ---
-   if (post.imageUrls && post.imageUrls.length > 0) {
-       const imgContainer = document.createElement('div');
-       imgContainer.classList.add('multi-image-container');  // This class for layout
-       post.imageUrls.forEach(imageUrl => {
-    const mediaWrapper = document.createElement('div');
-    mediaWrapper.classList.add('media-wrapper');
+ // --- Images ---
+if (post.imageUrls && post.imageUrls.length > 0) {
+    const imgContainer = document.createElement('div');
+    imgContainer.classList.add('multi-image-container');
+    post.imageUrls.forEach(imageUrl => {
+        const mediaWrapper = document.createElement('div');
+        mediaWrapper.classList.add('media-wrapper');
 
-    const imgElement = document.createElement('img');
-    imgElement.src = imageUrl;
-    imgElement.alt = "Post Image";
-    imgElement.classList.add('post-image');
-    imgElement.addEventListener('click', () => {
-               const modal = document.getElementById('image-modal');
-               const modalImageContainer = document.getElementById('modal-image-container');
-               const closeButton = document.querySelector('.close-button');
+        const imgElement = document.createElement('img');
+        imgElement.src = imageUrl;
+        imgElement.alt = "Post Image";
+        imgElement.classList.add('post-image');
+        imgElement.addEventListener('click', () => {
+            const modal = document.getElementById('image-modal');
+            const modalImageContainer = document.getElementById('modal-image-container');
+            const closeButton = document.querySelector('.close-button');
 
-               // Clear existing images
-               modalImageContainer.innerHTML = '';
+            modalImageContainer.innerHTML = '';
 
-               // Create and append images to modal
-               post.imageUrls.forEach(imageUrl => {
-                   const modalImg = document.createElement('img');
-                   modalImg.src = imageUrl;
-                   modalImg.alt = "Full Size Image";
-                   modalImageContainer.appendChild(modalImg);
-               });
+            post.imageUrls.forEach(imageUrl => {
+                const modalImg = document.createElement('img');
+                modalImg.src = imageUrl;
+                modalImg.alt = "Full Size Image";
+                modalImageContainer.appendChild(modalImg);
+            });
 
-               modal.style.display = 'flex';
+            modal.style.display = 'flex';
 
-               closeButton.addEventListener('click', () => {
-                   modal.style.display = 'none';
-               });
+            closeButton.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
 
-                 //Next Button
-               const nextButton = document.getElementById('next-button');
-                 nextButton.addEventListener('click', () => {
-                      modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
-                   });
+            const nextButton = document.getElementById('next-button');
+            nextButton.addEventListener('click', () => {
+                modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
+            });
 
-                 //Previous Button
-                 const prevButton = document.getElementById('prev-button');
-                 prevButton.addEventListener('click', () => {
-                       modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
-                 });
-           });
-           imgContainer.appendChild(imgElement);
-       });
-       mediaContainer.appendChild(videoThumbnailContainer);
+            const prevButton = document.getElementById('prev-button');
+            prevButton.addEventListener('click', () => {
+                modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
+            });
+        });
 
-    const videoDownloadBtn = document.createElement('a');
-    videoDownloadBtn.href = `${API_BASE_URL}/posts/${post._id}/download?url=${encodeURIComponent(firstVideoUrl)}`;
-    videoDownloadBtn.textContent = '⬇ Download Video';
-    videoDownloadBtn.classList.add('download-btn');
-    mediaContainer.appendChild(videoDownloadBtn);
+        // ✅ download button inside forEach, BEFORE closing forEach
+        const downloadBtn = document.createElement('a');
+        downloadBtn.href = `${API_BASE_URL}/posts/${post._id}/download?url=${encodeURIComponent(imageUrl)}`;
+        downloadBtn.textContent = '⬇ Download';
+        downloadBtn.classList.add('download-btn');
+
+        mediaWrapper.appendChild(imgElement);
+        mediaWrapper.appendChild(downloadBtn);
+        imgContainer.appendChild(mediaWrapper);
+    }); // ✅ closes forEach
+    mediaContainer.appendChild(imgContainer); // ✅ closes if
 }
 
   // Videos (using thumbnail)
