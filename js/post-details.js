@@ -103,11 +103,14 @@ function displayPostDetails(post) {
        const imgContainer = document.createElement('div');
        imgContainer.classList.add('multi-image-container');  // This class for layout
        post.imageUrls.forEach(imageUrl => {
-           const imgElement = document.createElement('img');
-           imgElement.src = imageUrl;
-           imgElement.alt = "Post Image";
-           imgElement.classList.add('post-image'); // Style individual image
-           imgElement.addEventListener('click', () => {
+    const mediaWrapper = document.createElement('div');
+    mediaWrapper.classList.add('media-wrapper');
+
+    const imgElement = document.createElement('img');
+    imgElement.src = imageUrl;
+    imgElement.alt = "Post Image";
+    imgElement.classList.add('post-image');
+    imgElement.addEventListener('click', () => {
                const modal = document.getElementById('image-modal');
                const modalImageContainer = document.getElementById('modal-image-container');
                const closeButton = document.querySelector('.close-button');
@@ -143,8 +146,14 @@ function displayPostDetails(post) {
            });
            imgContainer.appendChild(imgElement);
        });
-       mediaContainer.appendChild(imgContainer); // Add images to the MEDIA CONTAINER!
-   }
+       mediaContainer.appendChild(videoThumbnailContainer);
+
+    const videoDownloadBtn = document.createElement('a');
+    videoDownloadBtn.href = `${API_BASE_URL}/posts/${post._id}/download?url=${encodeURIComponent(firstVideoUrl)}`;
+    videoDownloadBtn.textContent = '⬇ Download Video';
+    videoDownloadBtn.classList.add('download-btn');
+    mediaContainer.appendChild(videoDownloadBtn);
+}
 
   // Videos (using thumbnail)
   if (post.videoUrls && post.videoUrls.length > 0) {
@@ -375,14 +384,25 @@ function displayComments(comments) {
             const imgContainer = document.createElement('div');
             imgContainer.classList.add('multi-image-container');
 
-            comment.imageUrls.forEach(imageUrl => {
+           comment.imageUrls.forEach(imageUrl => {
+                const mediaWrapper = document.createElement('div');
+                mediaWrapper.classList.add('media-wrapper');
+
                 const imgElement = document.createElement('img');
                 imgElement.src = imageUrl;
                 imgElement.alt = "Comment Image";
-                imgElement.classList.add('post-image'); // Use same style as post image
-                imgElement.style.maxWidth = '100%';  // Set maxWidth
-                imgElement.style.height = 'auto';    //Keep ratio
-                imgContainer.appendChild(imgElement);
+                imgElement.classList.add('post-image');
+                imgElement.style.maxWidth = '100%';
+                imgElement.style.height = 'auto';
+
+                const downloadBtn = document.createElement('a');
+                downloadBtn.href = `${API_BASE_URL}/posts/${new URLSearchParams(window.location.search).get('id')}/download?url=${encodeURIComponent(imageUrl)}`;
+                downloadBtn.textContent = '⬇ Download';
+                downloadBtn.classList.add('download-btn');
+
+                mediaWrapper.appendChild(imgElement);
+                mediaWrapper.appendChild(downloadBtn);
+                imgContainer.appendChild(mediaWrapper);
             });
             commentItem.appendChild(imgContainer);
         }
@@ -393,14 +413,25 @@ function displayComments(comments) {
             videoContainer.classList.add('multi-video-container');
 
             comment.videoUrls.forEach(videoUrl => {
+                const mediaWrapper = document.createElement('div');
+                mediaWrapper.classList.add('media-wrapper');
+
                 const videoElement = document.createElement('video');
                 videoElement.src = videoUrl;
                 videoElement.alt = "Comment Video";
                 videoElement.controls = true;
-                videoElement.classList.add('post-video'); // Use same style as post video
+                videoElement.classList.add('post-video');
                 videoElement.style.maxWidth = '100%';
                 videoElement.style.maxHeight = '300px';
-                videoContainer.appendChild(videoElement);
+
+                const downloadBtn = document.createElement('a');
+                downloadBtn.href = `${API_BASE_URL}/posts/${new URLSearchParams(window.location.search).get('id')}/download?url=${encodeURIComponent(videoUrl)}`;
+                downloadBtn.textContent = '⬇ Download Video';
+                downloadBtn.classList.add('download-btn');
+
+                mediaWrapper.appendChild(videoElement);
+                mediaWrapper.appendChild(downloadBtn);
+                videoContainer.appendChild(mediaWrapper);
             });
             commentItem.appendChild(videoContainer);
         }
