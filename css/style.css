@@ -525,11 +525,14 @@ button[type="submit"]:disabled {
 
 /* Individual image styles */
 .multi-image-container .post-image {
-  max-width: 30%;           /* Each image takes up approximately 30% of the container */
+  max-width: 30%;
   max-height: 200px;
   height: auto;
-  object-fit: cover;       /* Maintain aspect ratio and fill the container */
-  border-radius: 5px;      /* Optional: Add rounded corners */
+  object-fit: cover;
+  border-radius: 5px;
+  display: block;        /* ✅ add this */
+  margin-right: 8px;     /* ✅ add this */
+  margin-bottom: 8px;    /* ✅ add this */
 }
 
 /* Multi-video container styles (similar to image container) */
