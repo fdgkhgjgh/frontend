@@ -763,17 +763,20 @@ button[type="submit"]:disabled {
 }
 
 #modal-image-container {
-  display: flex;         /* Arrange images in a row */
-  overflow-x: auto;      /* Enable horizontal scrolling */
-  scroll-snap-type: x mandatory; /* Enable scroll snapping */
-  -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;           /* ✅ add this */
+  scroll-behavior: smooth; /* ✅ smooth scrolling */
 }
 
 #modal-image-container img {
-  width: 100%;         /* Each image takes up the full width */
-  max-height: 80vh;      /* Limit maximum height to 80% of the viewport height */
-  object-fit: contain;   /* Maintain aspect ratio and fit within the container */
-  scroll-snap-align: start; /* Snap to the start of each image */
+  min-width: 100%;       /* ✅ changed from width to min-width: 100% */
+  max-height: 80vh;
+  object-fit: contain;
+  scroll-snap-align: start;
+  flex-shrink: 0;        /* ✅ add this - prevents images from shrinking */
 }
 
 .video-play-icon {
