@@ -256,6 +256,8 @@ textarea {
   font-weight: bold;
   cursor: pointer;
   z-index: 1001; /* Ensure it's above the image */
+  color: #ffffff;
+  text-shadow: 0 0 6px rgba(0,0,0,0.8);
 }
 
 /* --- Responsive Adjustments --- */
