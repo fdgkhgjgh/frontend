@@ -833,13 +833,13 @@ button[type="submit"]:disabled {
   padding: 7px 12px;
   background: #222;
   color: #aaa;
-  font-size: 0.82rem;
-  margin-top: 40px;
+  font-size: 0.41rem;
+  margin-top: 20px;
 }
 
 .site-footer .footer-links {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   flex-wrap: wrap;
   margin-right: 70px; /* ✅ add this to avoid Tawk.to button overlap */
 }
