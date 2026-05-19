@@ -847,6 +847,9 @@ button[type="submit"]:disabled {
 .site-footer a {
   color: #fff;
   text-decoration: none;
+  background-color: transparent;
+  border: none;
+  padding: 0;
 }
 
 .site-footer a:hover {
