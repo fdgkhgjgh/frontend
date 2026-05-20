@@ -238,12 +238,15 @@ if (!existingCloseBtn) {
     mediaContainer.appendChild(imgContainer);
 }
 
-  // Videos (using thumbnail)
-  if (post.videoUrls && post.videoUrls.length > 0) {
+ // Videos (using thumbnail)
+if (post.videoUrls && post.videoUrls.length > 0) {
     const firstVideoUrl = post.videoUrls[0];
-    const thumbnailUrl = firstVideoUrl.replace(/\.(mp4|mov|avi)$/i, '.jpg');
 
-    // --- CONTAINER FOR THUMBNAIL & ICON ---
+    // ✅ Correct Cloudinary thumbnail URL
+    const thumbnailUrl = firstVideoUrl
+        .replace('/upload/', '/upload/so_0/')
+        .replace(/\.(mp4|mov|avi|webm)$/i, '.jpg');
+
     const videoThumbnailContainer = document.createElement('div');
     videoThumbnailContainer.classList.add('video-thumbnail-container');
 
@@ -251,40 +254,39 @@ if (!existingCloseBtn) {
     imgElement.src = thumbnailUrl;
     imgElement.alt = "Post Video";
     imgElement.style.cursor = 'pointer';
+    imgElement.style.width = '100%';
+    imgElement.style.height = '100%';
+    imgElement.style.objectFit = 'cover';
 
-    // Create the play icon overlay
+    // ✅ Fallback if thumbnail fails to load
+    imgElement.onerror = () => {
+        imgElement.style.display = 'none';
+        videoThumbnailContainer.style.background = '#333';
+    };
+
+    // ✅ Play icon
     const playIcon = document.createElement('div');
-    playIcon.innerHTML = '&#9658;'; // Unicode play symbol
-    playIcon.classList.add('video-play-icon'); // Use the CSS Class for styling.
+    playIcon.innerHTML = '&#9658;';
+    playIcon.classList.add('video-play-icon');
 
     videoThumbnailContainer.appendChild(imgElement);
     videoThumbnailContainer.appendChild(playIcon);
 
-    // Use a single click handler for both the image and the icon
     const handleClick = () => {
-        console.log("handleClick triggered"); // Debug log
-
-        // Create and add video
         const videoElement = document.createElement('video');
         videoElement.src = firstVideoUrl;
-        videoElement.alt = "Post Video";
-        videoElement.controls = true; // Enable controls
-        videoElement.classList.add('post-video-fullscreen'); // Use a new class for fullscreen
-
-        //--- INSERT VIDEO *BEFORE* THUMBNAIL CONTAINER ---
+        videoElement.controls = true;
+        videoElement.classList.add('post-video-fullscreen');
         mediaContainer.insertBefore(videoElement, videoThumbnailContainer);
-
-        videoElement.play()//Play the video
-
-        // Disable the video thumbnail
+        videoElement.play();
         videoThumbnailContainer.style.display = 'none';
     };
 
     imgElement.addEventListener('click', handleClick);
     playIcon.addEventListener('click', handleClick);
     mediaContainer.appendChild(videoThumbnailContainer);
-      
-      const videoDownloadBtn = document.createElement('a');
+
+    const videoDownloadBtn = document.createElement('a');
     videoDownloadBtn.href = `${API_BASE_URL}/posts/${post._id}/download?url=${encodeURIComponent(firstVideoUrl)}`;
     videoDownloadBtn.textContent = '⬇ Download Video';
     videoDownloadBtn.classList.add('download-btn');
