@@ -898,39 +898,101 @@ commentsList.addEventListener('click', (event) => {
 
             //check the modal before accessing property!!!
             if (modal) {
-    modal.style.display = 'flex';
+    // Force fullscreen via JS
+    modal.style.cssText = `
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        z-index: 99999;
+        margin: 0;
+        padding: 0;
+    `;
 
-    // PC: click dark area outside to close
-    modal.onclick = (e) => {
-        if (e.target === modal) {
+    const modalContent = modal.querySelector('.modal-content');
+    modalContent.style.cssText = `
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    `;
+
+    const carousel = document.getElementById('modal-image-carousel');
+    carousel.style.cssText = `
+        width: 100vw;
+        height: 100vh;
+    `;
+
+    modalImageContainer.style.cssText = `
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+    `;
+
+    // Set each image to fullscreen size
+    const allModalImgs = modalImageContainer.querySelectorAll('img');
+    allModalImgs.forEach(img => {
+        img.style.cssText = `
+            min-width: 100vw;
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+        `;
+    });
+
+    // Add close button for PC
+    let existingCloseBtn = modal.querySelector('.modal-close-pc');
+    if (!existingCloseBtn) {
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = '✕';
+        closeBtn.classList.add('modal-close-pc');
+        closeBtn.onclick = (e) => {
+            e.stopPropagation();
+            modal.style.display = 'none';
+        };
+        modal.appendChild(closeBtn);
+    }
+
+    // Mobile: swipe up to close
+    let touchStartY = 0;
+    let touchStartX = 0;
+    modal.ontouchstart = (e) => {
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
+    };
+    modal.ontouchend = (e) => {
+        const touchEndY = e.changedTouches[0].clientY;
+        const touchEndX = e.changedTouches[0].clientX;
+        const diffY = touchEndY - touchStartY;
+        const diffX = Math.abs(touchEndX - touchStartX);
+        if (diffY < -80 && diffX < 50) {
             modal.style.display = 'none';
         }
     };
 
-    // Mobile: swipe down to close
-    let touchStartY = 0;
-    modal.addEventListener('touchstart', (e) => {
-        touchStartY = e.touches[0].clientY;
-    }, { once: true });
-    modal.addEventListener('touchend', (e) => {
-        const touchEndY = e.changedTouches[0].clientY;
-        if (touchEndY - touchStartY > 60) {
-            modal.style.display = 'none';
-        }
-    }, { once: true });
-
-    // Click left/right to navigate
+    // PC: click left/right to navigate
     modalImageContainer.onclick = (e) => {
         e.stopPropagation();
         const rect = modalImageContainer.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        if (clickX < rect.width / 2) {
+        if (e.clientX - rect.left < rect.width / 2) {
             modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
         } else {
             modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
         }
     };
 }
+           
         
 
         }
