@@ -474,6 +474,11 @@ button[type="submit"]:disabled {
 
 /* AFTER */
 .media-container .video-thumbnail-container {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 5px;
   flex: none;
 }
 
