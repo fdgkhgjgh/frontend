@@ -108,36 +108,36 @@ if (post.imageUrls && post.imageUrls.length > 0) {
         imgElement.src = imageUrl;
         imgElement.alt = "Post Image";
         imgElement.classList.add('post-image');
-        imgElement.addEventListener('click', () => {
-            const modal = document.getElementById('image-modal');
-            const modalImageContainer = document.getElementById('modal-image-container');
-            const closeButton = document.querySelector('.close-button');
+imgElement.addEventListener('click', () => {
+    const modal = document.getElementById('image-modal');
+    const modalImageContainer = document.getElementById('modal-image-container');
+    const closeButton = document.querySelector('.close-button');
 
-            modalImageContainer.innerHTML = '';
+    modalImageContainer.innerHTML = '';
 
-            post.imageUrls.forEach(imageUrl => {
-                const modalImg = document.createElement('img');
-                modalImg.src = imageUrl;
-                modalImg.alt = "Full Size Image";
-                modalImageContainer.appendChild(modalImg);
-            });
+    post.imageUrls.forEach(url => {
+        const modalImg = document.createElement('img');
+        modalImg.src = url;
+        modalImg.alt = "Full Size Image";
+        modalImageContainer.appendChild(modalImg);
+    });
 
-            modal.style.display = 'flex';
+    modal.style.display = 'flex';
 
-            closeButton.addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
+    // Close button
+    closeButton.onclick = () => { modal.style.display = 'none'; };
 
-            const nextButton = document.getElementById('next-button');
-            nextButton.addEventListener('click', () => {
-                modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
-            });
-
-            const prevButton = document.getElementById('prev-button');
-            prevButton.addEventListener('click', () => {
-                modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
-            });
-        });
+    // Click left/right side of modal to navigate
+    modalImageContainer.onclick = (e) => {
+        const rect = modalImageContainer.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        if (clickX < rect.width / 2) {
+            modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
+        } else {
+            modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
+        }
+    };
+});
 
 
        imgContainer.appendChild(imgElement);
