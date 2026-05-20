@@ -126,16 +126,24 @@ if (post.imageUrls && post.imageUrls.length > 0) {
     modal.style.display = 'none';
 };
 
-            modalImageContainer.onclick = (e) => {
-                e.stopPropagation(); // ✅ prevents click from closing the modal
-                const rect = modalImageContainer.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                if (clickX < rect.width / 2) {
-                    modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
-                } else {
-                    modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
-                }
-            };
+            // PC: clicking the dark area outside closes modal
+modal.onclick = (e) => {
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+};
+
+// Mobile: swipe down to close
+let touchStartY = 0;
+modal.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+});
+modal.addEventListener('touchend', (e) => {
+    const touchEndY = e.changedTouches[0].clientY;
+    if (touchEndY - touchStartY > 60) { // swipe down 60px = close
+        modal.style.display = 'none';
+    }
+});
 
             // ✅ MOVED HERE — inside the click listener
             modalImageContainer.onmousemove = (e) => {
