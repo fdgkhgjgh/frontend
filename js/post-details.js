@@ -98,7 +98,7 @@ function displayPostDetails(post) {
    const mediaContainer = document.createElement('div');
    mediaContainer.classList.add('media-container'); // Common container for images AND videos
 
- // --- Images ---
+// --- Images ---
 if (post.imageUrls && post.imageUrls.length > 0) {
     const imgContainer = document.createElement('div');
     imgContainer.classList.add('multi-image-container');
@@ -121,9 +121,60 @@ if (post.imageUrls && post.imageUrls.length > 0) {
                 modalImageContainer.appendChild(modalImg);
             });
 
-            modal.style.display = 'flex';
+            // Force fullscreen via JS directly
+            modal.style.cssText = `
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: #000;
+                z-index: 99999;
+                margin: 0;
+                padding: 0;
+            `;
 
-            // PC: click dark area outside to close
+            const modalContent = modal.querySelector('.modal-content');
+            modalContent.style.cssText = `
+                width: 100vw;
+                height: 100vh;
+                max-width: 100vw;
+                max-height: 100vh;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            `;
+
+            const carousel = document.getElementById('modal-image-carousel');
+            carousel.style.cssText = `
+                width: 100vw;
+                height: 100vh;
+            `;
+
+            modalImageContainer.style.cssText = `
+                display: flex;
+                width: 100vw;
+                height: 100vh;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                scroll-behavior: smooth;
+            `;
+
+            // set each image to fullscreen size
+            const allModalImgs = modalImageContainer.querySelectorAll('img');
+            allModalImgs.forEach(img => {
+                img.style.cssText = `
+                    min-width: 100vw;
+                    width: 100vw;
+                    height: 100vh;
+                    object-fit: contain;
+                    flex-shrink: 0;
+                    scroll-snap-align: start;
+                `;
+            });
+
+            // PC: click dark area to close
             modal.onclick = (e) => {
                 if (e.target === modal) {
                     modal.style.display = 'none';
@@ -132,29 +183,33 @@ if (post.imageUrls && post.imageUrls.length > 0) {
 
             // Mobile: swipe down to close
             let touchStartY = 0;
-            modal.addEventListener('touchstart', (e) => {
+            let touchStartX = 0;
+            modal.ontouchstart = (e) => {
                 touchStartY = e.touches[0].clientY;
-            }, { once: true });
-            modal.addEventListener('touchend', (e) => {
+                touchStartX = e.touches[0].clientX;
+            };
+            modal.ontouchend = (e) => {
                 const touchEndY = e.changedTouches[0].clientY;
-                if (touchEndY - touchStartY > 60) {
+                const touchEndX = e.changedTouches[0].clientX;
+                const diffY = touchEndY - touchStartY;
+                const diffX = Math.abs(touchEndX - touchStartX);
+                if (diffY > 80 && diffX < 50) {
                     modal.style.display = 'none';
                 }
-            }, { once: true });
+            };
 
-            // Click left/right to navigate
+            // PC: click left/right to navigate
             modalImageContainer.onclick = (e) => {
                 e.stopPropagation();
                 const rect = modalImageContainer.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                if (clickX < rect.width / 2) {
+                if (e.clientX - rect.left < rect.width / 2) {
                     modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
                 } else {
                     modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
                 }
             };
 
-            // Cursor direction indicator
+            // Cursor direction
             modalImageContainer.onmousemove = (e) => {
                 const rect = modalImageContainer.getBoundingClientRect();
                 if (e.clientX - rect.left < rect.width / 2) {
@@ -164,22 +219,10 @@ if (post.imageUrls && post.imageUrls.length > 0) {
                 }
             };
 
-           
-            // ✅ MOVED HERE — inside the click listener
-            modalImageContainer.onmousemove = (e) => {
-                const rect = modalImageContainer.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                if (clickX < rect.width / 2) {
-                    modalImageContainer.classList.add('cursor-left');
-                } else {
-                    modalImageContainer.classList.remove('cursor-left');
-                }
-            };
-
-        }); // ✅ closes click listener
+        }); // closes imgElement click listener
 
         imgContainer.appendChild(imgElement);
-    }); // ✅ closes forEach
+    }); // closes forEach
     mediaContainer.appendChild(imgContainer);
 }
 
