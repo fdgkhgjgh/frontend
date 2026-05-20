@@ -134,6 +134,18 @@ if (post.imageUrls && post.imageUrls.length > 0) {
                 margin: 0;
                 padding: 0;
             `;
+            // Add close button for PC
+let existingCloseBtn = modal.querySelector('.modal-close-pc');
+if (!existingCloseBtn) {
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕';
+    closeBtn.classList.add('modal-close-pc');
+    closeBtn.onclick = (e) => {
+        e.stopPropagation();
+        modal.style.display = 'none';
+    };
+    modal.appendChild(closeBtn);
+}
 
             const modalContent = modal.querySelector('.modal-content');
             modalContent.style.cssText = `
@@ -193,7 +205,7 @@ if (post.imageUrls && post.imageUrls.length > 0) {
                 const touchEndX = e.changedTouches[0].clientX;
                 const diffY = touchEndY - touchStartY;
                 const diffX = Math.abs(touchEndX - touchStartX);
-                if (diffY > 80 && diffX < 50) {
+                if (diffY < -80 && diffX < 50) {
                     modal.style.display = 'none';
                 }
             };
