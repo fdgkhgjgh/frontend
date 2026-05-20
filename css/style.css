@@ -601,18 +601,12 @@ button[type="submit"]:disabled {
     scroll-snap-align: start;
 }
 
-/* Left half = left arrow, right half = right arrow */
 #modal-image-container {
-    cursor: e-resize; /* default: right arrow */
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'><path fill='white' d='M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z'/></svg>") 16 16, e-resize;
 }
 
-#modal-image-container:hover {
-    cursor: e-resize;
-}
-
-/* Use JS to switch cursor side — add this helper class */
 .cursor-left {
-    cursor: w-resize !important;
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'><path fill='white' d='M12 20l1.41-1.41L7.83 13H20v-2H7.83l5.58-5.59L12 4l-8 8z'/></svg>") 16 16, w-resize !important;
 }
 
 /*Style the link*/
