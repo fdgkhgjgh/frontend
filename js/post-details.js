@@ -108,41 +108,50 @@ if (post.imageUrls && post.imageUrls.length > 0) {
         imgElement.src = imageUrl;
         imgElement.alt = "Post Image";
         imgElement.classList.add('post-image');
-imgElement.addEventListener('click', () => {
-    const modal = document.getElementById('image-modal');
-    const modalImageContainer = document.getElementById('modal-image-container');
-    const closeButton = document.querySelector('.close-button');
+        imgElement.addEventListener('click', () => {
+            const modal = document.getElementById('image-modal');
+            const modalImageContainer = document.getElementById('modal-image-container');
+            const closeButton = document.querySelector('.close-button');
 
-    modalImageContainer.innerHTML = '';
+            modalImageContainer.innerHTML = '';
 
-    post.imageUrls.forEach(url => {
-        const modalImg = document.createElement('img');
-        modalImg.src = url;
-        modalImg.alt = "Full Size Image";
-        modalImageContainer.appendChild(modalImg);
-    });
+            post.imageUrls.forEach(url => {
+                const modalImg = document.createElement('img');
+                modalImg.src = url;
+                modalImg.alt = "Full Size Image";
+                modalImageContainer.appendChild(modalImg);
+            });
 
-    modal.style.display = 'flex';
+            modal.style.display = 'flex';
 
-    // Close button
-    closeButton.onclick = () => { modal.style.display = 'none'; };
+            closeButton.onclick = () => { modal.style.display = 'none'; };
 
-    // Click left/right side of modal to navigate
-    modalImageContainer.onclick = (e) => {
-        const rect = modalImageContainer.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        if (clickX < rect.width / 2) {
-            modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
-        } else {
-            modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
-        }
-    };
-});
+            modalImageContainer.onclick = (e) => {
+                const rect = modalImageContainer.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                if (clickX < rect.width / 2) {
+                    modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
+                } else {
+                    modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
+                }
+            };
 
+            // ✅ MOVED HERE — inside the click listener
+            modalImageContainer.onmousemove = (e) => {
+                const rect = modalImageContainer.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                if (clickX < rect.width / 2) {
+                    modalImageContainer.classList.add('cursor-left');
+                } else {
+                    modalImageContainer.classList.remove('cursor-left');
+                }
+            };
 
-       imgContainer.appendChild(imgElement);
+        }); // ✅ closes click listener
+
+        imgContainer.appendChild(imgElement);
     }); // ✅ closes forEach
-    mediaContainer.appendChild(imgContainer); // ✅ closes if
+    mediaContainer.appendChild(imgContainer);
 }
 
   // Videos (using thumbnail)
