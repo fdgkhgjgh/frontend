@@ -288,7 +288,7 @@ if (post.videoUrls && post.videoUrls.length > 0) {
 
     const videoDownloadBtn = document.createElement('a');
     videoDownloadBtn.href = `${API_BASE_URL}/posts/${post._id}/download?url=${encodeURIComponent(firstVideoUrl)}`;
-    videoDownloadBtn.textContent = '⬇ Download Video';
+    videoDownloadBtn.textContent = '⬇ 下载此视频';
     videoDownloadBtn.classList.add('download-btn');
     mediaContainer.appendChild(videoDownloadBtn);
 }
