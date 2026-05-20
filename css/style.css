@@ -484,6 +484,20 @@ button[type="submit"]:disabled {
     cursor: pointer;
 }
 
+.video-play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2em;
+  color: white;
+  opacity: 0.9;
+  cursor: pointer;
+  z-index: 10;
+  text-shadow: 0 0 8px rgba(0,0,0,0.8);
+  pointer-events: none;
+}
+
 /* Multi-image container styles */
 .multi-image-container {
   display: flex;            /* Arrange images in a row */
