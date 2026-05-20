@@ -127,6 +127,7 @@ if (post.imageUrls && post.imageUrls.length > 0) {
 };
 
             modalImageContainer.onclick = (e) => {
+                e.stopPropagation(); // ✅ prevents click from closing the modal
                 const rect = modalImageContainer.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
                 if (clickX < rect.width / 2) {
