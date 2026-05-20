@@ -689,147 +689,20 @@ button[type="submit"]:disabled {
   width: 90%;
 }
 
+/* --- Modal fullscreen on mobile --- */
 @media (max-width: 768px) {
   .modal {
-    padding: 0;
-    align-items: stretch;
-    justify-content: stretch;
-  }
-
-  .modal-content {
-    max-width: 100% !important;
-    max-height: 100% !important;
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 0;
-    overflow: hidden;
-  }
-
-  #modal-image-container {
-    height: 100vh;
-  }
-
-  #modal-image-container img {
-    height: 100vh;
-    max-height: 100vh;
-  }
-}
-
-#modal-image {
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain; /* VERY IMPORTANT! */
-}
-
-
-/* Style for the modal image carousel */
-#modal-image-carousel {
-  position: relative;   /* For positioning navigation buttons */
-}
-
-#modal-image-container {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  width: 100%;           /* ✅ add this */
-  scroll-behavior: smooth; /* ✅ smooth scrolling */
-}
-
-#modal-image-container img {
-  min-width: 100%;       /* ✅ changed from width to min-width: 100% */
-  max-height: 80vh;
-  object-fit: contain;
-  scroll-snap-align: start;
-  flex-shrink: 0;        /* ✅ add this - prevents images from shrinking */
-}
-
-.video-play-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 3em;
-  color: white;
-  opacity: 0.7;
-  cursor: pointer;
-}
-
-.video-container { /* Assuming you have a container around the video */
-  width: 160px; /* Fixed width */
-  height: 240px; /* Fixed height */
-  overflow: hidden; /* Prevent overflowing content */
-}
-
-.post-video {
-  max-width: 100%; /* or whatever width you want */
-  height: auto;
-  border-radius: 5px; /* Optional:  If you want rounded corners */
-}
-
-.video-thumbnail-container {
-  width: 100px;      /* Adjust as needed */
-  height: 240px;     /* Adjust as needed */
-  overflow: hidden; /* Keep the video within container! */
-  position: relative; /* For absolute positioning of the play icon */
-  border-radius: 5px; /* Optional: Rounded corners */
-}
-
-.video-thumbnail-container img {  /* Style the Thumbnail */
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Important: Prevents distortion */
-}
-
-
-/* Apply to Video element when it is played */
-.post-video-fullscreen {
-  max-width: 80%; /* Adjust size as needed */
-  max-height: 600px;
-  display: block;
-  margin: 10px auto; /* Centering */
-}
-.site-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 9px 14px;
-  background: #222;
-  color: #aaa;
-  font-size: 0.82rem;
-  margin-top: 20px;
-}
-
-.site-footer .footer-links {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-right: 70px; /* ✅ add this to avoid Tawk.to button overlap */
-}
-
-.site-footer a {
-  color: #fff;
-  text-decoration: none;
-  background-color: transparent;
-  border: none;
-  padding: 0;
-}
-
-.site-footer a:hover {
-  color: #fff;
-}
-
-@media (max-width: 768px) {
-  .modal {
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
+    position: fixed !important;
     top: 0 !important;
     left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 99999 !important;
+    background-color: #000 !important;
+    align-items: stretch;
+    justify-content: stretch;
   }
 
   .modal-content {
@@ -840,6 +713,7 @@ button[type="submit"]:disabled {
     margin: 0 !important;
     padding: 0 !important;
     border-radius: 0 !important;
+    overflow: hidden !important;
   }
 
   #modal-image-carousel {
@@ -855,18 +729,8 @@ button[type="submit"]:disabled {
   #modal-image-container img {
     width: 100vw !important;
     height: 100vh !important;
+    min-width: 100vw !important;
     max-height: 100vh !important;
-    object-fit: contain;
-  }
-}
-@media (max-width: 768px) {
-  .modal {
-    z-index: 99999 !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    background-color: #000 !important;
+    object-fit: contain !important;
   }
 }
