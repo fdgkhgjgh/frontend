@@ -111,7 +111,6 @@ if (post.imageUrls && post.imageUrls.length > 0) {
         imgElement.addEventListener('click', () => {
             const modal = document.getElementById('image-modal');
             const modalImageContainer = document.getElementById('modal-image-container');
-            const closeButton = document.querySelector('.close-button');
 
             modalImageContainer.innerHTML = '';
 
@@ -123,8 +122,9 @@ if (post.imageUrls && post.imageUrls.length > 0) {
             });
 
             modal.style.display = 'flex';
-
-            closeButton.onclick = () => { modal.style.display = 'none'; };
+            modal.onclick = () => {
+    modal.style.display = 'none';
+};
 
             modalImageContainer.onclick = (e) => {
                 const rect = modalImageContainer.getBoundingClientRect();
@@ -798,7 +798,6 @@ commentsList.addEventListener('click', (event) => {
             // Show the modal
             const modal = document.getElementById('image-modal');
             const modalImageContainer = document.getElementById('modal-image-container');
-            const closeButton = document.querySelector('.close-button');
 
             // Clear existing images
             modalImageContainer.innerHTML = '';
@@ -813,12 +812,11 @@ commentsList.addEventListener('click', (event) => {
 
             //check the modal before accessing property!!!
             if (modal) {
-             modal.style.display = 'flex'; // THIS LINE IS THE PROBLEM!!!!
-            }
-
-            closeButton.addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
+    modal.style.display = 'flex';
+    modal.onclick = () => {
+        modal.style.display = 'none';
+    };
+}
 
         }
     }
