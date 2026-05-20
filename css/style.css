@@ -474,12 +474,14 @@ button[type="submit"]:disabled {
 
 /* AFTER */
 .media-container .video-thumbnail-container {
-  width: 120px;
-  height: 120px;
-  overflow: hidden;
-  position: relative;
-  border-radius: 5px;
-  flex: none;
+    width: 120px;
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 5px;
+    flex: none;
+    background: #222;
+    cursor: pointer;
 }
 
 /* Multi-image container styles */
@@ -745,4 +747,26 @@ button[type="submit"]:disabled {
     max-height: 100vh !important;
     object-fit: contain !important;
   }
+}
+
+.modal-close-pc {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    z-index: 999999;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    border: none;
+    font-size: 22px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none; /* hidden on mobile */
+}
+
+@media (min-width: 769px) {
+    .modal-close-pc {
+        display: block; /* only show on PC */
+    }
 }
