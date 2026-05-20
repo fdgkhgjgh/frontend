@@ -122,29 +122,49 @@ if (post.imageUrls && post.imageUrls.length > 0) {
             });
 
             modal.style.display = 'flex';
-            modal.onclick = () => {
-    modal.style.display = 'none';
-};
 
-            // PC: clicking the dark area outside closes modal
-modal.onclick = (e) => {
-    if (e.target === modal) {
-        modal.style.display = 'none';
-    }
-};
+            // PC: click dark area outside to close
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
 
-// Mobile: swipe down to close
-let touchStartY = 0;
-modal.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-});
-modal.addEventListener('touchend', (e) => {
-    const touchEndY = e.changedTouches[0].clientY;
-    if (touchEndY - touchStartY > 60) { // swipe down 60px = close
-        modal.style.display = 'none';
-    }
-});
+            // Mobile: swipe down to close
+            let touchStartY = 0;
+            modal.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+            }, { once: true });
+            modal.addEventListener('touchend', (e) => {
+                const touchEndY = e.changedTouches[0].clientY;
+                if (touchEndY - touchStartY > 60) {
+                    modal.style.display = 'none';
+                }
+            }, { once: true });
 
+            // Click left/right to navigate
+            modalImageContainer.onclick = (e) => {
+                e.stopPropagation();
+                const rect = modalImageContainer.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                if (clickX < rect.width / 2) {
+                    modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
+                } else {
+                    modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
+                }
+            };
+
+            // Cursor direction indicator
+            modalImageContainer.onmousemove = (e) => {
+                const rect = modalImageContainer.getBoundingClientRect();
+                if (e.clientX - rect.left < rect.width / 2) {
+                    modalImageContainer.classList.add('cursor-left');
+                } else {
+                    modalImageContainer.classList.remove('cursor-left');
+                }
+            };
+
+           
             // ✅ MOVED HERE — inside the click listener
             modalImageContainer.onmousemove = (e) => {
                 const rect = modalImageContainer.getBoundingClientRect();
@@ -822,10 +842,39 @@ commentsList.addEventListener('click', (event) => {
             //check the modal before accessing property!!!
             if (modal) {
     modal.style.display = 'flex';
-    modal.onclick = () => {
-        modal.style.display = 'none';
+
+    // PC: click dark area outside to close
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    // Mobile: swipe down to close
+    let touchStartY = 0;
+    modal.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    }, { once: true });
+    modal.addEventListener('touchend', (e) => {
+        const touchEndY = e.changedTouches[0].clientY;
+        if (touchEndY - touchStartY > 60) {
+            modal.style.display = 'none';
+        }
+    }, { once: true });
+
+    // Click left/right to navigate
+    modalImageContainer.onclick = (e) => {
+        e.stopPropagation();
+        const rect = modalImageContainer.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        if (clickX < rect.width / 2) {
+            modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
+        } else {
+            modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
+        }
     };
 }
+        
 
         }
     }
