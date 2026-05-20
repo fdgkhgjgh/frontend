@@ -198,6 +198,16 @@ imgElement.addEventListener('click', () => {
     mediaContainer.appendChild(videoDownloadBtn);
 }
 
+// Switch cursor based on mouse position
+modalImageContainer.onmousemove = (e) => {
+    const rect = modalImageContainer.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    if (clickX < rect.width / 2) {
+        modalImageContainer.classList.add('cursor-left');
+    } else {
+        modalImageContainer.classList.remove('cursor-left');
+    }
+};
 // Add the media container to the content (only if there are images OR videos)
 if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
     contentContainer.appendChild(mediaContainer);
