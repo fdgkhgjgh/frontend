@@ -473,7 +473,7 @@ button[type="submit"]:disabled {
 }
 
 /* AFTER */
-.media-container .video-thumbnail-container {
+.video-thumbnail-container {
     width: 120px;
     height: 180px;
     overflow: hidden;
