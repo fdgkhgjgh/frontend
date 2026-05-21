@@ -489,35 +489,72 @@ function displayComments(comments) {
         }
 
          // Add video display logic
-        if (comment.videoUrls && comment.videoUrls.length > 0) {
-            const videoContainer = document.createElement('div');
-            videoContainer.classList.add('multi-video-container');
+if (comment.videoUrls && comment.videoUrls.length > 0) {
+    const videoContainer = document.createElement('div');
+    videoContainer.classList.add('multi-video-container');
 
-            comment.videoUrls.forEach(videoUrl => {
-                const mediaWrapper = document.createElement('div');
-                mediaWrapper.classList.add('media-wrapper');
+    comment.videoUrls.forEach(videoUrl => {
+        const mediaWrapper = document.createElement('div');
+        mediaWrapper.classList.add('media-wrapper');
 
-                const videoElement = document.createElement('video');
-                videoElement.src = videoUrl;
-                videoElement.controls = true;
-                videoElement.classList.add('post-video');
-                videoElement.style.width = '150px';
-                videoElement.style.height = '160px';
-                videoElement.style.objectFit = 'cover';
-                videoElement.style.borderRadius = '5px';
-                videoContainer.appendChild(videoElement);
+        const thumbContainer = document.createElement('div');
+        thumbContainer.style.cssText = `
+            width: 120px;
+            height: 120px;
+            position: relative;
+            border-radius: 5px;
+            overflow: hidden;
+            background: #222;
+            cursor: pointer;
+            flex: none;
+        `;
 
-                const downloadBtn = document.createElement('a');
-                downloadBtn.href = `${API_BASE_URL}/posts/${new URLSearchParams(window.location.search).get('id')}/download?url=${encodeURIComponent(videoUrl)}`;
-                downloadBtn.textContent = '⬇ Download Video';
-                downloadBtn.classList.add('download-btn');
+        const thumbImg = document.createElement('img');
+        thumbImg.src = videoUrl
+            .replace('/upload/', '/upload/so_0/')
+            .replace(/\.(mp4|mov|avi|webm)$/i, '.jpg');
+        thumbImg.style.cssText = `
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        `;
+        thumbImg.onerror = () => {
+            thumbImg.style.display = 'none';
+            thumbContainer.style.background = '#333';
+        };
 
-                mediaWrapper.appendChild(videoElement);
-                mediaWrapper.appendChild(downloadBtn);
-                videoContainer.appendChild(mediaWrapper);
-            });
-            commentItem.appendChild(videoContainer);
-        }
+        const playIcon = document.createElement('div');
+        playIcon.innerHTML = '&#9658;';
+        playIcon.classList.add('video-play-icon');
+
+        thumbContainer.appendChild(thumbImg);
+        thumbContainer.appendChild(playIcon);
+
+        thumbContainer.addEventListener('click', () => {
+            const videoElement = document.createElement('video');
+            videoElement.src = videoUrl;
+            videoElement.controls = true;
+            videoElement.style.cssText = `
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 5px;
+            `;
+            videoElement.autoplay = true;
+            mediaWrapper.replaceChild(videoElement, thumbContainer);
+        });
+
+        const downloadBtn = document.createElement('a');
+        downloadBtn.href = `${API_BASE_URL}/posts/${new URLSearchParams(window.location.search).get('id')}/download?url=${encodeURIComponent(videoUrl)}`;
+        downloadBtn.textContent = '⬇ Download Video';
+        downloadBtn.classList.add('download-btn');
+
+        mediaWrapper.appendChild(thumbContainer);
+        mediaWrapper.appendChild(downloadBtn);
+        videoContainer.appendChild(mediaWrapper);
+    });
+    commentItem.appendChild(videoContainer);
+}
 
         //Add delete button.
         const currentUserId = localStorage.getItem('userId');
