@@ -272,34 +272,79 @@ if (post.videoUrls && post.videoUrls.length > 0) {
     videoThumbnailContainer.appendChild(imgElement);
     videoThumbnailContainer.appendChild(playIcon);
 
-    const handleClick = () => {
-    const videoElement = document.createElement('video');
-    videoElement.src = firstVideoUrl;
-    videoElement.controls = true;
-    
-    // 🌟 1. Use a clean, regular layout class instead of the fullscreen-forcing class
-    videoElement.classList.add('post-video-inline');
-    
-    // 🌟 2. Force mobile browsers to play it inline on the page without expanding it
-    videoElement.playsInline = true;
-    videoElement.setAttribute('webkit-playsinline', 'true');
-    
-    // Inline styling rules to ensure it behaves exactly like an image container
-    videoElement.style.width = '100%';
-    videoElement.style.maxWidth = '100%';
-    videoElement.style.height = 'auto';
-    videoElement.style.borderRadius = '5px';
+        const handleClick = () => {
+        // 1. Create a dark modal overlay background
+        const videoModal = document.createElement('div');
+        videoModal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        `;
 
-    // 🌟 3. Clean recovery if paused on mobile
-    videoElement.addEventListener('pause', () => {
-        videoElement.style.width = '100%';
-        videoElement.style.height = 'auto';
-    });
+        // 2. Create the video element
+        const videoElement = document.createElement('video');
+        videoElement.src = firstVideoUrl;
+        videoElement.controls = true;
+        videoElement.playsInline = true; // Prevents iOS/Chrome from taking over natively
+        videoElement.setAttribute('webkit-playsinline', 'true');
+        
+        // Mobile-friendly popup styling
+        videoElement.style.cssText = `
+            max-width: 100vw;
+            max-height: 80vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        `;
 
-    mediaContainer.insertBefore(videoElement, videoThumbnailContainer);
-    videoElement.play();
-    videoThumbnailContainer.style.display = 'none';
-};
+        // 3. Create a clean "Close" button at the top corner
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = '✕ Close';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 100000;
+        `;
+
+        // 4. Function to close full screen and clean up completely
+        const closeFullScreenVideo = (e) => {
+            if (e) e.stopPropagation();
+            videoElement.pause(); // Stop audio playback immediately
+            videoModal.remove();  // Remove the modal overlay from screen
+        };
+
+        // Close when clicking the button OR clicking the dark background area
+        closeBtn.addEventListener('click', closeFullScreenVideo);
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                closeFullScreenVideo(e);
+            }
+        });
+
+        // Assemble the elements and append them to the body layer
+        videoModal.appendChild(closeBtn);
+        videoModal.appendChild(videoElement);
+        document.body.appendChild(videoModal);
+
+        // Start playing automatically once it pops up!
+        videoElement.play().catch(error => console.log("Autoplay blocked:", error));
+    };
+
 
 
     imgElement.addEventListener('click', handleClick);
