@@ -663,13 +663,20 @@ async function deleteComment(commentId, commentElement) {
 commentsList.addEventListener('click', (event) => {
     if (event.target.classList.contains('reply-button')) {
         const commentId = event.target.dataset.commentId;
-        showReplyForm(commentId); //Display reply form.
+        const replyToUserId = event.target.dataset.replyToUserId || null;
+        const replyToUsername = event.target.dataset.replyToUsername || null;
+        
+        showReplyForm(commentId, replyToUserId, replyToUsername); 
     }
 });
 
-// Function to show the reply form
-function showReplyForm(commentId) {
-    // Create reply form
+// Update showReplyForm to accept those parameters
+function showReplyForm(commentId, replyToUserId = null, replyToUsername = null) {
+    // Check if form already exists to avoid duplication
+    const repliesContainer = document.getElementById(`replies-${commentId}`);
+    const existingForm = repliesContainer.querySelector('.reply-form');
+    if (existingForm) existingForm.remove();
+
     const replyForm = document.createElement('form');
     replyForm.classList.add('reply-form');
     replyForm.dataset.commentId = commentId;
@@ -677,58 +684,42 @@ function showReplyForm(commentId) {
     const replyTextarea = document.createElement('textarea');
     replyTextarea.classList.add('reply-textarea');
     replyTextarea.rows = 3;
-    replyTextarea.placeholder = 'Write your reply...';
+    // 🌟 Make the placeholder clear about who they are replying to
+    replyTextarea.placeholder = replyToUsername ? `Replying to @${replyToUsername}...` : 'Write your reply...';
     replyForm.appendChild(replyTextarea);
 
-      //---ADD SPINNER HTML HERE---
     const replyButton = document.createElement('button');
     replyButton.type = 'submit';
-    replyButton.innerHTML = `Submit Reply
-            <span id="reply-button-spinner" style="display: none;">
-                &#x21bb; <!-- Unicode anticlockwise circled arrow -->
-            </span>
-        `;
+    replyButton.innerHTML = `Submit Reply <span id="reply-button-spinner" style="display: none;">&#x21bb;</span>`;
     replyForm.appendChild(replyButton);
 
-      // Get references to the button and spinner (after they're created)
     const replyButtonSpinner = replyForm.querySelector('#reply-button-spinner');
 
-     //---SET BUTTON STATE FUNCTION---
-      function setReplyButtonState(state) {
-        switch (state) {
-            case 'sending':
-                replyButton.disabled = true;
-                replyButton.textContent = 'Sending...';
-                replyButtonSpinner.style.display = 'inline-block';
-                break;
-            case 'default':
-                replyButton.disabled = false;
-                replyButton.innerHTML = `Submit Reply
-                        <span id="reply-button-spinner" style="display: none;">
-                            &#x21bb; <!-- Unicode anticlockwise circled arrow -->
-                        </span>`;
-                replyButtonSpinner.style.display = 'none';
-                break;
+    function setReplyButtonState(state) {
+        if (state === 'sending') {
+            replyButton.disabled = true;
+            replyButton.textContent = 'Sending...';
+        } else {
+            replyButton.disabled = false;
+            replyButton.innerHTML = `Submit Reply <span id="reply-button-spinner" style="display: none;">&#x21bb;</span>`;
         }
     }
 
-    // Add the form to the replies container
-    const repliesContainer = document.getElementById(`replies-${commentId}`);
     repliesContainer.appendChild(replyForm);
 
-    //Add event listener to form.
     replyForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent the default form submission
+        e.preventDefault();
+        const replyText = replyTextarea.value;
+        const postId = new URLSearchParams(window.location.search).get('id');
 
-        const replyText = replyTextarea.value; // The text of the reply
-        const postId = new URLSearchParams(window.location.search).get('id'); // Post id
-
-        //Call addReply function .
-        addReply(postId, commentId, replyText, repliesContainer, setReplyButtonState);
+        // 🌟 Pass replyToUserId to the API poster function
+        addReply(postId, commentId, replyText, replyToUserId, repliesContainer, setReplyButtonState);
     });
 }
+
+
 // Function to add a reply
-async function addReply(postId, commentId, replyText, repliesContainer, setReplyButtonState) {
+async function addReply(postId, commentId, replyText, replyToUser, repliesContainer, setReplyButtonState) {
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -737,7 +728,6 @@ async function addReply(postId, commentId, replyText, repliesContainer, setReply
             return;
         }
 
-         //---SET BUTTON TO "SENDING" STATE---
         setReplyButtonState('sending');
 
         const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies`, {
@@ -746,7 +736,11 @@ async function addReply(postId, commentId, replyText, repliesContainer, setReply
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify({ text: replyText }),
+            // 🌟 INCLUDE THE replyToUser FIELD IN THE JSON PAYLOAD
+            body: JSON.stringify({ 
+                text: replyText,
+                replyToUser: replyToUser 
+            }),
         });
 
         const data = await response.json();
@@ -754,142 +748,113 @@ async function addReply(postId, commentId, replyText, repliesContainer, setReply
         if (response.ok) {
             commentMessage.textContent = "Reply added successfully!";
             commentMessage.style.color = 'green';
-            //Clear the message and Load replies.
-            commentMessage.textContent = '';
+            setTimeout(() => { commentMessage.textContent = ''; }, 2000);
 
-            //Add load replies again.
-            loadReplies(commentId, repliesContainer)
+            loadReplies(commentId, repliesContainer);
         } else {
             commentMessage.textContent = `Error adding reply: ${data.message || 'Unknown error'}`;
             commentMessage.style.color = 'red';
         }
-
     } catch (error) {
         console.error('Error adding reply:', error);
         commentMessage.textContent = "An error occurred while adding the reply.";
         commentMessage.style.color = 'red';
     } finally {
-           //---RESET BUTTON TO DEFAULT STATE---
         setReplyButtonState('default');
     }
 }
+
 // Load replies function
 async function loadReplies(commentId, repliesContainer) {
     repliesContainer.innerHTML = '';
   
-    // Check if commentId is a valid MongoDB ObjectId
-    if (!/^[0-9a-fA-F]{24}$/.test(commentId)) {  // Corrected ObjectId Validation
+    if (!/^[0-9a-fA-F]{24}$/.test(commentId)) {
       console.error('Invalid comment ID format:', commentId);
-      repliesContainer.textContent = 'Invalid comment ID format. Please try again.';
       return;
     }
   
     try {
-      //console.log('Comment ID before fetch:', commentId);
-      const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`); // Corrected URL
-      //console.log('Fetch response status:', response.status);
+      const response = await fetch(`${API_BASE_URL}/posts/comments/${commentId}/replies`); 
   
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(`Failed to fetch replies: ${response.status} - ${errorData.message || 'Unknown error'}`);
+        throw new Error(`Failed to fetch replies: ${response.status}`);
       }
       const replies = await response.json();
-  
-      //console.log('Fetched replies:', replies);
   
       if (replies.length > 0) {
         replies.forEach(reply => {
           const replyElement = document.createElement('div');
           replyElement.classList.add('reply');
 
-           // --- ADD PROFILE PICTURE HERE ---
+           // Profile Picture
            const profilePicture = document.createElement('img');
            profilePicture.classList.add('profile-picture');
-           profilePicture.src = reply.author?.profilePictureUrl || 'assets/default-profile.png'; // Use a default image!
-           profilePicture.alt = `${reply.author?.username}'s Profile Picture`;  //Also use ? to prevent errors
+           profilePicture.src = reply.author?.profilePictureUrl || 'assets/default-profile.png';
+           profilePicture.alt = `${reply.author?.username}'s Profile Picture`;
            replyElement.appendChild(profilePicture);
 
-           //NEW CODE HERE!
-           const usernameLink = document.createElement('a');  // Create an <a> tag
-           usernameLink.href = `profile.html?id=${reply.author._id}`; // Set the href to the profile page
-           usernameLink.textContent = reply.author?.username || "Unknown"; // Set the link text to the username
+           // Author Link
+           const usernameLink = document.createElement('a'); 
+           usernameLink.href = `profile.html?id=${reply.author?._id}`;
+           usernameLink.textContent = reply.author?.username || "Unknown";
+           replyElement.appendChild(usernameLink);
 
-           replyElement.append(usernameLink);  // Append the <a> tag to the <p>
-           replyElement.append(`: ${reply.text} -- ${formatDate(reply.createdAt)}`); // Add the rest of the comment content
+           // 🌟 NEW: Check if this is a reply to another reply and add the "@username" tag
+           const textSpan = document.createElement('span');
+           if (reply.replyToUser && reply.replyToUser.username) {
+               textSpan.innerHTML = ` to <a href="profile.html?id=${reply.replyToUser._id}">@${reply.replyToUser.username}</a>: ${reply.text} -- ${formatDate(reply.createdAt)}`;
+           } else {
+               textSpan.textContent = `: ${reply.text} -- ${formatDate(reply.createdAt)}`;
+           }
+           replyElement.appendChild(textSpan);
 
-            // --- ADD DELETE BUTTON HERE ---
+            // Delete Button logic
             const currentUserId = localStorage.getItem('userId');
             if (currentUserId && currentUserId === reply.author?._id.toString()) {
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
                 deleteButton.classList.add('delete-button');
-                deleteButton.dataset.replyId = reply._id; // Store reply ID as dataset
-                deleteButton.addEventListener('click', (event) => {
-                    deleteReply(reply._id, replyElement, commentId); // Pass commentId here
+                deleteButton.addEventListener('click', () => {
+                    deleteReply(reply._id, replyElement, commentId);
                 });
                 replyElement.appendChild(deleteButton);
             }
+
+            // 🌟 NEW: Add a Reply Button to this sub-reply item!
+            const subReplyButton = document.createElement('button');
+            subReplyButton.classList.add('reply-button', 'sub-reply-btn');
+            subReplyButton.textContent = '回复 (Reply)';
+            // Crucial: The commentId remains the top-level parent ID so it stays in this column!
+            subReplyButton.dataset.commentId = commentId; 
+            subReplyButton.dataset.replyToUserId = reply.author?._id;
+            subReplyButton.dataset.replyToUsername = reply.author?.username;
+            replyElement.appendChild(subReplyButton);
+
            repliesContainer.appendChild(replyElement);
         });
       } else {
         repliesContainer.textContent = "No replies yet.";
       }
+
+      // View more collapse animation logic... (Keep your existing execution code here)
       if (replies.length > 5) {
-        repliesContainer.classList.add('overlapped-replies');
-  
-        // Create "View More" button
-        const viewMoreButton = document.createElement('button');
-        viewMoreButton.textContent = 'View More Replies';
-        viewMoreButton.classList.add('view-more-replies-button');
-  
-        // Attach click listener to the button
-        viewMoreButton.addEventListener('click', () => {
-          repliesContainer.classList.remove('overlapped-replies'); // Remove the class that hides the content
-          viewMoreButton.style.display = 'none'; // Hide the "View More" button after click
-        });
-  
-        repliesContainer.appendChild(viewMoreButton);
+         repliesContainer.classList.add('overlapped-replies');
+         const viewMoreButton = document.createElement('button');
+         viewMoreButton.textContent = 'View More Replies';
+         viewMoreButton.classList.add('view-more-replies-button');
+         viewMoreButton.addEventListener('click', () => {
+             repliesContainer.classList.remove('overlapped-replies');
+             viewMoreButton.style.display = 'none';
+         });
+         repliesContainer.appendChild(viewMoreButton);
       }
   
     } catch (error) {
       console.error('Error loading replies:', error);
-      repliesContainer.textContent = `Error loading replies: ${error.message}`;
-    }
-  }
-
-  //delete reply
-  async function deleteReply(replyId, replyElement, commentId) {
-    const postId = new URLSearchParams(window.location.search).get('id'); // Get post ID
-
-    const confirmDelete = confirm("Are you sure you want to delete this reply?");
-    if (!confirmDelete) return;
-
-    try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies/${replyId}`, { // Corrected URL
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            // Remove the reply element from the DOM
-            replyElement.remove();
-            commentMessage.textContent = data.message; // Display a message.
-            commentMessage.style.color = 'green';
-        } else {
-            commentMessage.textContent = `Error: ${data.message}`;
-            commentMessage.style.color = 'red';
-        }
-    } catch (error) {
-        console.error('Error deleting reply:', error);
-        commentMessage.textContent = "An error occurred while deleting the reply.";
-        commentMessage.style.color = 'red';
     }
 }
+
 
 //Click to zoom in
 commentsList.addEventListener('click', (event) => {
