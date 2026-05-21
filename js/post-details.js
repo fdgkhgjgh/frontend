@@ -476,9 +476,6 @@ function displayComments(comments) {
             imgContainer.classList.add('multi-image-container');
 
            comment.imageUrls.forEach(imageUrl => {
-                const mediaWrapper = document.createElement('div');
-                mediaWrapper.classList.add('media-wrapper');
-
                 const imgElement = document.createElement('img');
                 imgElement.src = imageUrl;
                 imgElement.alt = "Comment Image";
