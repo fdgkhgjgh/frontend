@@ -272,78 +272,53 @@ if (post.videoUrls && post.videoUrls.length > 0) {
     videoThumbnailContainer.appendChild(imgElement);
     videoThumbnailContainer.appendChild(playIcon);
 
-        const handleClick = () => {
-        // 1. Create a dark modal overlay background
-        const videoModal = document.createElement('div');
-        videoModal.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-        `;
-
-        // 2. Create the video element
+            const handleClick = () => {
         const videoElement = document.createElement('video');
         videoElement.src = firstVideoUrl;
         videoElement.controls = true;
-        videoElement.playsInline = true; // Prevents iOS/Chrome from taking over natively
-        videoElement.setAttribute('webkit-playsinline', 'true');
         
-        // Mobile-friendly popup styling
+        // Style it to replace the thumbnail temporarily on the page
         videoElement.style.cssText = `
-            max-width: 100vw;
-            max-height: 80vh;
-            width: auto;
+            width: 100%;
+            max-width: 100%;
             height: auto;
-            object-fit: contain;
+            border-radius: 5px;
         `;
 
-        // 3. Create a clean "Close" button at the top corner
-        const closeBtn = document.createElement('button');
-        closeBtn.textContent = '✕ Close';
-        closeBtn.style.cssText = `
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border: 1px solid #fff;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            z-index: 100000;
-        `;
+        mediaContainer.insertBefore(videoElement, videoThumbnailContainer);
+        videoThumbnailContainer.style.display = 'none';
 
-        // 4. Function to close full screen and clean up completely
-        const closeFullScreenVideo = (e) => {
-            if (e) e.stopPropagation();
-            videoElement.pause(); // Stop audio playback immediately
-            videoModal.remove();  // Remove the modal overlay from screen
+        // 🌟 THE MAGIC PART: Tell the browser to instantly launch its native full-screen popup player
+        if (videoElement.requestFullscreen) {
+            videoElement.requestFullscreen();
+        } else if (videoElement.webkitRequestFullscreen) { // Safari & iOS Chrome support
+            videoElement.webkitRequestFullscreen();
+        } else if (videoElement.msRequestFullscreen) {
+            videoElement.msRequestFullscreen();
+        }
+
+        // Start playing natively
+        videoElement.play();
+
+        // 🌟 AUTO-CLOSE BACK TO FIRST SIZE WHEN SYSTEM FULLSCREEN IS EXITED
+        const exitHandler = () => {
+            // If the user is no longer looking at the video in fullscreen mode
+            if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.msFullscreenElement) {
+                // Put the thumbnail back and remove the video element cleanly
+                videoElement.remove();
+                videoThumbnailContainer.style.display = 'block';
+                
+                // Remove the listener so it doesn't leave trailing ghost logic
+                document.removeEventListener('fullscreenchange', exitHandler);
+                document.removeEventListener('webkitfullscreenchange', exitHandler);
+            }
         };
 
-        // Close when clicking the button OR clicking the dark background area
-        closeBtn.addEventListener('click', closeFullScreenVideo);
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) {
-                closeFullScreenVideo(e);
-            }
-        });
-
-        // Assemble the elements and append them to the body layer
-        videoModal.appendChild(closeBtn);
-        videoModal.appendChild(videoElement);
-        document.body.appendChild(videoModal);
-
-        // Start playing automatically once it pops up!
-        videoElement.play().catch(error => console.log("Autoplay blocked:", error));
+        // Listen for the browser's original native close action
+        document.addEventListener('fullscreenchange', exitHandler);
+        document.addEventListener('webkitfullscreenchange', exitHandler);
     };
+
 
 
 
