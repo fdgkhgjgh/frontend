@@ -486,14 +486,7 @@ function displayComments(comments) {
                 imgElement.style.maxWidth = '100%';
                 imgElement.style.height = 'auto';
 
-                const downloadBtn = document.createElement('a');
-                downloadBtn.href = `${API_BASE_URL}/posts/${new URLSearchParams(window.location.search).get('id')}/download?url=${encodeURIComponent(imageUrl)}`;
-                downloadBtn.textContent = '⬇ Download';
-                downloadBtn.classList.add('download-btn');
-
-                mediaWrapper.appendChild(imgElement);
-                mediaWrapper.appendChild(downloadBtn);
-                imgContainer.appendChild(mediaWrapper);
+                imgContainer.appendChild(imgElement);
             });
             commentItem.appendChild(imgContainer);
         }
