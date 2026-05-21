@@ -499,11 +499,13 @@ function displayComments(comments) {
 
                 const videoElement = document.createElement('video');
                 videoElement.src = videoUrl;
-                videoElement.alt = "Comment Video";
                 videoElement.controls = true;
                 videoElement.classList.add('post-video');
-                videoElement.style.maxWidth = '100%';
-                videoElement.style.maxHeight = '300px';
+                videoElement.style.width = '120px';
+                videoElement.style.height = '160px';
+                videoElement.style.objectFit = 'cover';
+                videoElement.style.borderRadius = '5px';
+                videoContainer.appendChild(videoElement);
 
                 const downloadBtn = document.createElement('a');
                 downloadBtn.href = `${API_BASE_URL}/posts/${new URLSearchParams(window.location.search).get('id')}/download?url=${encodeURIComponent(videoUrl)}`;
