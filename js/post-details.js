@@ -272,62 +272,74 @@ if (post.videoUrls && post.videoUrls.length > 0) {
     videoThumbnailContainer.appendChild(imgElement);
     videoThumbnailContainer.appendChild(playIcon);
 
-        const handleClick = () => {
+            const handleClick = () => {
+        // 1. Reuse your image modal structure to create a clean black screen overlay layer
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 99999;
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+        `;
+
+        // 2. Create the video player safely inside the modal box
         const videoElement = document.createElement('video');
         videoElement.src = firstVideoUrl;
         videoElement.controls = true;
         
-        // 1. Give it a temporary inline style so it doesn't break things while opening
+        // This stops mobile browsers from opening their own glitched system window layout layers
+        videoElement.playsInline = true;
+        videoElement.setAttribute('webkit-playsinline', 'true');
+        
         videoElement.style.cssText = `
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            display: block;
+            width: 100vw;
+            max-height: 100vh;
+            object-fit: contain;
         `;
 
-        mediaContainer.insertBefore(videoElement, videoThumbnailContainer);
-        videoThumbnailContainer.style.display = 'none';
+        // 3. Setup a unified close controller function
+        const closeVideoModal = () => {
+            videoElement.pause(); // Stop audio track immediately
+            modal.remove();       // Clear the modal window completely from the DOM
+            videoThumbnailContainer.style.display = 'block'; // Ensure original thumbnail stays untouched
+        };
 
-        // 2. Launch the native system fullscreen player immediately
-        if (videoElement.requestFullscreen) {
-            videoElement.requestFullscreen();
-        } else if (videoElement.webkitRequestFullscreen) { // Chrome mobile & Safari support
-            videoElement.webkitRequestFullscreen();
-        } else if (videoElement.msRequestFullscreen) {
-            videoElement.msRequestFullscreen();
-        }
-
-        // Start playing the video
-        videoElement.play();
-
-        // 3. THE COMPLETE FIX FOR GOING BACK TO THE FIRST SIZE:
-        const exitHandler = () => {
-            // Check if the browser has officially exited native fullscreen mode
-            const isFullscreen = document.fullscreenElement || 
-                                 document.webkitIsFullScreen || 
-                                 document.msFullscreenElement;
-
-            if (!isFullscreen) {
-                // Stop the video audio immediately
-                videoElement.pause(); 
-                
-                // CRITICAL: Wipe out the video element completely so it cannot stay giant on your page
-                videoElement.remove(); 
-                
-                // Bring back your original beautiful thumbnail layout instantly!
-                videoThumbnailContainer.style.display = 'block';
-                
-                // Clean up the event listeners so they don't cause lag later
-                document.removeEventListener('fullscreenchange', exitHandler);
-                document.removeEventListener('webkitfullscreenchange', exitHandler);
+        // 4. Attach event listeners for closing
+        // Mobile swipe up to close (matching your image modal logic perfectly!)
+        let touchStartY = 0;
+        modal.ontouchstart = (e) => {
+            touchStartY = e.touches[0].clientY;
+        };
+        modal.ontouchend = (e) => {
+            const touchEndY = e.changedTouches[0].clientY;
+            const diffY = touchEndY - touchStartY;
+            // Swipe upwards to instantly destroy the video player screen layer
+            if (diffY < -80) {
+                closeVideoModal();
             }
         };
 
-        // Listen for the native system/browser close or back button action
-        document.addEventListener('fullscreenchange', exitHandler);
-        document.addEventListener('webkitfullscreenchange', exitHandler);
+        // Click outside the video player boundaries to exit back to first size
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                closeVideoModal();
+            }
+        };
+
+        // Assemble, display, and play immediately
+        modal.appendChild(videoElement);
+        document.body.appendChild(modal);
+        videoElement.play();
     };
+
 
 
 
