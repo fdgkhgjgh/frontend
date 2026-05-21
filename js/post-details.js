@@ -889,7 +889,7 @@ async function loadReplies(commentId, repliesContainer) {
       if (replies.length > 5) {
          repliesContainer.classList.add('overlapped-replies');
          const viewMoreButton = document.createElement('button');
-         viewMoreButton.textContent = 'View More Replies';
+         viewMoreButton.textContent = '展开更多回复';
          viewMoreButton.classList.add('view-more-replies-button');
          viewMoreButton.addEventListener('click', () => {
              repliesContainer.classList.remove('overlapped-replies');
