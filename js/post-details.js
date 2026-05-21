@@ -501,10 +501,10 @@ function displayComments(comments) {
                 videoElement.src = videoUrl;
                 videoElement.controls = true;
                 videoElement.classList.add('post-video');
-                videoElement.style.width = '120px';
-                videoElement.style.height = '160px';
+                videoElement.style.width = '170px';
+                videoElement.style.height = '190px';
                 videoElement.style.objectFit = 'cover';
-                videoElement.style.borderRadius = '5px';
+                videoElement.style.borderRadius = '8px';
                 videoContainer.appendChild(videoElement);
 
                 const downloadBtn = document.createElement('a');
