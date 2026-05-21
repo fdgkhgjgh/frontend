@@ -272,52 +272,63 @@ if (post.videoUrls && post.videoUrls.length > 0) {
     videoThumbnailContainer.appendChild(imgElement);
     videoThumbnailContainer.appendChild(playIcon);
 
-            const handleClick = () => {
+        const handleClick = () => {
         const videoElement = document.createElement('video');
         videoElement.src = firstVideoUrl;
         videoElement.controls = true;
         
-        // Style it to replace the thumbnail temporarily on the page
+        // 1. Give it a temporary inline style so it doesn't break things while opening
         videoElement.style.cssText = `
             width: 100%;
             max-width: 100%;
             height: auto;
             border-radius: 5px;
+            display: block;
         `;
 
         mediaContainer.insertBefore(videoElement, videoThumbnailContainer);
         videoThumbnailContainer.style.display = 'none';
 
-        // 🌟 THE MAGIC PART: Tell the browser to instantly launch its native full-screen popup player
+        // 2. Launch the native system fullscreen player immediately
         if (videoElement.requestFullscreen) {
             videoElement.requestFullscreen();
-        } else if (videoElement.webkitRequestFullscreen) { // Safari & iOS Chrome support
+        } else if (videoElement.webkitRequestFullscreen) { // Chrome mobile & Safari support
             videoElement.webkitRequestFullscreen();
         } else if (videoElement.msRequestFullscreen) {
             videoElement.msRequestFullscreen();
         }
 
-        // Start playing natively
+        // Start playing the video
         videoElement.play();
 
-        // 🌟 AUTO-CLOSE BACK TO FIRST SIZE WHEN SYSTEM FULLSCREEN IS EXITED
+        // 3. THE COMPLETE FIX FOR GOING BACK TO THE FIRST SIZE:
         const exitHandler = () => {
-            // If the user is no longer looking at the video in fullscreen mode
-            if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.msFullscreenElement) {
-                // Put the thumbnail back and remove the video element cleanly
-                videoElement.remove();
+            // Check if the browser has officially exited native fullscreen mode
+            const isFullscreen = document.fullscreenElement || 
+                                 document.webkitIsFullScreen || 
+                                 document.msFullscreenElement;
+
+            if (!isFullscreen) {
+                // Stop the video audio immediately
+                videoElement.pause(); 
+                
+                // CRITICAL: Wipe out the video element completely so it cannot stay giant on your page
+                videoElement.remove(); 
+                
+                // Bring back your original beautiful thumbnail layout instantly!
                 videoThumbnailContainer.style.display = 'block';
                 
-                // Remove the listener so it doesn't leave trailing ghost logic
+                // Clean up the event listeners so they don't cause lag later
                 document.removeEventListener('fullscreenchange', exitHandler);
                 document.removeEventListener('webkitfullscreenchange', exitHandler);
             }
         };
 
-        // Listen for the browser's original native close action
+        // Listen for the native system/browser close or back button action
         document.addEventListener('fullscreenchange', exitHandler);
         document.addEventListener('webkitfullscreenchange', exitHandler);
     };
+
 
 
 
