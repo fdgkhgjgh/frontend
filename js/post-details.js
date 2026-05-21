@@ -276,6 +276,8 @@ if (post.videoUrls && post.videoUrls.length > 0) {
         const videoElement = document.createElement('video');
         videoElement.src = firstVideoUrl;
         videoElement.controls = true;
+        videoElement.playsInline = true; 
+        videoElement.setAttribute('webkit-playsinline', 'true');
         videoElement.classList.add('post-video-fullscreen');
         mediaContainer.insertBefore(videoElement, videoThumbnailContainer);
         videoElement.play();
