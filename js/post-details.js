@@ -273,16 +273,34 @@ if (post.videoUrls && post.videoUrls.length > 0) {
     videoThumbnailContainer.appendChild(playIcon);
 
     const handleClick = () => {
-        const videoElement = document.createElement('video');
-        videoElement.src = firstVideoUrl;
-        videoElement.controls = true;
-        videoElement.playsInline = true; 
-        videoElement.setAttribute('webkit-playsinline', 'true');
-        videoElement.classList.add('post-video-fullscreen');
-        mediaContainer.insertBefore(videoElement, videoThumbnailContainer);
-        videoElement.play();
-        videoThumbnailContainer.style.display = 'none';
-    };
+    const videoElement = document.createElement('video');
+    videoElement.src = firstVideoUrl;
+    videoElement.controls = true;
+    
+    // 🌟 1. Use a clean, regular layout class instead of the fullscreen-forcing class
+    videoElement.classList.add('post-video-inline');
+    
+    // 🌟 2. Force mobile browsers to play it inline on the page without expanding it
+    videoElement.playsInline = true;
+    videoElement.setAttribute('webkit-playsinline', 'true');
+    
+    // Inline styling rules to ensure it behaves exactly like an image container
+    videoElement.style.width = '100%';
+    videoElement.style.maxWidth = '100%';
+    videoElement.style.height = 'auto';
+    videoElement.style.borderRadius = '5px';
+
+    // 🌟 3. Clean recovery if paused on mobile
+    videoElement.addEventListener('pause', () => {
+        videoElement.style.width = '100%';
+        videoElement.style.height = 'auto';
+    });
+
+    mediaContainer.insertBefore(videoElement, videoThumbnailContainer);
+    videoElement.play();
+    videoThumbnailContainer.style.display = 'none';
+};
+
 
     imgElement.addEventListener('click', handleClick);
     playIcon.addEventListener('click', handleClick);
