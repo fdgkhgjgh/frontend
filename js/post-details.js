@@ -272,73 +272,51 @@ if (post.videoUrls && post.videoUrls.length > 0) {
     videoThumbnailContainer.appendChild(imgElement);
     videoThumbnailContainer.appendChild(playIcon);
 
-            const handleClick = () => {
-        // 1. Reuse your image modal structure to create a clean black screen overlay layer
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-            display: flex;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #000;
-            z-index: 99999;
-            margin: 0;
-            padding: 0;
-            justify-content: center;
-            align-items: center;
+                const handleClick = () => {
+        // 1. Create a clean video container div to perfectly replace your thumbnail block
+        const inlineVideoContainer = document.createElement('div');
+        inlineVideoContainer.style.cssText = `
+            width: 100%;
+            max-width: 100%;
+            margin: 10px 0;
+            display: block;
         `;
 
-        // 2. Create the video player safely inside the modal box
+        // 2. Create the video element exactly like the comment's video logic
         const videoElement = document.createElement('video');
         videoElement.src = firstVideoUrl;
         videoElement.controls = true;
         
-        // This stops mobile browsers from opening their own glitched system window layout layers
-        videoElement.playsInline = true;
-        videoElement.setAttribute('webkit-playsinline', 'true');
-        
+        // Match standard responsive dimensions
         videoElement.style.cssText = `
-            width: 100vw;
-            max-height: 100vh;
-            object-fit: contain;
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            display: block;
         `;
 
-        // 3. Setup a unified close controller function
-        const closeVideoModal = () => {
-            videoElement.pause(); // Stop audio track immediately
-            modal.remove();       // Clear the modal window completely from the DOM
-            videoThumbnailContainer.style.display = 'block'; // Ensure original thumbnail stays untouched
+        // Assemble the elements into the page column
+        inlineVideoContainer.appendChild(videoElement);
+        mediaContainer.insertBefore(inlineVideoContainer, videoThumbnailContainer);
+        videoThumbnailContainer.style.display = 'none';
+
+        // 3. Play the video immediately
+        // On mobile Chrome, this automatically handles popping open the native player natively!
+        videoElement.play().catch(error => console.log("Playback interaction error:", error));
+
+        // 4. THE ULTIMATE PAUSE & RETURN RESET:
+        // When paused or finished (like hitting the browser's native back/close button),
+        // we completely wipe out the video player container and restore the original first-size thumbnail.
+        const resetToThumbnail = () => {
+            videoElement.pause();
+            inlineVideoContainer.remove(); // Removes the video element completely so it can't get stuck huge
+            videoThumbnailContainer.style.display = 'block'; // Instantly returns to the first size
         };
 
-        // 4. Attach event listeners for closing
-        // Mobile swipe up to close (matching your image modal logic perfectly!)
-        let touchStartY = 0;
-        modal.ontouchstart = (e) => {
-            touchStartY = e.touches[0].clientY;
-        };
-        modal.ontouchend = (e) => {
-            const touchEndY = e.changedTouches[0].clientY;
-            const diffY = touchEndY - touchStartY;
-            // Swipe upwards to instantly destroy the video player screen layer
-            if (diffY < -80) {
-                closeVideoModal();
-            }
-        };
-
-        // Click outside the video player boundaries to exit back to first size
-        modal.onclick = (e) => {
-            if (e.target === modal) {
-                closeVideoModal();
-            }
-        };
-
-        // Assemble, display, and play immediately
-        modal.appendChild(videoElement);
-        document.body.appendChild(modal);
-        videoElement.play();
+        videoElement.addEventListener('pause', resetToThumbnail);
+        videoElement.addEventListener('ended', resetToThumbnail);
     };
+
 
 
 
