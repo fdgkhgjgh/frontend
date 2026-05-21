@@ -531,8 +531,8 @@ button[type="submit"]:disabled {
 /* Individual video styles */
 .multi-video-container .post-video {
   max-width: 20%; /* Adjust as needed */
-  max-height: 180px;
-  width: 160px;
+  max-height: 160px;
+  width: 150px;
   border-radius: 5px;
 }
 
