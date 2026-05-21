@@ -194,10 +194,28 @@ if (post.imageUrls && post.imageUrls.length > 0) {
                 }
             };
 
-            // Mobile: one tap anywhere to close
-            modal.ontouchend = () => {
-                modal.style.display = 'none';
-            };
+            // Mobile: swipe left/right to navigate images
+let swipeTouchStartX = 0;
+modalImageContainer.addEventListener('touchstart', (e) => {
+    swipeTouchStartX = e.touches[0].clientX;
+}, { passive: true });
+
+modalImageContainer.addEventListener('touchend', (e) => {
+    const swipeTouchEndX = e.changedTouches[0].clientX;
+    const diffX = swipeTouchStartX - swipeTouchEndX;
+    if (Math.abs(diffX) > 50) { // swipe at least 50px
+        if (diffX > 0) {
+            // swipe left = next image
+            modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
+        } else {
+            // swipe right = previous image
+            modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
+        }
+    } else {
+        // short tap = close
+        modal.style.display = 'none';
+    }
+}, { passive: true });
 
             // PC: click left/right to navigate
             modalImageContainer.onclick = (e) => {
@@ -991,10 +1009,28 @@ commentsList.addEventListener('click', (event) => {
                     }
                 };
 
-                // Mobile: one tap anywhere to close
-                modal.ontouchend = () => {
-                    modal.style.display = 'none';
-                };
+                // Mobile: swipe left/right to navigate images
+let swipeTouchStartX = 0;
+modalImageContainer.addEventListener('touchstart', (e) => {
+    swipeTouchStartX = e.touches[0].clientX;
+}, { passive: true });
+
+modalImageContainer.addEventListener('touchend', (e) => {
+    const swipeTouchEndX = e.changedTouches[0].clientX;
+    const diffX = swipeTouchStartX - swipeTouchEndX;
+    if (Math.abs(diffX) > 50) { // swipe at least 50px
+        if (diffX > 0) {
+            // swipe left = next image
+            modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
+        } else {
+            // swipe right = previous image
+            modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
+        }
+    } else {
+        // short tap = close
+        modal.style.display = 'none';
+    }
+}, { passive: true });
 
                 // PC: click left/right to navigate
                 modalImageContainer.onclick = (e) => {
