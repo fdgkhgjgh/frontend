@@ -570,7 +570,7 @@ if (comment.videoUrls && comment.videoUrls.length > 0) {
         // Add reply button
         const replyButton = document.createElement('button');
         replyButton.classList.add('reply-button');
-        replyButton.textContent = 'Reply';
+        replyButton.textContent = '回复(Reply)';
         replyButton.dataset.commentId = comment._id; //Set the comment id
         commentItem.appendChild(replyButton);
 
