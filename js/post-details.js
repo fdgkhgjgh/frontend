@@ -903,6 +903,33 @@ async function loadReplies(commentId, repliesContainer) {
     }
 }
 
+//delete reply
+async function deleteReply(replyId, replyElement, commentId) {
+    if (!confirm('Delete this reply?')) return;
+
+    try {
+        const token = localStorage.getItem('token');
+        const postId = new URLSearchParams(window.location.search).get('id');
+
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies/${replyId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            replyElement.remove();
+        } else {
+            const data = await response.json();
+            alert(data.message || 'Failed to delete reply');
+        }
+    } catch (error) {
+        console.error('Error deleting reply:', error);
+        alert('Failed to delete reply');
+    }
+}
+
 
 //Click to zoom in
 commentsList.addEventListener('click', (event) => {
