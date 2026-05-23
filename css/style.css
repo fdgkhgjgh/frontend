@@ -605,6 +605,14 @@ button[type="submit"]:disabled {
   text-decoration: underline;  /* Add underline on hover */
 }
 
+#post-details-container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
 /* Style usernames in post detail page */
 #post-details-container .post .post-content p a {
   color: rgb(236, 88, 9); /* Or your desired color for day mode */
