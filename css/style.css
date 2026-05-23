@@ -37,9 +37,9 @@ nav a:hover {
 .post {
   display: flex; /* Use Flexbox for layout */
   background-color: #e6e6e6;
-  border: 2px solid #ddd;
+  border: 1px solid #ddd;
   margin-bottom: 2px;
-  padding: 0.5px;
+  padding: 0.2px;
   border-radius: 1px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -190,17 +190,6 @@ textarea {
   position: relative; /* Required for absolute positioning of the button */
 }
 
-/*  Remove the pseudo-element.  We're using a button now.  It's also causing click issues */
-/* .overlapped-replies::after {
-  content: "...";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
-  text-align: center;
-  padding: 2px 0;
-} */
 
 /* Style the "View More" button */
 .view-more-replies-button {
