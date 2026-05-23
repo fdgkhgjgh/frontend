@@ -52,6 +52,7 @@ function displayPosts(posts) {
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+	;
 
         // --- Main Container for Content ---
         const textInfoContainer = document.createElement('div');
