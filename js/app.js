@@ -46,6 +46,12 @@ function displayPosts(posts) {
     posts.forEach(post => {
         const postElement = document.createElement('div');
         postElement.classList.add('post');
+		postElement.style.cssText = `
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
 
         // --- Main Container for Content ---
         const textInfoContainer = document.createElement('div');
