@@ -58,7 +58,7 @@ nav a:hover {
 
 /* Bigger title on post list */
 .post h2 {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     margin: 0 0 4px 0;
 }
 
@@ -89,6 +89,15 @@ nav a:hover {
   height: auto;
   display: block;
   border-radius: 4px; /* Optional: Rounded corners */
+}
+
+/* content backgroud */
+.post-body {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px 0 16px 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 /* --- Vote Container and Buttons --- */
