@@ -678,12 +678,12 @@ button[type="submit"]:disabled {
 }
 
 /* Styles for the image on the post 
-.main-post-list .post-list-image {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 4px;
-  flex-shrink: 0;
+.post-list-image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
 }
 
 /* Styles for the video on the post list */
