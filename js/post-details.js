@@ -92,7 +92,10 @@ function displayPostDetails(post) {
     } else {
         contentElement.textContent = ''; // or some placeholder if content is empty
     }
-    contentContainer.appendChild(contentElement);
+    const postBody = document.createElement('div');
+postBody.classList.add('post-body');
+postBody.appendChild(contentElement);
+contentContainer.appendChild(postBody);
 
    // --- Media Container (Handles both Images and Videos) ---
    const mediaContainer = document.createElement('div');
@@ -343,7 +346,7 @@ if (post.videoUrls && post.videoUrls.length > 0) {
 
 // Add the media container to the content (only if there are images OR videos)
 if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
-    contentContainer.appendChild(mediaContainer);
+    postBody.appendChild(mediaContainer);
 }
 
     // --- Like/Dislike Buttons ---
@@ -378,7 +381,7 @@ if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
     downvoteCount.textContent = post.downvotes; //Set default downvotes.
     voteContainer.appendChild(downvoteCount);
 
-    contentContainer.appendChild(voteContainer);
+    postBody.appendChild(voteContainer);
 
     postElement.appendChild(contentContainer);
     postDetailsContainer.appendChild(postElement);
