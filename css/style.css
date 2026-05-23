@@ -35,13 +35,14 @@ nav a:hover {
 
 /* --- Post Styles --- */
 .post {
-  display: flex; /* Use Flexbox for layout */
-  background-color: #e6e6e6;
   border: 1px solid #ddd;
-  margin-bottom: 2px;
-  padding: 0.2px;
-  border-radius: 1px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 4px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 
@@ -652,13 +653,13 @@ button[type="submit"]:disabled {
   color: #777;
 }
 
-/* Styles for the image on the post list */
-.main-post-list .post-list-image {
-  width: 100px;
-  height: 100px;
+/* Styles for the image on the post 
+.post-list-image {
+  width: 60px;
+  height: 60px;
   object-fit: cover;
-  border-radius: 5px;
-  margin-left: 10px;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 /* Styles for the video on the post list */
