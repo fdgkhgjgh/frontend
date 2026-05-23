@@ -48,79 +48,38 @@ function displayPosts(posts) {
         postElement.classList.add('post');
 
         // --- Main Container for Content ---
-        const contentContainer = document.createElement('div');
-        contentContainer.classList.add('post-content');
-
-        // --- Title (NOW CLICKABLE) ---
-        const titleElement = document.createElement('h2');
-        const titleLink = document.createElement('a'); // Create an <a> tag
-        titleLink.href = `post-details.html?id=${post._id}`; // Set the link to the details page
-        titleLink.textContent = post.title; // Set the link text to the post title
-
-        // Add Comment Count to the Title Link
-        const commentCountSpan = document.createElement('span');
-        commentCountSpan.textContent = ` ( ${post.totalComments})`;
-        commentCountSpan.style.fontWeight = 'normal'; // Optional: remove bolding if desired
-        titleLink.appendChild(commentCountSpan);
-
-        titleElement.appendChild(titleLink);   // Wrap the title text in the link
-
-        // --- Author and Date ---
-        const authorDateElement = document.createElement('p');
-        authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
-
-        // ---  NEW: Wrap Title & Author/Date in a Container ---
         const textInfoContainer = document.createElement('div');
         textInfoContainer.classList.add('text-info-container');
+        textInfoContainer.style.cssText = `
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        `;
+
+        const titleElement = document.createElement('h2');
+        titleElement.style.margin = '0 0 4px 0';
+        titleElement.style.fontSize = '0.95rem';
+
+        const titleLink = document.createElement('a');
+        titleLink.href = `post-details.html?id=${post._id}`;
+        titleLink.textContent = post.title;
+
+        const commentCountSpan = document.createElement('span');
+        commentCountSpan.textContent = ` ( ${post.totalComments})`;
+        commentCountSpan.style.fontWeight = 'normal';
+        titleLink.appendChild(commentCountSpan);
+        titleElement.appendChild(titleLink);
+
+        const authorDateElement = document.createElement('p');
+        authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
+        authorDateElement.style.cssText = 'margin: 0; font-size: 0.8rem; color: #666;';
+
         textInfoContainer.appendChild(titleElement);
         textInfoContainer.appendChild(authorDateElement);
 
-
-        // Create a container for media (image or video)
-        const mediaContainer = document.createElement('div');
-        mediaContainer.style.display = 'flex';
-        mediaContainer.style.flexDirection = 'column';
-        mediaContainer.style.alignItems = 'center';
-
-        let mediaElement = null;
-        if (post.imageUrls && post.imageUrls.length > 0) {
-            const firstImageUrl = post.imageUrls[0];
-
-            mediaElement = document.createElement('img');
-            mediaElement.src = firstImageUrl;
-            mediaElement.alt = post.title;
-            mediaElement.classList.add('post-list-image');
-            mediaContainer.appendChild(mediaElement);
-
-
-        } else if (post.videoUrls && post.videoUrls.length > 0) {
-
-            const firstVideoUrl = post.videoUrls[0];
-            const thumbnailUrl = firstVideoUrl.replace(/\.(mp4|mov|avi)$/i, '.jpg');
-
-            mediaElement = document.createElement('img');
-            mediaElement.src = thumbnailUrl;
-            mediaElement.alt = post.title;
-            mediaElement.style.maxWidth = '100%';
-            mediaElement.style.maxHeight = '150px';
-            mediaElement.style.marginBottom = '5px';
-            mediaElement.classList.add('post-list-video');
-            mediaContainer.appendChild(mediaElement);
-
-        }
-
-        //Clear existing content in contentContainer (important)
-        contentContainer.innerHTML = '';
-
-        //Append in correct order!
-        contentContainer.appendChild(textInfoContainer); //Title, Author/Date
-        if (mediaElement) {
-            contentContainer.appendChild(mediaContainer); // Image or Video Thumbnail
-        }
-
-        //contentContainer.appendChild(contentElement); //Finally, the text content
-
-        // ***ADD PIN/UNPIN BUTTON HERE***
+        // Pin button
         const currentUserId = localStorage.getItem('userId');
         if (currentUserId && post.author && post.author._id && currentUserId === post.author._id.toString()) {
             const pinButton = document.createElement('button');
@@ -128,13 +87,32 @@ function displayPosts(posts) {
             pinButton.classList.add('pin-button');
             pinButton.dataset.postId = post._id;
             pinButton.addEventListener('click', (event) => {
-                pinUnpinPost(post._id, event.target); // Pass the post ID and the button element
+                pinUnpinPost(post._id, event.target);
             });
-            contentContainer.appendChild(pinButton);
+            textInfoContainer.appendChild(pinButton);
         }
 
-        // --- Combine Everything ---
-        postElement.appendChild(contentContainer);
+        // --- Right: image/video thumbnail ---
+        let mediaElement = null;
+        if (post.imageUrls && post.imageUrls.length > 0) {
+            mediaElement = document.createElement('img');
+            mediaElement.src = post.imageUrls[0];
+            mediaElement.alt = post.title;
+            mediaElement.classList.add('post-list-image');
+        } else if (post.videoUrls && post.videoUrls.length > 0) {
+            mediaElement = document.createElement('img');
+            mediaElement.src = post.videoUrls[0]
+                .replace('/upload/', '/upload/so_0/')
+                .replace(/\.(mp4|mov|avi|webm)$/i, '.jpg');
+            mediaElement.alt = post.title;
+            mediaElement.classList.add('post-list-image');
+        }
+
+        // --- Combine: text left, image right ---
+        postElement.appendChild(textInfoContainer);
+        if (mediaElement) {
+            postElement.appendChild(mediaElement);
+        }
         postList.appendChild(postElement);
 
     });  // <--- CLOSING CURLY BRACE for forEach LOOP
