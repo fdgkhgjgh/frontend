@@ -171,3 +171,8 @@ font-size: 0.8em;
   color: lightyellow; /* Lighter yellow on hover for better visibility */
   text-decoration: underline; /* Keep the underline on hover */
 }
+
+.dark-mode .post-body {
+  background-color: #2c2c2c;
+  color: #eee;
+}
