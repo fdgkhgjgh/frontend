@@ -43,6 +43,14 @@ nav a:hover {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#post-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 
@@ -248,26 +256,32 @@ textarea {
 
 /* Add these new styles to your style.css */
 .title-image-container {
-  display: flex; /* Use flexbox to align items in a row */
-  align-items: center; /* Vertically align items */
-  justify-content: space-between; /* Distribute space between items */
-  margin-bottom: 10px; /* Add some spacing below */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0;
 }
 
 .title-image-container h2 {
-  margin: 0; /* Reset default heading margins */
-  flex: 1; /* Allow the title to take up remaining space */
-  text-align: left;   /* Ensure the title is left-aligned within its space */
+  margin: 0;
+  flex: 1;
+  text-align: left;
+  font-size: 0.95rem;
 }
 
 .title-image-container .image-container {
-  width: auto; /* Allow image container to adjust its width */
-  margin-left: 10px; /* Add spacing between title and image */
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0;
+  margin-left: 10px;
 }
 
 .title-image-container .image-container img {
-  max-width: 100px; /* Adjust the maximum width of the image */
-  height: auto;
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
 }
 
 
