@@ -177,3 +177,22 @@ font-size: 0.8em;
   color: #eee;
 }
 
+body.dark-mode #star-canvas {
+    z-index: 0;
+}
+
+body.dark-mode .post,
+body.dark-mode .post-body,
+body.dark-mode .comment-item,
+body.dark-mode .reply,
+body.dark-mode nav,
+body.dark-mode header {
+    background-color: rgba(44, 44, 44, 0.85); /* semi-transparent so stars show through */
+    position: relative;
+    z-index: 1;
+}
+
+body.dark-mode {
+    background-color: #0a0a1a;
+}
+
