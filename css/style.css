@@ -47,6 +47,15 @@ nav a:hover {
   box-sizing: border-box;
 }
 
+.post h2 a {
+    color: orange;
+    text-decoration: none;
+}
+
+.post h2 a:hover {
+    text-decoration: underline;
+}
+
 #post-list {
   padding: 0;
   margin: 0;
@@ -603,14 +612,6 @@ button[type="submit"]:disabled {
 .post-content h2 a:hover {
   color: #555;  /* A darker shade on hover, for example */
   text-decoration: underline;  /* Add underline on hover */
-}
-
-#post-details-container {
-  background: #fff;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 /* Style usernames in post detail page */
