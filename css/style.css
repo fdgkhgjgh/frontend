@@ -654,7 +654,7 @@ button[type="submit"]:disabled {
 }
 
 /* Styles for the image on the post 
-.post-list-image {
+.main-post-list .post-list-image {
   width: 60px;
   height: 60px;
   object-fit: cover;
