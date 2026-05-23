@@ -56,6 +56,18 @@ nav a:hover {
     text-decoration: underline;
 }
 
+/* Bigger title on post list */
+.post h2 {
+    font-size: 1.1rem;
+    margin: 0 0 4px 0;
+}
+
+/* Shorter pin button */
+.pin-button {
+    padding: 2px 8px;
+    font-size: 0.75rem;
+}
+
 #post-list {
   padding: 0;
   margin: 0;
