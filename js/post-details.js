@@ -117,12 +117,19 @@ if (post.imageUrls && post.imageUrls.length > 0) {
 
             modalImageContainer.innerHTML = '';
 
-            post.imageUrls.forEach(url => {
-                const modalImg = document.createElement('img');
-                modalImg.src = url;
-                modalImg.alt = "Full Size Image";
-                modalImageContainer.appendChild(modalImg);
-            });
+const clickedIndex = post.imageUrls.indexOf(imageUrl);
+
+post.imageUrls.forEach(url => {
+    const modalImg = document.createElement('img');
+    modalImg.src = url;
+    modalImg.alt = "Full Size Image";
+    modalImageContainer.appendChild(modalImg);
+});
+
+// ✅ Scroll to the clicked image after images are added
+setTimeout(() => {
+    modalImageContainer.scrollLeft = clickedIndex * modalImageContainer.offsetWidth;
+}, 50);
 
             // Force fullscreen via JS directly
             modal.style.cssText = `
