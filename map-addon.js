@@ -13,12 +13,14 @@ const currentUsername = localStorage.getItem('username') || 'Explorer_' + Math.r
 // 2. Initialize Leaflet Map centered over China
 const map = L.map('live-sharing-map').setView([34.7466, 113.6253], 12);
 
-// 3. Mount Gaode (AMap) Tile Skins (Works flawlessly inside China)
+// Locate your AMap tile layer config inside map-addon.js and update it:
 L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
     subdomains: ['1', '2', '3', '4'],
     maxZoom: 18,
-    attribution: '&copy; <a href="https://ditu.amap.com/">高德地图 AMap</a>'
+    crossOrigin: true, // 🌟 THIS INSULATES TILE IMAGES FROM CORS BLOCKS
+    attribution: '&copy; 高德地图 AMap'
 }).addTo(map);
+
 
 // Keep track of user pin markers drawn on the screen
 const activeMarkers = {};
