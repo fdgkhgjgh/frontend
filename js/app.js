@@ -52,7 +52,12 @@ function displayPosts(posts) {
             align-items: center;
             justify-content: space-between;
             gap: 10px;
+			cursor: pointer;
         `; // ✅ closing backtick and semicolon was missing
+		// ✅ Click anywhere on post to open it
+postElement.addEventListener('click', () => {
+    window.location.href = `post-details.html?id=${post._id}`;
+});
 
         // --- Main Container for Content ---
         const textInfoContainer = document.createElement('div');
