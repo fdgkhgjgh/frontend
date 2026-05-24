@@ -72,6 +72,7 @@ if (loginForm) {
                   localStorage.setItem('userId', data.userId);
                   localStorage.setItem('username', data.username); // ADD THIS LINE
                   localStorage.setItem('isLoggedIn', 'true'); // Set isLoggedIn
+                  localStorage.setItem('profilePictureUrl', data.profilePictureUrl || '');
                   window.location.href = 'index.html';
                 } else {
                     loginMessage.textContent = data.message;
