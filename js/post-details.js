@@ -405,6 +405,7 @@ if (savedPosts.includes(post._id)) {
 }
 
 saveButton.addEventListener('click', async () => {
+    e.stopPropagation();
     const token = localStorage.getItem('token');
     if (!token) { alert('Please login to save posts'); return; }
 
@@ -690,7 +691,7 @@ if (comment.videoUrls && comment.videoUrls.length > 0) {
 }
 // Add event listener to the post details container (event delegation)
 postDetailsContainer.addEventListener('click', async (event) => {
-    if (event.target.classList.contains('vote-button')) {
+    if (event.target.classList.contains('vote-button') && !event.target.classList.contains('save-button')) {
         const postId = event.target.dataset.postId;
         const voteType = event.target.dataset.voteType;
 
