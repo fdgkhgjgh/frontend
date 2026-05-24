@@ -837,3 +837,35 @@ button[type="submit"]:disabled {
 
 }
 }
+
+#map-container {
+    z-index: 1;
+}
+
+.leaflet-control-zoom {
+    margin-bottom: 50px !important;
+}
+
+#chat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.dark-mode #map-panel {
+    background: #1a1a2e;
+}
+
+.dark-mode #chat-messages {
+    background: #1a1a2e;
+    color: #eee;
+}
+
+.dark-mode #chat-input {
+    background: #2c2c3e;
+    color: #eee;
+    border-color: #444;
+}
