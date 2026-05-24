@@ -11,6 +11,7 @@ let locationChannel = null;
 let chatChannel = null;
 let watchId = null;
 let isSharingLocation = false;
+let polylines = {}; // store track lines per user
 
 // Get logged in user info
 function getCurrentUser() {
@@ -124,6 +125,59 @@ function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
     });
 }
 
+//track line
+async function loadTracks() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const { data, error } = await supabaseClient
+        .from('location_tracks')
+        .select('*')
+        .gte('recorded_at', today.toISOString())
+        .order('recorded_at', { ascending: true });
+
+    if (error) { console.error('Load tracks error:', error); return; }
+
+    // Group by user_id
+    const grouped = {};
+    data.forEach(point => {
+        if (!grouped[point.user_id]) grouped[point.user_id] = [];
+        grouped[point.user_id].push([point.latitude, point.longitude]);
+    });
+
+    // Draw polyline for each user
+    Object.entries(grouped).forEach(([userId, points]) => {
+        if (polylines[userId]) {
+            map.removeLayer(polylines[userId]);
+        }
+        if (points.length > 1) {
+            polylines[userId] = L.polyline(points, {
+                color: userId === getCurrentUser().userId ? '#4f46e5' : '#e53e3e',
+                weight: 3,
+                opacity: 0.7,
+                dashArray: '6, 4'
+            }).addTo(map);
+        }
+    });
+}
+
+//track part
+let tracksVisible = false;
+
+function toggleTracks() {
+    const btn = document.getElementById('toggle-tracks-btn');
+    if (tracksVisible) {
+        Object.values(polylines).forEach(line => map.removeLayer(line));
+        polylines = {};
+        tracksVisible = false;
+        btn.textContent = 'Show Tracks';
+    } else {
+        loadTracks();
+        tracksVisible = true;
+        btn.textContent = 'Hide Tracks';
+    }
+}
+
 // Update or create marker for a user
 function updateMarker(userId, username, lat, lng, profilePic) {
     const { userId: currentUserId } = getCurrentUser();
@@ -197,27 +251,38 @@ async function startSharingLocation() {
     document.getElementById('share-location-btn').style.background = '#e53e3e';
 
     watchId = navigator.geolocation.watchPosition(async (pos) => {
-        const { latitude, longitude } = pos.coords;
+    const { latitude, longitude } = pos.coords;
 
-        await supabaseClient.from('locations').upsert({
-            user_id: userId,
-            username: username || 'Anonymous',
-            latitude,
-            longitude,
-            profile_pic: profilePic,  // ✅ store profile pic
-            updated_at: new Date().toISOString()
-        }, { onConflict: 'user_id' });
+    // Update current location
+    await supabaseClient.from('locations').upsert({
+        user_id: userId,
+        username: username || 'Anonymous',
+        latitude,
+        longitude,
+        profile_pic: profilePic,
+        updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id' });
 
-        map.setView([latitude, longitude], 14);
-
-    }, (err) => {
-        console.error('Geolocation error:', err);
-    }, {
-        enableHighAccuracy: true,
-        maximumAge: 10000,
-        timeout: 5000
+    // ✅ Record track point
+    await supabaseClient.from('location_tracks').insert({
+        user_id: userId,
+        username: username || 'Anonymous',
+        latitude,
+        longitude
     });
-}
+
+    // ✅ Redraw tracks
+    await loadTracks();
+
+    map.setView([latitude, longitude], 14);
+
+}, (err) => {
+    console.error('Geolocation error:', err);
+}, {
+    enableHighAccuracy: true,
+    maximumAge: 10000,
+    timeout: 5000
+});
 
 // Stop sharing location
 async function stopSharingLocation() {
@@ -333,6 +398,7 @@ async function initMapPanel() {
     subscribeLocations();
     await loadChatMessages();
     subscribeChat();
+    await loadTracks();
 }
 
 // Toggle map panel visibility
