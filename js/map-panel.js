@@ -250,6 +250,8 @@ async function startSharingLocation() {
     document.getElementById('share-location-btn').textContent = '停止分享Stop Sharing';
     document.getElementById('share-location-btn').style.background = '#e53e3e';
 
+    let firstUpdate = true;
+
     watchId = navigator.geolocation.watchPosition(async (pos) => {
     const raw = pos.coords;
 
@@ -276,16 +278,20 @@ async function startSharingLocation() {
 
         await loadTracks();
 
-        map.setView([latitude, longitude], 14);
+        // ✅ Only center map on first update, not every update
+        if (firstUpdate) {
+            map.setView([latitude, longitude], 14);
+            firstUpdate = false;
+        }
 
     }, (err) => {
         console.error('Geolocation error:', err);
     }, {
-        enableHighAccuracy: true,
-        maximumAge: 10000,
-        timeout: 5000
+        enableHighAccuracy: false,
+        maximumAge: 30000,
+        timeout: 10000
     });
-} // ✅ this closes startSharingLocation
+}
 
 // Stop sharing location
 async function stopSharingLocation() {
