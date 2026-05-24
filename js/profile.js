@@ -330,14 +330,23 @@ async function loadSavedPosts() {
             `;
 
             // Unsave button
-            const unsaveBtn = document.createElement('button');
-            unsaveBtn.textContent = '🔖 Unsave';
-            unsaveBtn.style.cssText = 'padding:2px 8px; font-size:0.75rem; margin-left:auto; flex-shrink:0;';
-            unsaveBtn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/auth/saved-posts`, {
-    headers: { 'Authorization': `Bearer ${token}` }
+const unsaveBtn = document.createElement('button');
+unsaveBtn.textContent = '🔖 Unsave';
+unsaveBtn.style.cssText = 'padding:2px 8px; font-size:0.75rem; margin-left:auto; flex-shrink:0;';
+unsaveBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_BASE_URL}/auth/save-post/${post._id}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+
+    if (data.saved === false) {
+        postElement.remove();
+        const saved = JSON.parse(localStorage.getItem('savedPosts') || '[]');
+        localStorage.setItem('savedPosts', JSON.stringify(saved.filter(id => id !== post._id.toString())));
+    }
 });
 
 // ✅ handle empty response
