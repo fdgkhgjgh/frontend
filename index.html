@@ -214,5 +214,21 @@
     <a href="mailto:your@email.com">Contact</a>
   </div>
 </footer>
+    <script>
+window.addEventListener('load', () => {
+    // Wait for Tawk.to to load then make it transparent
+    setTimeout(() => {
+        const tawkIframe = document.querySelector('iframe[title*="chat"]') || 
+                           document.querySelector('.tawk-min-container') ||
+                           document.querySelector('[id*="tawk"]');
+        if (tawkIframe) {
+            tawkIframe.style.opacity = '0.5';
+            tawkIframe.style.transition = 'opacity 0.3s';
+            tawkIframe.addEventListener('mouseenter', () => tawkIframe.style.opacity = '1');
+            tawkIframe.addEventListener('mouseleave', () => tawkIframe.style.opacity = '0.5');
+        }
+    }, 3000); // wait 3 seconds for Tawk to load
+});
+</script>
 </body>
 </html>
