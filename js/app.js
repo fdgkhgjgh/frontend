@@ -20,7 +20,7 @@ let currentPage = 1; // Track the current page
 
 async function loadPosts(page = 1) {
     try {
-        const limit = 8; // Number of posts per page
+        const limit = 5; // Number of posts per page
         const response = await fetch(`${API_BASE_URL}/posts?page=${page}&limit=${limit}`); // Use API_BASE_URL
         //console.log('Response:', response); // Log the entire response object
 
