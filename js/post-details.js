@@ -388,6 +388,49 @@ if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
     downvoteCount.textContent = post.downvotes; //Set default downvotes.
     voteContainer.appendChild(downvoteCount);
 
+    // --- Save/Collect Button ---
+const saveButton = document.createElement('button');
+saveButton.classList.add('vote-button', 'save-button');
+saveButton.innerHTML = '🔖';
+saveButton.title = 'Save this post';
+saveButton.style.marginLeft = '12px';
+
+// Check if already saved
+const savedPosts = JSON.parse(localStorage.getItem('savedPosts') || '[]');
+if (savedPosts.includes(post._id)) {
+    saveButton.style.opacity = '1';
+    saveButton.title = 'Saved!';
+} else {
+    saveButton.style.opacity = '0.4';
+}
+
+saveButton.addEventListener('click', async () => {
+    const token = localStorage.getItem('token');
+    if (!token) { alert('Please login to save posts'); return; }
+
+    const response = await fetch(`${API_BASE_URL}/auth/save-post/${post._id}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+
+    if (data.saved) {
+        saveButton.style.opacity = '1';
+        saveButton.title = 'Saved!';
+        const saved = JSON.parse(localStorage.getItem('savedPosts') || '[]');
+        saved.push(post._id);
+        localStorage.setItem('savedPosts', JSON.stringify(saved));
+    } else {
+        saveButton.style.opacity = '0.4';
+        saveButton.title = 'Save this post';
+        const saved = JSON.parse(localStorage.getItem('savedPosts') || '[]');
+        localStorage.setItem('savedPosts', JSON.stringify(saved.filter(id => id !== post._id)));
+    }
+});
+
+voteContainer.appendChild(saveButton);
+postBody.appendChild(voteContainer);
+
     postBody.appendChild(voteContainer);
 
     postElement.appendChild(contentContainer);
