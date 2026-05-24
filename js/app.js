@@ -145,7 +145,7 @@ function displayPagination(totalPages, currentPage) {
     // Previous Page button
     if (currentPage > 1) {
         const prevButton = document.createElement('button');
-        prevButton.textContent = 'Previous';
+        prevButton.textContent = '上一页';
         prevButton.addEventListener('click', () => {
             loadPosts(currentPage - 1);
         });
