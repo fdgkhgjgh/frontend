@@ -53,13 +53,13 @@ function initMap() {
         }
     );
 
-    // OSM as default
-    osmLayer.addTo(map);
+    // amap as default
+    amapLayer.addTo(map);
 
     // Layer switcher top right
     L.control.layers({
-        'World Map': osmLayer,
-        'China Map': amapLayer
+        'China Map': amapLayer,
+        'World Map': osmLayer
     }).addTo(map);
 }
 
