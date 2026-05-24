@@ -200,11 +200,15 @@ function displayUserPosts(posts, isOwnProfile) {  //***ADDED isOwnProfile as a P
     posts.forEach(post => {
         // Create elements to display the post (similar to how you display posts on the main page)
         const postElement = document.createElement('div');
-        postElement.classList.add('post');
+postElement.classList.add('post');
+postElement.style.cursor = 'pointer';
+postElement.addEventListener('click', () => {
+    window.location.href = `post-details.html?id=${post._id}`;
+});
 
-        const titleElement = document.createElement('h2');
-        titleElement.textContent = post.title;
-        postElement.appendChild(titleElement);
+const titleElement = document.createElement('h2');
+titleElement.textContent = post.title;
+postElement.appendChild(titleElement);
 
         const contentElement = document.createElement('p');
         contentElement.textContent = post.content.substring(0, 150);;
