@@ -298,7 +298,7 @@ async function stopSharingLocation() {
         removeMarker(userId);
     }
 
-    document.getElementById('share-location-btn').textContent = 'Share My Location';
+    document.getElementById('share-location-btn').textContent = '继续分享位置Share My Location';
     document.getElementById('share-location-btn').style.background = '#4f46e5';
 }
 
