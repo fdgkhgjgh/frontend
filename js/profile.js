@@ -208,6 +208,7 @@ postElement.addEventListener('click', () => {
 
 const titleElement = document.createElement('h2');
 titleElement.textContent = post.title;
+titleElement.style.color = '#c45c00';
 postElement.appendChild(titleElement);
 
         const contentElement = document.createElement('p');
