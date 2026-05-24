@@ -262,7 +262,7 @@ if (createPostFormMain) {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                createPostMessageMain.textContent = "You must be logged in to create a post.";
+                createPostMessageMain.textContent = "您必须登录后才能发送帖子You must be logged in to create a post.";
                 createPostMessageMain.style.color = 'red';
                 return;
             }
