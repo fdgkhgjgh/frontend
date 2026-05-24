@@ -331,10 +331,13 @@ async function loadSavedPosts() {
             unsaveBtn.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 const token = localStorage.getItem('token');
-                await fetch(`${API_BASE_URL}/auth/save-post/${post._id}`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+                const response = await fetch(`${API_BASE_URL}/auth/saved-posts`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+});
+
+// ✅ handle empty response
+const text = await response.text();
+const posts = text ? JSON.parse(text) : [];
                 postElement.remove();
                 // Update localStorage
                 const saved = JSON.parse(localStorage.getItem('savedPosts') || '[]');
