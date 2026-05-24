@@ -14,6 +14,17 @@ header {
   text-align: center;
 }
 
+h1 {
+  font-size: 2.2rem;
+  color: #fff;
+  text-shadow: 
+    -2px -2px 0 #2d5a1b,
+     2px -2px 0 #2d5a1b,
+    -2px  2px 0 #2d5a1b,
+     2px  2px 0 #2d5a1b;
+  letter-spacing: 3px;
+}
+
 nav {
   margin-bottom: 5px;
 }
