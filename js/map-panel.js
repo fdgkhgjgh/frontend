@@ -247,7 +247,7 @@ async function startSharingLocation() {
     const profilePic = localStorage.getItem('profilePictureUrl') || null;
 
     isSharingLocation = true;
-    document.getElementById('share-location-btn').textContent = 'Stop Sharing';
+    document.getElementById('share-location-btn').textContent = '停止分享Stop Sharing';
     document.getElementById('share-location-btn').style.background = '#e53e3e';
 
     watchId = navigator.geolocation.watchPosition(async (pos) => {
