@@ -283,6 +283,7 @@ async function startSharingLocation() {
     maximumAge: 10000,
     timeout: 5000
 });
+}
 
 // Stop sharing location
 async function stopSharingLocation() {
