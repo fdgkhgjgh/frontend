@@ -251,39 +251,36 @@ async function startSharingLocation() {
     document.getElementById('share-location-btn').style.background = '#e53e3e';
 
     watchId = navigator.geolocation.watchPosition(async (pos) => {
-    const { latitude, longitude } = pos.coords;
+        const { latitude, longitude } = pos.coords;
 
-    // Update current location
-    await supabaseClient.from('locations').upsert({
-        user_id: userId,
-        username: username || 'Anonymous',
-        latitude,
-        longitude,
-        profile_pic: profilePic,
-        updated_at: new Date().toISOString()
-    }, { onConflict: 'user_id' });
+        await supabaseClient.from('locations').upsert({
+            user_id: userId,
+            username: username || 'Anonymous',
+            latitude,
+            longitude,
+            profile_pic: profilePic,
+            updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id' });
 
-    // ✅ Record track point
-    await supabaseClient.from('location_tracks').insert({
-        user_id: userId,
-        username: username || 'Anonymous',
-        latitude,
-        longitude
+        await supabaseClient.from('location_tracks').insert({
+            user_id: userId,
+            username: username || 'Anonymous',
+            latitude,
+            longitude
+        });
+
+        await loadTracks();
+
+        map.setView([latitude, longitude], 14);
+
+    }, (err) => {
+        console.error('Geolocation error:', err);
+    }, {
+        enableHighAccuracy: true,
+        maximumAge: 10000,
+        timeout: 5000
     });
-
-    // ✅ Redraw tracks
-    await loadTracks();
-
-    map.setView([latitude, longitude], 14);
-
-}, (err) => {
-    console.error('Geolocation error:', err);
-}, {
-    enableHighAccuracy: true,
-    maximumAge: 10000,
-    timeout: 5000
-});
-}
+} // ✅ this closes startSharingLocation
 
 // Stop sharing location
 async function stopSharingLocation() {
