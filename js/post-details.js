@@ -404,7 +404,7 @@ if (savedPosts.includes(post._id)) {
     saveButton.style.opacity = '0.4';
 }
 
-saveButton.addEventListener('click', async () => {
+saveButton.addEventListener('click', async (e) => {
     e.stopPropagation();
     const token = localStorage.getItem('token');
     if (!token) { alert('Please login to save posts'); return; }
