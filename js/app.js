@@ -170,7 +170,7 @@ function displayPagination(totalPages, currentPage) {
     // Next Page button
     if (currentPage < totalPages) {
         const nextButton = document.createElement('button');
-        nextButton.textContent = 'Next';
+        nextButton.textContent = '下一页';
         nextButton.addEventListener('click', () => {
             loadPosts(currentPage + 1);
         });
@@ -183,7 +183,7 @@ function displayPagination(totalPages, currentPage) {
     jumpInput.type = 'number';
     jumpInput.min = 1;
     jumpInput.max = totalPages;
-    jumpInput.placeholder = 'Go to';
+    jumpInput.placeholder = '跳到';
     jumpInput.style.cssText = `
         width: 55px;
         padding: 3px 6px;
@@ -203,7 +203,7 @@ function displayPagination(totalPages, currentPage) {
     });
 
     const jumpBtn = document.createElement('button');
-    jumpBtn.textContent = 'Go';
+    jumpBtn.textContent = '跳页';
     jumpBtn.style.cssText = `
         margin-left: 4px;
         padding: 3px 8px;
