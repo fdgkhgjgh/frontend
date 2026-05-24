@@ -46,13 +46,18 @@ function initMap() {
 }
 
 // Create custom marker icon
-function createMarkerIcon(username, isCurrentUser) {
+function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
     const color = isCurrentUser ? '#4f46e5' : '#e53e3e';
     const initial = username ? username.charAt(0).toUpperCase() : '?';
-    return L.divIcon({
-        className: '',
-        html: `
-            <div style="
+
+    const innerContent = profilePicUrl
+        ? `<img src="${profilePicUrl}" style="
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                object-fit: cover;
+            "/>`
+        : `<div style="
                 background: ${color};
                 color: white;
                 width: 36px;
@@ -63,18 +68,37 @@ function createMarkerIcon(username, isCurrentUser) {
                 justify-content: center;
                 font-weight: bold;
                 font-size: 14px;
-                border: 3px solid white;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            ">${initial}</div>
-            <div style="
-                width: 0;
-                height: 0;
-                border-left: 6px solid transparent;
-                border-right: 6px solid transparent;
-                border-top: 8px solid ${color};
-                margin: -2px auto 0;
-                width: fit-content;
-            "></div>
+            ">${initial}</div>`;
+
+    return L.divIcon({
+        className: '',
+        html: `
+            <div style="position: relative; width: 36px; height: 44px;">
+                <!-- Pulsing ring -->
+                <div style="
+                    position: absolute;
+                    top: -6px;
+                    left: -6px;
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 50%;
+                    background: ${color};
+                    opacity: 0.3;
+                    animation: pulse 1.5s infinite;
+                "></div>
+                <!-- Profile pic or initial -->
+                <div style="
+                    position: relative;
+                    border: 3px solid ${color};
+                    border-radius: 50%;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    width: 36px;
+                    height: 36px;
+                    overflow: hidden;
+                ">
+                    ${innerContent}
+                </div>
+            </div>
         `,
         iconSize: [36, 44],
         iconAnchor: [18, 44],
@@ -83,17 +107,18 @@ function createMarkerIcon(username, isCurrentUser) {
 }
 
 // Update or create marker for a user
-function updateMarker(userId, username, lat, lng) {
+function updateMarker(userId, username, lat, lng, profilePic) {
     const { userId: currentUserId } = getCurrentUser();
     const isCurrentUser = userId === currentUserId;
 
     if (markers[userId]) {
         markers[userId].setLatLng([lat, lng]);
+        markers[userId].setIcon(createMarkerIcon(username, isCurrentUser, profilePic));
     } else {
         const marker = L.marker([lat, lng], {
-            icon: createMarkerIcon(username, isCurrentUser)
+            icon: createMarkerIcon(username, isCurrentUser, profilePic)
         }).addTo(map);
-        marker.bindPopup(`<strong>${username}</strong>`);
+        marker.bindPopup(`<strong>${username}</strong>`).openPopup();
         markers[userId] = marker;
     }
 }
@@ -115,7 +140,7 @@ async function loadLocations() {
     if (error) { console.error('Load locations error:', error); return; }
 
     data.forEach(loc => {
-        updateMarker(loc.user_id, loc.username, loc.latitude, loc.longitude);
+        updateMarker(loc.user_id, loc.username, loc.latitude, loc.longitude, loc.profile_pic);
     });
 }
 
@@ -132,7 +157,7 @@ function subscribeLocations() {
                 removeMarker(payload.old.user_id);
             } else {
                 const loc = payload.new;
-                updateMarker(loc.user_id, loc.username, loc.latitude, loc.longitude);
+updateMarker(loc.user_id, loc.username, loc.latitude, loc.longitude, loc.profile_pic);
             }
         })
         .subscribe();
@@ -146,28 +171,25 @@ async function startSharingLocation() {
         return;
     }
 
-    if (!navigator.geolocation) {
-        alert('Geolocation is not supported by your browser');
-        return;
-    }
+    // Get profile pic from localStorage (saved during login)
+    const profilePic = localStorage.getItem('profilePictureUrl') || null;
 
     isSharingLocation = true;
-    document.getElementById('share-location-btn').textContent = '📍停止分享位置Stop Sharing';
+    document.getElementById('share-location-btn').textContent = 'Stop Sharing';
     document.getElementById('share-location-btn').style.background = '#e53e3e';
 
     watchId = navigator.geolocation.watchPosition(async (pos) => {
         const { latitude, longitude } = pos.coords;
 
-        // Upsert location to Supabase
         await supabaseClient.from('locations').upsert({
             user_id: userId,
             username: username || 'Anonymous',
             latitude,
             longitude,
+            profile_pic: profilePic,  // ✅ store profile pic
             updated_at: new Date().toISOString()
         }, { onConflict: 'user_id' });
 
-        // Center map on my location first time
         map.setView([latitude, longitude], 14);
 
     }, (err) => {
