@@ -72,6 +72,9 @@ async function loadUserProfile() {
 
         const posts = await postsResponse.json();
         displayUserPosts(posts, isOwnProfile);  //***Pass the Flag!***
+        if (isOwnProfile) {
+    await loadSavedPosts();
+}
 
     const updateProfileSection = document.getElementById('update-profile-form');
     if (updateProfileSection) {
@@ -282,6 +285,69 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Error resetting notifications:", error);
     }
 });
+
+async function loadSavedPosts() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/saved-posts`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const posts = await response.json();
+
+        // Find or create saved posts container
+        let savedContainer = document.getElementById('saved-posts-container');
+        if (!savedContainer) {
+            savedContainer = document.createElement('div');
+            savedContainer.id = 'saved-posts-container';
+            userPostsContainer.parentNode.appendChild(savedContainer);
+        }
+
+        savedContainer.innerHTML = '<h3>🔖 Saved Posts</h3>';
+
+        if (!posts.length) {
+            savedContainer.innerHTML += '<p>No saved posts yet.</p>';
+            return;
+        }
+
+        posts.forEach(post => {
+            const postElement = document.createElement('div');
+            postElement.classList.add('post');
+            postElement.style.cursor = 'pointer';
+            postElement.onclick = () => window.location.href = `post-details.html?id=${post._id}`;
+
+            postElement.innerHTML = `
+                <div>
+                    <h2 style="font-size:0.95rem; margin:0 0 4px 0; color:#c45c00;">${post.title}</h2>
+                    <p style="font-size:0.8rem; color:#666; margin:0;">Posted on: ${formatDate(post.createdAt)}</p>
+                </div>
+            `;
+
+            // Unsave button
+            const unsaveBtn = document.createElement('button');
+            unsaveBtn.textContent = '🔖 Unsave';
+            unsaveBtn.style.cssText = 'padding:2px 8px; font-size:0.75rem; margin-left:auto; flex-shrink:0;';
+            unsaveBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const token = localStorage.getItem('token');
+                await fetch(`${API_BASE_URL}/auth/save-post/${post._id}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                postElement.remove();
+                // Update localStorage
+                const saved = JSON.parse(localStorage.getItem('savedPosts') || '[]');
+                localStorage.setItem('savedPosts', JSON.stringify(saved.filter(id => id !== post._id)));
+            });
+            postElement.appendChild(unsaveBtn);
+            savedContainer.appendChild(postElement);
+        });
+
+    } catch (error) {
+        console.error('Error loading saved posts:', error);
+    }
+}
 
 
 
