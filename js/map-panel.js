@@ -298,7 +298,7 @@ async function stopSharingLocation() {
         removeMarker(userId);
     }
 
-    document.getElementById('share-location-btn').textContent = '📍分享我的位置Share My Location';
+    document.getElementById('share-location-btn').textContent = 'Share My Location';
     document.getElementById('share-location-btn').style.background = '#4f46e5';
 }
 
@@ -416,6 +416,6 @@ function toggleMapPanel() {
         }
     } else {
         panel.style.display = 'none';
-        btn.textContent = '🗺️家庭地图 Family Map';
+        btn.textContent = 'Family Map';
     }
 }
