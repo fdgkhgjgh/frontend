@@ -175,6 +175,52 @@ function displayPagination(totalPages, currentPage) {
             loadPosts(currentPage + 1);
         });
         paginationContainer.appendChild(nextButton);
+		// Page jump input
+    const jumpContainer = document.createElement('span');
+    jumpContainer.style.cssText = 'margin-left: 8px; font-size: 0.85rem;';
+
+    const jumpInput = document.createElement('input');
+    jumpInput.type = 'number';
+    jumpInput.min = 1;
+    jumpInput.max = totalPages;
+    jumpInput.placeholder = 'Go to';
+    jumpInput.style.cssText = `
+        width: 55px;
+        padding: 3px 6px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        text-align: center;
+    `;
+
+    jumpInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const page = parseInt(jumpInput.value);
+            if (page >= 1 && page <= totalPages) {
+                loadPosts(page);
+            }
+        }
+    });
+
+    const jumpBtn = document.createElement('button');
+    jumpBtn.textContent = 'Go';
+    jumpBtn.style.cssText = `
+        margin-left: 4px;
+        padding: 3px 8px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        cursor: pointer;
+    `;
+    jumpBtn.addEventListener('click', () => {
+        const page = parseInt(jumpInput.value);
+        if (page >= 1 && page <= totalPages) {
+            loadPosts(page);
+        }
+    });
+
+    jumpContainer.appendChild(jumpInput);
+    jumpContainer.appendChild(jumpBtn);
+    paginationContainer.appendChild(jumpContainer);
     }
 }
 // --- ADD COMMENT FUNCTION --- (Removed)
