@@ -32,6 +32,115 @@
     <main id="post-list" class="main-post-list">
         <!-- Posts will be dynamically inserted here -->
 
+        <!-- Map Toggle Button -->
+<div style="text-align: center; margin: 16px 0;">
+    <button id="map-toggle-btn" onclick="toggleMapPanel()" style="
+        background: #4f46e5;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    ">ðŸ—ºï¸ å®¶åº­åœ°å›¾ Family Map</button>
+</div>
+
+<!-- Map Panel (hidden by default) -->
+<div id="map-panel" style="
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    margin: 0 8px 16px 8px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+">
+    <!-- Map -->
+    <div style="position: relative;">
+        <div id="map-container" style="width: 100%; height: 350px;"></div>
+        <!-- Share location button overlaid on map -->
+        <button id="share-location-btn" onclick="toggleLocationSharing()" style="
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        ">ðŸ“ Share My Location</button>
+        <button id="toggle-tracks-btn" onclick="toggleTracks()" style="
+    position: absolute;
+    bottom: 12px;
+    left: 10px;
+    z-index: 1000;
+    background: #2d7d46;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+">Show Tracks</button>
+    </div>
+
+    <!-- Chat Panel -->
+    <div style="
+        background: #f9f9f9;
+        border-top: 1px solid #ddd;
+        display: flex;
+        flex-direction: column;
+        height: 220px;
+    ">
+        <div style="padding: 8px 12px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid #eee; background: #fff;">
+            ðŸ’¬ Group Chat
+        </div>
+        <div id="chat-messages" style="
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+        "></div>
+        <div style="
+            display: flex;
+            gap: 8px;
+            padding: 8px 12px;
+            border-top: 1px solid #eee;
+            background: #fff;
+        ">
+            <input id="chat-input" type="text" placeholder="Type a message..." 
+                onkeydown="if(event.key==='Enter') sendChatMessage()"
+                style="
+                    flex: 1;
+                    padding: 6px 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 20px;
+                    font-size: 0.85rem;
+                    outline: none;
+                "/>
+            <button onclick="sendChatMessage()" style="
+                background: #4f46e5;
+                color: white;
+                border: none;
+                padding: 6px 14px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 0.85rem;
+            ">Send</button>
+        </div>
+    </div>
+</div>
+
+<!-- Map Panel Script -->
+<script src="js/map-panel.js"></script>
+
     </main>
     <!-- Pagination container will be inserted here by js -->
     <section id="create-post-section">
@@ -89,100 +198,6 @@
     <!--End of Tawk.to Script-->
     <footer class="site-footer">
 
-        <!-- Map Toggle Button -->
-<div style="text-align: center; margin: 16px 0;">
-    <button id="map-toggle-btn" onclick="toggleMapPanel()" style="
-        background: #4f46e5;
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        border-radius: 20px;
-        font-size: 1rem;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    ">ðŸ—ºï¸ å®¶åº­åœ°å›¾ Family Map</button>
-</div>
-
-<!-- Map Panel (hidden by default) -->
-<div id="map-panel" style="
-    display: none;
-    flex-direction: column;
-    gap: 0;
-    margin: 0 8px 16px 8px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-">
-    <!-- Map -->
-    <div style="position: relative;">
-        <div id="map-container" style="width: 100%; height: 350px;"></div>
-        <!-- Share location button overlaid on map -->
-        <button id="share-location-btn" onclick="toggleLocationSharing()" style="
-            position: absolute;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background: #4f46e5;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        ">ðŸ“ Share My Location</button>
-    </div>
-
-    <!-- Chat Panel -->
-    <div style="
-        background: #f9f9f9;
-        border-top: 1px solid #ddd;
-        display: flex;
-        flex-direction: column;
-        height: 220px;
-    ">
-        <div style="padding: 8px 12px; font-weight: bold; font-size: 0.85rem; border-bottom: 1px solid #eee; background: #fff;">
-            ðŸ’¬ Group Chat
-        </div>
-        <div id="chat-messages" style="
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px 12px;
-            font-size: 0.85rem;
-        "></div>
-        <div style="
-            display: flex;
-            gap: 8px;
-            padding: 8px 12px;
-            border-top: 1px solid #eee;
-            background: #fff;
-        ">
-            <input id="chat-input" type="text" placeholder="Type a message..." 
-                onkeydown="if(event.key==='Enter') sendChatMessage()"
-                style="
-                    flex: 1;
-                    padding: 6px 10px;
-                    border: 1px solid #ddd;
-                    border-radius: 20px;
-                    font-size: 0.85rem;
-                    outline: none;
-                "/>
-            <button onclick="sendChatMessage()" style="
-                background: #4f46e5;
-                color: white;
-                border: none;
-                padding: 6px 14px;
-                border-radius: 20px;
-                cursor: pointer;
-                font-size: 0.85rem;
-            ">Send</button>
-        </div>
-    </div>
-</div>
-
-<!-- Map Panel Script -->
-<script src="js/map-panel.js"></script>
   <span>© 2026 Mini Forum</span>
   <div class="footer-links">
     <a href="/privacy-policy.html">Privacy & Cookies</a>
