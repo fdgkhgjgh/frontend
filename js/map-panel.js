@@ -170,11 +170,11 @@ function toggleTracks() {
         Object.values(polylines).forEach(line => map.removeLayer(line));
         polylines = {};
         tracksVisible = false;
-        btn.textContent = 'Show Tracks';
+        btn.textContent = '显示轨迹';
     } else {
         loadTracks();
         tracksVisible = true;
-        btn.textContent = 'Hide Tracks';
+        btn.textContent = '隐藏轨迹';
     }
 }
 
@@ -239,7 +239,7 @@ updateMarker(loc.user_id, loc.username, loc.latitude, loc.longitude, loc.profile
 async function startSharingLocation() {
     const { username, userId } = getCurrentUser();
     if (!userId) {
-        alert('Please login to share your location');
+        alert('请登录后再分享位置Please login to share your location');
         return;
     }
 
@@ -416,6 +416,6 @@ function toggleMapPanel() {
         }
     } else {
         panel.style.display = 'none';
-        btn.textContent = 'Family Map';
+        btn.textContent = '🗺️家庭地图Family Map';
     }
 }
