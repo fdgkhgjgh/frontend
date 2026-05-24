@@ -29,20 +29,38 @@ function initMap() {
     if (map) return;
 
     map = L.map('map-container', {
-        center: [35.8617, 104.1954], // Center of China
+        center: [35.8617, 104.1954],
         zoom: 4,
         zoomControl: true
     });
 
-    // Amap tile layer
-    L.tileLayer(
+    // OpenStreetMap - covers whole world
+    const osmLayer = L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap'
+        }
+    );
+
+    // Amap - China detail
+    const amapLayer = L.tileLayer(
         `https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}&key=${AMAP_KEY}`,
         {
             subdomains: ['1', '2', '3', '4'],
             maxZoom: 18,
-            attribution: 'Â© é«˜å¾·åœ°å›¾'
+            attribution: '© 高德地图'
         }
-    ).addTo(map);
+    );
+
+    // OSM as default
+    osmLayer.addTo(map);
+
+    // Layer switcher top right
+    L.control.layers({
+        'World Map': osmLayer,
+        'China Map': amapLayer
+    }).addTo(map);
 }
 
 // Create custom marker icon
