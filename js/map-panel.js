@@ -152,7 +152,7 @@ async function startSharingLocation() {
     }
 
     isSharingLocation = true;
-    document.getElementById('share-location-btn').textContent = 'ðŸ“ Stop Sharing';
+    document.getElementById('share-location-btn').textContent = '📍停止分享位置Stop Sharing';
     document.getElementById('share-location-btn').style.background = '#e53e3e';
 
     watchId = navigator.geolocation.watchPosition(async (pos) => {
@@ -195,7 +195,7 @@ async function stopSharingLocation() {
         removeMarker(userId);
     }
 
-    document.getElementById('share-location-btn').textContent = 'ðŸ“ Share My Location';
+    document.getElementById('share-location-btn').textContent = '📍分享我的位置Share My Location';
     document.getElementById('share-location-btn').style.background = '#4f46e5';
 }
 
@@ -303,7 +303,7 @@ function toggleMapPanel() {
 
     if (isHidden) {
         panel.style.display = 'flex';
-        btn.textContent = 'ðŸ—ºï¸ éšè—åœ°å›¾ Hide Map';
+        btn.textContent = '🗺️收起Hide Map';
         // Init map only when first opened
         if (!map) {
             setTimeout(initMapPanel, 100);
@@ -312,6 +312,6 @@ function toggleMapPanel() {
         }
     } else {
         panel.style.display = 'none';
-        btn.textContent = 'ðŸ—ºï¸ å®¶åº­åœ°å›¾ Family Map';
+        btn.textContent = '🗺️家庭地图 Family Map';
     }
 }
