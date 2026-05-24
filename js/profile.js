@@ -349,14 +349,6 @@ unsaveBtn.addEventListener('click', async (e) => {
     }
 });
 
-// ✅ handle empty response
-const text = await response.text();
-const posts = text ? JSON.parse(text) : [];
-                postElement.remove();
-                // Update localStorage
-                const saved = JSON.parse(localStorage.getItem('savedPosts') || '[]');
-                localStorage.setItem('savedPosts', JSON.stringify(saved.filter(id => id !== post._id)));
-            });
             postElement.appendChild(unsaveBtn);
             savedContainer.appendChild(postElement);
         });
