@@ -289,109 +289,136 @@ if (post.videoUrls && post.videoUrls.length > 0) {
     videoThumbnailContainer.appendChild(imgElement);
     videoThumbnailContainer.appendChild(playIcon);
 
-                const handleClick = () => {
-        // 1. Create a clean video container div to perfectly replace your thumbnail block
-        const inlineVideoContainer = document.createElement('div');
-        inlineVideoContainer.style.cssText = `
-            width: 100%;
-            max-width: 100%;
-            margin: 10px 0;
-            display: block;
-        `;
+const handleClick = () => {
+    const inlineVideoContainer = document.createElement('div');
+    inlineVideoContainer.style.cssText = `
+        width: 100%;
+        max-width: 100%;
+        margin: 10px 0;
+        display: block;
+        position: relative;
+    `;
 
-        // 2. Create the video element exactly like the comment's video logic
-        const videoElement = document.createElement('video');
-        videoElement.src = firstVideoUrl;
-        videoElement.controls = true;
-        
-        // Match standard responsive dimensions
-        videoElement.style.cssText = `
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-            display: block;
-        `;
-
-        // Assemble the elements into the page column
-        inlineVideoContainer.appendChild(videoElement);
-        mediaContainer.insertBefore(inlineVideoContainer, videoThumbnailContainer);
-        videoThumbnailContainer.style.display = 'none';
-
-        // 3. Play the video immediately
-        // On mobile Chrome, this automatically handles popping open the native player natively!
-        videoElement.play().catch(error => console.log("Playback interaction error:", error));
-
-        // 4. THE ULTIMATE PAUSE & RETURN RESET:
-        // When paused or finished (like hitting the browser's native back/close button),
-        // we completely wipe out the video player container and restore the original first-size thumbnail.
-                    videoElement.addEventListener('pause', () => {
+    const videoElement = document.createElement('video');
+    videoElement.src = firstVideoUrl;
+    videoElement.controls = true;
     videoElement.style.cssText = `
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
+        width: 100%;
+        height: auto;
         border-radius: 5px;
         display: block;
-        cursor: pointer;
     `;
 
-    // Remove any existing pause icon
-    const existing = inlineVideoContainer.querySelector('.pause-play-icon');
-    if (existing) existing.remove();
-
-    const pausePlayIcon = document.createElement('div');
-    pausePlayIcon.className = 'pause-play-icon';
-    pausePlayIcon.innerHTML = '&#9658;';
-    pausePlayIcon.style.cssText = `
+    // Close button for PC
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕';
+    closeBtn.style.cssText = `
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 2em;
+        top: 6px;
+        right: 6px;
+        z-index: 20;
+        background: rgba(0,0,0,0.5);
         color: white;
-        z-index: 10;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
         cursor: pointer;
-        text-shadow: 0 0 8px rgba(0,0,0,0.8);
+        font-size: 0.9rem;
     `;
+    closeBtn.onclick = () => {
+        inlineVideoContainer.remove();
+        videoThumbnailContainer.style.display = 'block';
+    };
 
-    inlineVideoContainer.style.cssText = `
-        position: relative;
-        width: 120px;
-        height: 180px;
-        display: inline-block;
-    `;
-    inlineVideoContainer.appendChild(pausePlayIcon);
+    inlineVideoContainer.appendChild(videoElement);
+    inlineVideoContainer.appendChild(closeBtn);
+    mediaContainer.insertBefore(inlineVideoContainer, videoThumbnailContainer);
+    videoThumbnailContainer.style.display = 'none';
 
-    pausePlayIcon.addEventListener('click', () => {
-        pausePlayIcon.remove();
-        inlineVideoContainer.style.cssText = `
-            width: 100%;
-            max-width: 100%;
-            margin: 10px 0;
+    videoElement.play().catch(error => console.log("Playback interaction error:", error));
+
+    videoElement.addEventListener('pause', () => {
+        videoElement.style.cssText = `
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
             display: block;
-            position: relative;
+            cursor: pointer;
         `;
+
+        const existing = inlineVideoContainer.querySelector('.pause-play-icon');
+        if (existing) existing.remove();
+
+        const pausePlayIcon = document.createElement('div');
+        pausePlayIcon.className = 'pause-play-icon';
+        pausePlayIcon.innerHTML = '&#9658;';
+        pausePlayIcon.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            color: white;
+            z-index: 10;
+            cursor: pointer;
+            text-shadow: 0 0 8px rgba(0,0,0,0.8);
+        `;
+        inlineVideoContainer.style.cssText = `
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: inline-block;
+        `;
+        inlineVideoContainer.appendChild(pausePlayIcon);
+
+        pausePlayIcon.addEventListener('click', () => {
+            pausePlayIcon.remove();
+            inlineVideoContainer.style.cssText = `
+                width: 100%;
+                max-width: 100%;
+                margin: 10px 0;
+                display: block;
+                position: relative;
+            `;
+            videoElement.style.cssText = `
+                width: 100%;
+                height: auto;
+                border-radius: 5px;
+                display: block;
+            `;
+            videoElement.play();
+        });
+    });
+
+    videoElement.addEventListener('play', () => {
         videoElement.style.cssText = `
             width: 100%;
             height: auto;
             border-radius: 5px;
             display: block;
         `;
-        videoElement.play();
     });
-});
 
+    videoElement.addEventListener('ended', () => {
+        inlineVideoContainer.remove();
+        videoThumbnailContainer.style.display = 'block';
+    });
 
-imgElement.addEventListener('click', handleClick);
-    playIcon.addEventListener('click', handleClick);
-    mediaContainer.appendChild(videoThumbnailContainer);
+    videoElement.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            inlineVideoContainer.remove();
+            videoThumbnailContainer.style.display = 'block';
+        }
+    });
 
-    const videoDownloadBtn = document.createElement('a');
-    videoDownloadBtn.href = `${API_BASE_URL}/posts/${post._id}/download?url=${encodeURIComponent(firstVideoUrl)}`;
-    videoDownloadBtn.textContent = '⬇ 下载此视频';
-    videoDownloadBtn.classList.add('download-btn');
-    mediaContainer.appendChild(videoDownloadBtn);
-}
-
+    videoElement.addEventListener('webkitfullscreenchange', () => {
+        if (!document.webkitFullscreenElement) {
+            inlineVideoContainer.remove();
+            videoThumbnailContainer.style.display = 'block';
+        }
+    });
+}; // closes handleClick
     // Close button for PC
 const closeBtn = document.createElement('button');
 closeBtn.textContent = '✕';
