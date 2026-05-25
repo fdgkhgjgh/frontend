@@ -310,7 +310,7 @@ async function loadSavedPosts() {
             userPostsContainer.parentNode.appendChild(savedContainer);
         }
 
-        savedContainer.innerHTML = '<h3>🔖 Saved Posts</h3>';
+        savedContainer.innerHTML = '<h3>📌 Saved Posts</h3>';
 
         if (!posts.length) {
             savedContainer.innerHTML += '<p>No saved posts yet.</p>';
@@ -332,7 +332,7 @@ async function loadSavedPosts() {
 
             // Unsave button
 const unsaveBtn = document.createElement('button');
-unsaveBtn.textContent = '🔖 Unsave';
+unsaveBtn.textContent = '📌 Unsave';
 unsaveBtn.style.cssText = 'padding:2px 8px; font-size:0.75rem; margin-left:auto; flex-shrink:0;';
 unsaveBtn.addEventListener('click', async (e) => {
     e.stopPropagation();
