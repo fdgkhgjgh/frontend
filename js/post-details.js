@@ -338,7 +338,9 @@ const handleClick = () => {
 
     videoElement.play().catch(error => console.log("Playback interaction error:", error));
 
-   videoElement.addEventListener('pause', () => {
+       // --- 1. HANDLE PAUSE EVENT ---
+    videoElement.addEventListener('pause', () => {
+        // Shrink the video container back to square thumbnail size
         inlineVideoContainer.style.cssText = `
             width: 120px;
             height: 120px;
@@ -356,10 +358,32 @@ const handleClick = () => {
             cursor: pointer;
         `;
 
-        videoElement.addEventListener('click', () => {
+        // 🌟 FIX: Bring back the play icon visually over the shrunken video box!
+        playIcon.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            display: block;
+            z-index: 10;
+            cursor: pointer;
+            pointer-events: none; /* Allows clicks to pass through straight to the container */
+        `;
+        // Make sure it is appended into the active container layout
+        if (!inlineVideoContainer.contains(playIcon)) {
+            inlineVideoContainer.appendChild(playIcon);
+        }
+    });
+
+    // 🌟 FIX: Use a normal listener instead of { once: true } so users can pause/play multiple times!
+    inlineVideoContainer.onclick = (e) => {
+        // Only trigger if the video is currently paused
+        if (videoElement.paused) {
             inlineVideoContainer.style.cssText = `
                 width: 100%;
-                max-width: 240px;
+                max-width: 480px;
                 margin: 10px 0;
                 display: block;
                 position: relative;
@@ -370,14 +394,20 @@ const handleClick = () => {
                 border-radius: 5px;
                 display: block;
             `;
+            // Hide the play icon while the video is playing wide
+            playIcon.style.display = 'none';
             videoElement.play();
-        }, { once: true });
-    });
+        } else {
+            // Optional: If they click the wide video while playing, pause it!
+            videoElement.pause();
+        }
+    };
 
+    // --- 3. HANDLE PLAY EVENT ---
     videoElement.addEventListener('play', () => {
         inlineVideoContainer.style.cssText = `
             width: 100%;
-            max-width: 240px;
+            max-width: 480px;
             margin: 10px 0;
             display: block;
             position: relative;
@@ -388,8 +418,10 @@ const handleClick = () => {
             border-radius: 5px;
             display: block;
         `;
+        playIcon.style.display = 'none'; // Ensure icon stays hidden during active play
     });
 
+    // --- 4. CLEANUP EVENTS ---
     videoElement.addEventListener('ended', () => {
         inlineVideoContainer.remove();
         videoThumbnailContainer.style.display = 'block';
@@ -408,11 +440,12 @@ const handleClick = () => {
             videoThumbnailContainer.style.display = 'block';
         }
     });
-}; // closes handleClick
+}; // Closes handleClick
 
     imgElement.addEventListener('click', handleClick);
     playIcon.addEventListener('click', handleClick);
     mediaContainer.appendChild(videoThumbnailContainer);
+
 
     const videoDownloadBtn = document.createElement('a');
     videoDownloadBtn.href = `${API_BASE_URL}/posts/${post._id}/download?url=${encodeURIComponent(firstVideoUrl)}`;
