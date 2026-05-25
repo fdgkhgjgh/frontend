@@ -303,8 +303,8 @@ const handleClick = () => {
     videoElement.src = firstVideoUrl;
     videoElement.controls = true;
     videoElement.style.cssText = `
-        width: 100%;
-        height: auto;
+        width: 240px;
+        height: 190px;
         border-radius: 5px;
         display: block;
     `;
