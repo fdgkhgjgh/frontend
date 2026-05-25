@@ -191,7 +191,6 @@ function displayPagination(totalPages, currentPage) {
     if (isSearching) searchPosts(currentPage - 1);
     else loadPosts(currentPage - 1);
 });
-        });
         paginationContainer.appendChild(prevButton);
     }
 
@@ -203,7 +202,6 @@ function displayPagination(totalPages, currentPage) {
     if (isSearching) searchPosts(i);
     else loadPosts(i);
 });
-        });
 
         if (i === currentPage) {
             pageButton.classList.add('active'); // Style the current page button
@@ -220,7 +218,6 @@ function displayPagination(totalPages, currentPage) {
     if (isSearching) searchPosts(currentPage + 1);
     else loadPosts(currentPage + 1);
 });
-        });
         paginationContainer.appendChild(nextButton);
 		// Page jump input
     const jumpContainer = document.createElement('span');
