@@ -389,7 +389,7 @@ const handleClick = () => {
             videoThumbnailContainer.style.display = 'block';
         }
     });
-}); // Closes handleClick
+}; // Closes handleClick
 
     imgElement.addEventListener('click', handleClick);
     playIcon.addEventListener('click', handleClick);
