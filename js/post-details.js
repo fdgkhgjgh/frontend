@@ -355,7 +355,8 @@ const handleClick = () => {
             border-radius: 5px;
             display: block;
             cursor: pointer;
-            pointer-events: auto; /* 🌟 FIX: Stop the video element from stealing/blocking desktop clicks! */
+            pointer-events: auto;
+            playIcon.style.display = 'none';/* 🌟 FIX: Stop the video element from stealing/blocking desktop clicks! */
         `;
 
         // Style the icon and force it to show up
