@@ -340,7 +340,7 @@ const handleClick = () => {
     videoElement.addEventListener('pause', () => {
         videoElement.style.cssText = `
             width: 120px;
-            height: 120px;
+            height: 180px;
             object-fit: cover;
             border-radius: 5px;
             display: block;
