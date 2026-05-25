@@ -338,9 +338,42 @@ const handleClick = () => {
 
     videoElement.play().catch(error => console.log("Playback interaction error:", error));
 
-       // --- 1. HANDLE PAUSE EVENT ---
+       // --- COMPLETE HANDLECLICK FOR VIDEOS ---
+const handleClick = () => {
+    // Hide original thumbnail image elements
+    videoThumbnailContainer.style.display = 'none';
+
+    // 1. Create or Reset the Inline Containers
+    const inlineVideoContainer = document.createElement('div');
+    inlineVideoContainer.id = 'inline-video-wrapper';
+    inlineVideoContainer.style.cssText = `
+        width: 100%;
+        max-width: 480px;
+        margin: 10px 0;
+        display: block;
+        position: relative;
+    `;
+
+    const videoElement = document.createElement('video');
+    // Assuming your video URL variable is defined earlier as 'videoUrl' or similar
+    videoElement.src = imgElement.getAttribute('data-video-src') || imgElement.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4'); 
+    videoElement.controls = true; // Shows standard timeline controls on desktop
+    videoElement.style.cssText = `
+        width: 100%;
+        height: auto;
+        border-radius: 5px;
+        display: block;
+    `;
+
+    // Assemble video elements into the display wrapper
+    inlineVideoContainer.appendChild(videoElement);
+    mediaContainer.appendChild(inlineVideoContainer);
+    
+    // Start playback immediately on first expansion click
+    videoElement.play();
+
+    // --- 2. HANDLE PAUSE EVENT (SHRINK & RE-SHOW PLAY ICON) ---
     videoElement.addEventListener('pause', () => {
-        // Shrink the video container back to square thumbnail size
         inlineVideoContainer.style.cssText = `
             width: 120px;
             height: 120px;
@@ -358,7 +391,7 @@ const handleClick = () => {
             cursor: pointer;
         `;
 
-        // 🌟 FIX: Bring back the play icon visually over the shrunken video box!
+        // Style and bring the play icon directly inside the small frame
         playIcon.style.cssText = `
             position: absolute;
             top: 50%;
@@ -367,20 +400,21 @@ const handleClick = () => {
             width: 40px;
             height: 40px;
             display: block;
-            z-index: 10;
-            cursor: pointer;
-            pointer-events: none; /* Allows clicks to pass through straight to the container */
+            z-index: 9999;       /* Keeps icon layered safely over the video element */
+            pointer-events: none; /* CRITICAL: Pass mouse clicks cleanly through into container */
         `;
-        // Make sure it is appended into the active container layout
+        
         if (!inlineVideoContainer.contains(playIcon)) {
             inlineVideoContainer.appendChild(playIcon);
         }
     });
 
-    // 🌟 FIX: Use a normal listener instead of { once: true } so users can pause/play multiple times!
+    // --- 3. THE UNIFIED CLICK-TO-RESUME CONTAINER ROUTINE ---
     inlineVideoContainer.onclick = (e) => {
-        // Only trigger if the video is currently paused
+        e.stopPropagation(); // Prevents layout event bubbling triggers
+
         if (videoElement.paused) {
+            // Restore wide layout constraints
             inlineVideoContainer.style.cssText = `
                 width: 100%;
                 max-width: 480px;
@@ -394,16 +428,15 @@ const handleClick = () => {
                 border-radius: 5px;
                 display: block;
             `;
-            // Hide the play icon while the video is playing wide
-            playIcon.style.display = 'none';
+            playIcon.style.display = 'none'; // Conceal play indicator icon
             videoElement.play();
         } else {
-            // Optional: If they click the wide video while playing, pause it!
+            // Clicking wide running video causes regular pause events
             videoElement.pause();
         }
     };
 
-    // --- 3. HANDLE PLAY EVENT ---
+    // --- 4. HANDLE PLAY EVENT ---
     videoElement.addEventListener('play', () => {
         inlineVideoContainer.style.cssText = `
             width: 100%;
@@ -418,10 +451,10 @@ const handleClick = () => {
             border-radius: 5px;
             display: block;
         `;
-        playIcon.style.display = 'none'; // Ensure icon stays hidden during active play
+        playIcon.style.display = 'none'; // Keep icon hidden while track is streaming
     });
 
-    // --- 4. CLEANUP EVENTS ---
+    // --- 5. CLEANUP & DESTRUCTION LISTENERS ---
     videoElement.addEventListener('ended', () => {
         inlineVideoContainer.remove();
         videoThumbnailContainer.style.display = 'block';
@@ -440,11 +473,12 @@ const handleClick = () => {
             videoThumbnailContainer.style.display = 'block';
         }
     });
-}; // Closes handleClick
+}; // Closes complete handleClick
 
-    imgElement.addEventListener('click', handleClick);
-    playIcon.addEventListener('click', handleClick);
-    mediaContainer.appendChild(videoThumbnailContainer);
+// --- INITIAL ANCHOR ATTACHMENTS ---
+imgElement.addEventListener('click', handleClick);
+playIcon.addEventListener('click', handleClick);
+mediaContainer.appendChild(videoThumbnailContainer);
 
 
     const videoDownloadBtn = document.createElement('a');
