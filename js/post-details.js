@@ -327,14 +327,13 @@ if (post.videoUrls && post.videoUrls.length > 0) {
                     videoElement.addEventListener('pause', () => {
     videoElement.style.cssText = `
         width: 120px;
-        height: 180px;
+        height: 120px;
         object-fit: cover;
         border-radius: 5px;
         display: block;
         cursor: pointer;
     `;
 
-    // ✅ Add play icon overlay
     const pausePlayIcon = document.createElement('div');
     pausePlayIcon.innerHTML = '&#9658;';
     pausePlayIcon.classList.add('video-play-icon');
@@ -363,17 +362,6 @@ if (post.videoUrls && post.videoUrls.length > 0) {
         videoElement.play();
     }, { once: true });
 });
-    // Click to expand again
-    videoElement.addEventListener('click', () => {
-        videoElement.style.cssText = `
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-            display: block;
-        `;
-        videoElement.play();
-    }, { once: true });
-});
 
 videoElement.addEventListener('play', () => {
     videoElement.style.cssText = `
@@ -388,7 +376,7 @@ videoElement.addEventListener('ended', () => {
     inlineVideoContainer.remove();
     videoThumbnailContainer.style.display = 'block';
 });
-    };
+}; // closes handleClick
 
 
 imgElement.addEventListener('click', handleClick);
