@@ -305,6 +305,7 @@ const handleClick = () => {
     videoElement.style.cssText = `
         width: 240px;
         height: 190px;
+        object-fit: cover;
         border-radius: 5px;
         display: block;
     `;
