@@ -444,7 +444,7 @@ if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
     // --- Save/Collect Button ---
 const saveButton = document.createElement('button');
 saveButton.classList.add('vote-button', 'save-button');
-saveButton.innerHTML = '🔖';
+saveButton.innerHTML = '📌';
 saveButton.title = 'Save this post';
 saveButton.style.marginLeft = '12px';
 
