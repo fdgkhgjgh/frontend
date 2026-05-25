@@ -355,8 +355,7 @@ const handleClick = () => {
             border-radius: 5px;
             display: block;
             cursor: pointer;
-            pointer-events: auto;
-            playIcon.style.display = 'none';/* 🌟 FIX: Stop the video element from stealing/blocking desktop clicks! */
+            pointer-events: auto;/* 🌟 FIX: Stop the video element from stealing/blocking desktop clicks! */
         `;
 
     videoElement.onclick = (e) => {
