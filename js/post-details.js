@@ -324,12 +324,26 @@ if (post.videoUrls && post.videoUrls.length > 0) {
         // 4. THE ULTIMATE PAUSE & RETURN RESET:
         // When paused or finished (like hitting the browser's native back/close button),
         // we completely wipe out the video player container and restore the original first-size thumbnail.
-// Only reset when video ENDS, not when paused
-        videoElement.addEventListener('ended', () => {
-            inlineVideoContainer.remove();
-            videoThumbnailContainer.style.display = 'block';
-        });
-    }; // ✅ closes handleClick function
+                    videoElement.addEventListener('ended', () => {
+    inlineVideoContainer.remove();
+    videoThumbnailContainer.style.display = 'block';
+});
+
+// ✅ Reset when user exits fullscreen on mobile
+videoElement.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+        inlineVideoContainer.remove();
+        videoThumbnailContainer.style.display = 'block';
+    }
+});
+
+// ✅ Safari/iOS fullscreen
+videoElement.addEventListener('webkitfullscreenchange', () => {
+    if (!document.webkitFullscreenElement) {
+        inlineVideoContainer.remove();
+        videoThumbnailContainer.style.display = 'block';
+    }
+});
 
 
 imgElement.addEventListener('click', handleClick);
