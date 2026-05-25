@@ -324,19 +324,15 @@ if (post.videoUrls && post.videoUrls.length > 0) {
         // 4. THE ULTIMATE PAUSE & RETURN RESET:
         // When paused or finished (like hitting the browser's native back/close button),
         // we completely wipe out the video player container and restore the original first-size thumbnail.
-        // Only reset when video ENDS, not when paused
-videoElement.addEventListener('ended', () => {
-    inlineVideoContainer.remove();
-    videoThumbnailContainer.style.display = 'block';
-});
+// Only reset when video ENDS, not when paused
+        videoElement.addEventListener('ended', () => {
+            inlineVideoContainer.remove();
+            videoThumbnailContainer.style.display = 'block';
+        });
+    }; // ✅ closes handleClick function
 
 
-
-
-
-
-
-    imgElement.addEventListener('click', handleClick);
+imgElement.addEventListener('click', handleClick);
     playIcon.addEventListener('click', handleClick);
     mediaContainer.appendChild(videoThumbnailContainer);
 
