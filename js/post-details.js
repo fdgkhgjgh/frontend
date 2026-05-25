@@ -338,9 +338,8 @@ const handleClick = () => {
 
     videoElement.play().catch(error => console.log("Playback interaction error:", error));
 
-           // --- 1. HANDLE PAUSE EVENT ---
+               // --- 1. HANDLE PAUSE EVENT ---
     videoElement.addEventListener('pause', () => {
-        // Shrink the video container back to square thumbnail size
         inlineVideoContainer.style.cssText = `
             width: 120px;
             height: 120px;
@@ -358,7 +357,7 @@ const handleClick = () => {
             cursor: pointer;
         `;
 
-        // 🌟 FIX: Bring back the play icon visually over the shrunken video box!
+        // Style the icon and force it to show up
         playIcon.style.cssText = `
             position: absolute;
             top: 50%;
@@ -366,21 +365,21 @@ const handleClick = () => {
             transform: translate(-50%, -50%);
             width: 40px;
             height: 40px;
-            display: block;
-            z-index: 10;
-            cursor: pointer;
-            pointer-events: none; /* Allows clicks to pass through straight to the container */
+            display: block;        /* 🌟 FIX: Force it to show block display again */
+            z-index: 9999; 
+            pointer-events: none;  /* Allows clicks to pass through straight to the video */
         `;
-        // Make sure it is appended into the active container layout
+        
         if (!inlineVideoContainer.contains(playIcon)) {
             inlineVideoContainer.appendChild(playIcon);
         }
     });
 
-    // --- 2. CONTAINER RESUME CLICK EVENT ---
-    // 🌟 FIX: Use a normal listener instead of { once: true } so users can pause/play multiple times!
-    inlineVideoContainer.onclick = (e) => {
-        // Only trigger if the video is currently paused
+    // --- 2. THE CLICK EVENT (RESPONSIBLE FOR RESUMING) ---
+    // 🌟 FIX: Bind directly to videoElement so desktop browser clicks register instantly
+    videoElement.onclick = (e) => {
+        e.stopPropagation(); 
+        
         if (videoElement.paused) {
             inlineVideoContainer.style.cssText = `
                 width: 100%;
@@ -395,31 +394,8 @@ const handleClick = () => {
                 border-radius: 5px;
                 display: block;
             `;
-            // Hide the play icon while the video is playing wide
-            playIcon.style.display = 'none';
+            playIcon.style.display = 'none'; 
             videoElement.play();
-        } else {
-            // Optional: If they click the wide video while playing, pause it!
-            videoElement.pause();
-        }
-    };
-
-    // --- 3. HANDLE PLAY EVENT ---
-    videoElement.addEventListener('play', () => {
-        inlineVideoContainer.style.cssText = `
-            width: 100%;
-            max-width: 480px;
-            margin: 10px 0;
-            display: block;
-            position: relative;
-        `;
-        videoElement.style.cssText = `
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-            display: block;
-        `;
-        playIcon.style.display = 'none'; // Ensure icon stays hidden during active play
     });
 
     // --- 4. CLEANUP EVENTS ---
