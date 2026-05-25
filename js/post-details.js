@@ -697,10 +697,15 @@ if (comment.videoUrls && comment.videoUrls.length > 0) {
             mediaWrapper.replaceChild(videoElement, thumbContainer);
         });
 
+        const downloadableVideoUrl = videoUrl.replace('/upload/', '/upload/fl_attachment/');
+
         const downloadBtn = document.createElement('a');
-        downloadBtn.href = `${API_BASE_URL}/posts/${new URLSearchParams(window.location.search).get('id')}/download?url=${encodeURIComponent(videoUrl)}`;
+        downloadBtn.href = downloadableVideoUrl;
+        downloadBtn.setAttribute('download', 'comment-video.mp4');
+        downloadBtn.target = '_blank';
         downloadBtn.textContent = '⬇ Download Video';
         downloadBtn.classList.add('download-btn');
+        // ---------------------------
 
         mediaWrapper.appendChild(thumbContainer);
         mediaWrapper.appendChild(downloadBtn);
