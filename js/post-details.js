@@ -334,9 +334,13 @@ if (post.videoUrls && post.videoUrls.length > 0) {
         cursor: pointer;
     `;
 
+    // Remove any existing pause icon
+    const existing = inlineVideoContainer.querySelector('.pause-play-icon');
+    if (existing) existing.remove();
+
     const pausePlayIcon = document.createElement('div');
+    pausePlayIcon.className = 'pause-play-icon';
     pausePlayIcon.innerHTML = '&#9658;';
-    pausePlayIcon.classList.add('video-play-icon');
     pausePlayIcon.style.cssText = `
         position: absolute;
         top: 50%;
@@ -345,14 +349,27 @@ if (post.videoUrls && post.videoUrls.length > 0) {
         font-size: 2em;
         color: white;
         z-index: 10;
-        pointer-events: none;
+        cursor: pointer;
         text-shadow: 0 0 8px rgba(0,0,0,0.8);
     `;
-    inlineVideoContainer.style.position = 'relative';
+
+    inlineVideoContainer.style.cssText = `
+        position: relative;
+        width: 120px;
+        height: 180px;
+        display: inline-block;
+    `;
     inlineVideoContainer.appendChild(pausePlayIcon);
 
-    videoElement.addEventListener('click', () => {
+    pausePlayIcon.addEventListener('click', () => {
         pausePlayIcon.remove();
+        inlineVideoContainer.style.cssText = `
+            width: 100%;
+            max-width: 100%;
+            margin: 10px 0;
+            display: block;
+            position: relative;
+        `;
         videoElement.style.cssText = `
             width: 100%;
             height: auto;
@@ -360,23 +377,8 @@ if (post.videoUrls && post.videoUrls.length > 0) {
             display: block;
         `;
         videoElement.play();
-    }, { once: true });
+    });
 });
-
-videoElement.addEventListener('play', () => {
-    videoElement.style.cssText = `
-        width: 100%;
-        height: auto;
-        border-radius: 5px;
-        display: block;
-    `;
-});
-
-videoElement.addEventListener('ended', () => {
-    inlineVideoContainer.remove();
-    videoThumbnailContainer.style.display = 'block';
-});
-}; // closes handleClick
 
 
 imgElement.addEventListener('click', handleClick);
