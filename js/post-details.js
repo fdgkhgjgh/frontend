@@ -396,8 +396,8 @@ const handleClick = () => {
             `;
             playIcon.style.display = 'none'; 
             videoElement.play();
+             }
     };
-
     // --- 4. CLEANUP EVENTS ---
     videoElement.addEventListener('ended', () => {
         inlineVideoContainer.remove();
