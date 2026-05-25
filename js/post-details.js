@@ -359,7 +359,7 @@ const handleClick = () => {
         videoElement.addEventListener('click', () => {
             inlineVideoContainer.style.cssText = `
                 width: 100%;
-                max-width: 480px;
+                max-width: 240px;
                 margin: 10px 0;
                 display: block;
                 position: relative;
@@ -377,7 +377,7 @@ const handleClick = () => {
     videoElement.addEventListener('play', () => {
         inlineVideoContainer.style.cssText = `
             width: 100%;
-            max-width: 480px;
+            max-width: 240px;
             margin: 10px 0;
             display: block;
             position: relative;
