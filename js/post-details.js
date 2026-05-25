@@ -333,6 +333,37 @@ if (post.videoUrls && post.videoUrls.length > 0) {
         display: block;
         cursor: pointer;
     `;
+
+    // ✅ Add play icon overlay
+    const pausePlayIcon = document.createElement('div');
+    pausePlayIcon.innerHTML = '&#9658;';
+    pausePlayIcon.classList.add('video-play-icon');
+    pausePlayIcon.style.cssText = `
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2em;
+        color: white;
+        z-index: 10;
+        pointer-events: none;
+        text-shadow: 0 0 8px rgba(0,0,0,0.8);
+    `;
+    inlineVideoContainer.style.position = 'relative';
+    inlineVideoContainer.appendChild(pausePlayIcon);
+
+    videoElement.addEventListener('click', () => {
+        pausePlayIcon.remove();
+        videoElement.style.cssText = `
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            display: block;
+        `;
+        videoElement.play();
+    }, { once: true });
+});
+    `;
     // Click to expand again
     videoElement.addEventListener('click', () => {
         videoElement.style.cssText = `
