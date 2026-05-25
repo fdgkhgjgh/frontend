@@ -99,8 +99,9 @@ postElement.addEventListener('click', () => {
             pinButton.classList.add('pin-button');
             pinButton.dataset.postId = post._id;
             pinButton.addEventListener('click', (event) => {
-                pinUnpinPost(post._id, event.target);
-            });
+    event.stopPropagation(); // ✅ prevent opening post detail page
+    pinUnpinPost(post._id, event.target);
+});
             textInfoContainer.appendChild(pinButton);
         }
 
