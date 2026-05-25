@@ -419,6 +419,16 @@ const handleClick = () => {
         }
     });
 }; // closes handleClick
+    imgElement.addEventListener('click', handleClick);
+    playIcon.addEventListener('click', handleClick);
+    mediaContainer.appendChild(videoThumbnailContainer);
+
+    const videoDownloadBtn = document.createElement('a');
+    videoDownloadBtn.href = `${API_BASE_URL}/posts/${post._id}/download?url=${encodeURIComponent(firstVideoUrl)}`;
+    videoDownloadBtn.textContent = '⬇ 下载此视频';
+    videoDownloadBtn.classList.add('download-btn');
+    mediaContainer.appendChild(videoDownloadBtn);
+}
   
 // Add the media container to the content (only if there are images OR videos)
 if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
@@ -500,8 +510,6 @@ saveButton.addEventListener('click', async (e) => {
 
 voteContainer.appendChild(saveButton);
 postBody.appendChild(voteContainer);
-
-    postBody.appendChild(voteContainer);
 
     postElement.appendChild(contentContainer);
     postDetailsContainer.appendChild(postElement);
