@@ -242,6 +242,7 @@ async function deletePost(postId, postElement) {
         if (response.ok) {
             // Remove the post element from the DOM
             postElement.remove();
+			window.location.href = 'profile.html';
         } else {
 			alert(`Error message:${data.message}`)
         }
