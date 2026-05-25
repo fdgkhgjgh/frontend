@@ -359,24 +359,6 @@ const handleClick = () => {
             playIcon.style.display = 'none';/* 🌟 FIX: Stop the video element from stealing/blocking desktop clicks! */
         `;
 
-        // Style the icon and force it to show up
-        playIcon.style.cssText = `
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            display: block;        
-            z-index: 9999; 
-            pointer-events: none;  /* Allows clicks to pass through straight to the container */
-        `;
-        
-        if (!inlineVideoContainer.contains(playIcon)) {
-            inlineVideoContainer.appendChild(playIcon);
-        }
-    });
-
     videoElement.onclick = (e) => {
         e.stopPropagation(); 
         
