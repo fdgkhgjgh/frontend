@@ -338,46 +338,28 @@ const handleClick = () => {
 
     videoElement.play().catch(error => console.log("Playback interaction error:", error));
 
-    videoElement.addEventListener('pause', () => {
+   videoElement.addEventListener('pause', () => {
+        inlineVideoContainer.style.cssText = `
+            width: 120px;
+            height: 120px;
+            margin: 10px 0;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+        `;
         videoElement.style.cssText = `
             width: 120px;
-            height: 180px;
+            height: 120px;
             object-fit: cover;
             border-radius: 5px;
             display: block;
             cursor: pointer;
         `;
 
-        const existing = inlineVideoContainer.querySelector('.pause-play-icon');
-        if (existing) existing.remove();
-
-        const pausePlayIcon = document.createElement('div');
-        pausePlayIcon.className = 'pause-play-icon';
-        pausePlayIcon.innerHTML = '&#9658;';
-        pausePlayIcon.style.cssText = `
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2em;
-            color: white;
-            z-index: 10;
-            cursor: pointer;
-            text-shadow: 0 0 8px rgba(0,0,0,0.8);
-        `;
-        inlineVideoContainer.style.cssText = `
-            position: relative;
-            width: 120px;
-            height: 120px;
-            display: inline-block;
-        `;
-        inlineVideoContainer.appendChild(pausePlayIcon);
-
-        pausePlayIcon.addEventListener('click', () => {
-            pausePlayIcon.remove();
+        videoElement.addEventListener('click', () => {
             inlineVideoContainer.style.cssText = `
                 width: 100%;
-                max-width: 100%;
+                max-width: 480px;
                 margin: 10px 0;
                 display: block;
                 position: relative;
@@ -389,10 +371,17 @@ const handleClick = () => {
                 display: block;
             `;
             videoElement.play();
-        });
+        }, { once: true });
     });
 
     videoElement.addEventListener('play', () => {
+        inlineVideoContainer.style.cssText = `
+            width: 100%;
+            max-width: 480px;
+            margin: 10px 0;
+            display: block;
+            position: relative;
+        `;
         videoElement.style.cssText = `
             width: 100%;
             height: auto;
@@ -420,6 +409,7 @@ const handleClick = () => {
         }
     });
 }; // closes handleClick
+
     imgElement.addEventListener('click', handleClick);
     playIcon.addEventListener('click', handleClick);
     mediaContainer.appendChild(videoThumbnailContainer);
