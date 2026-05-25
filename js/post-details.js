@@ -383,16 +383,17 @@ const handleClick = () => {
         
         if (videoElement.paused) {
             inlineVideoContainer.style.cssText = `
-                width: 100%;
-                max-width: 480px;
+                width: 300px;
+                height: 240px;
                 margin: 10px 0;
-                display: block;
+                display: inline-block;
                 position: relative;
             `;
             // Restore video styles and reactivate its pointer controls
             videoElement.style.cssText = `
-                width: 100%;
-                height: auto;
+                width: 300px;
+                height: 240px;
+                object-fit: cover;
                 border-radius: 5px;
                 display: block;
                 pointer-events: auto; /* 🌟 RE-ENABLE controls for standard full screen/timeline actions */
