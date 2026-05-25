@@ -363,7 +363,6 @@ if (post.videoUrls && post.videoUrls.length > 0) {
         videoElement.play();
     }, { once: true });
 });
-    `;
     // Click to expand again
     videoElement.addEventListener('click', () => {
         videoElement.style.cssText = `
