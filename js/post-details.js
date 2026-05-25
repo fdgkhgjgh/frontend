@@ -357,7 +357,6 @@ const handleClick = () => {
             cursor: pointer;
             pointer-events: auto;/* 🌟 FIX: Stop the video element from stealing/blocking desktop clicks! */
         `;
-           }
     });
 
     videoElement.onclick = (e) => {
