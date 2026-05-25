@@ -338,7 +338,7 @@ const handleClick = () => {
 
     videoElement.play().catch(error => console.log("Playback interaction error:", error));
 
-               // --- 1. HANDLE PAUSE EVENT ---
+                   // --- 1. HANDLE PAUSE EVENT ---
     videoElement.addEventListener('pause', () => {
         inlineVideoContainer.style.cssText = `
             width: 120px;
@@ -355,6 +355,7 @@ const handleClick = () => {
             border-radius: 5px;
             display: block;
             cursor: pointer;
+            pointer-events: none; /* 🌟 FIX: Stop the video element from stealing/blocking desktop clicks! */
         `;
 
         // Style the icon and force it to show up
@@ -365,9 +366,9 @@ const handleClick = () => {
             transform: translate(-50%, -50%);
             width: 40px;
             height: 40px;
-            display: block;        /* 🌟 FIX: Force it to show block display again */
+            display: block;        
             z-index: 9999; 
-            pointer-events: none;  /* Allows clicks to pass through straight to the video */
+            pointer-events: none;  /* Allows clicks to pass through straight to the container */
         `;
         
         if (!inlineVideoContainer.contains(playIcon)) {
@@ -376,8 +377,8 @@ const handleClick = () => {
     });
 
     // --- 2. THE CLICK EVENT (RESPONSIBLE FOR RESUMING) ---
-    // 🌟 FIX: Bind directly to videoElement so desktop browser clicks register instantly
-    videoElement.onclick = (e) => {
+    // 🌟 FIX: Bind back to inlineVideoContainer because the video element passes clicks up to it now
+    inlineVideoContainer.onclick = (e) => {
         e.stopPropagation(); 
         
         if (videoElement.paused) {
@@ -388,15 +389,17 @@ const handleClick = () => {
                 display: block;
                 position: relative;
             `;
+            // Restore video styles and reactivate its pointer controls
             videoElement.style.cssText = `
                 width: 100%;
                 height: auto;
                 border-radius: 5px;
                 display: block;
+                pointer-events: auto; /* 🌟 RE-ENABLE controls for standard full screen/timeline actions */
             `;
             playIcon.style.display = 'none'; 
             videoElement.play();
-             }
+        }
     };
     // --- 4. CLEANUP EVENTS ---
     videoElement.addEventListener('ended', () => {
