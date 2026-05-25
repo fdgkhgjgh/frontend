@@ -1128,4 +1128,4 @@ modalImageContainer.addEventListener('touchend', (e) => {
 });
 
 // Export
-export { loadPostDetails }
+export { loadPostDetails };
