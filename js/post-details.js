@@ -343,7 +343,8 @@ videoElement.addEventListener('webkitfullscreenchange', () => {
         inlineVideoContainer.remove();
         videoThumbnailContainer.style.display = 'block';
     }
-});
+ });
+    };
 
 
 imgElement.addEventListener('click', handleClick);
