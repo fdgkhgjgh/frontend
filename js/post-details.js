@@ -378,7 +378,7 @@ if (post.videoUrls && post.videoUrls.length > 0) {
         `;
         videoElement.play();
     });
-});
+};
 
 
 imgElement.addEventListener('click', handleClick);
