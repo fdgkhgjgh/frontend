@@ -292,10 +292,10 @@ if (post.videoUrls && post.videoUrls.length > 0) {
 const handleClick = () => {
     const inlineVideoContainer = document.createElement('div');
     inlineVideoContainer.style.cssText = `
-        width: 100%;
-        max-width: 100%;
+        width: 240px;
+        width: 190px;
         margin: 10px 0;
-        display: block;
+        display: inline-block;
         position: relative;
     `;
 
