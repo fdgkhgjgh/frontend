@@ -18,6 +18,46 @@ const buttonSuccessIcon = document.getElementById('button-success-icon');
 
 let currentPage = 1; // Track the current page
 
+//search posts
+let isSearching = false;
+let currentSearchQuery = '';
+
+async function searchPosts(page = 1) {
+    const query = document.getElementById('search-input').value.trim();
+    if (!query) {
+        clearSearch();
+        return;
+    }
+
+    isSearching = true;
+    currentSearchQuery = query;
+    document.getElementById('clear-search-btn').style.display = 'inline-block';
+
+    try {
+        const limit = 5;
+        const response = await fetch(`${API_BASE_URL}/posts/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`);
+        if (!response.ok) throw new Error('Search failed');
+
+        const data = await response.json();
+        displayPosts(data.posts);
+        displayPagination(data.totalPages, page);
+
+        if (data.posts.length === 0) {
+            postList.innerHTML = '<p style="padding:10px;">No posts found.</p>';
+        }
+    } catch (error) {
+        console.error('Search error:', error);
+    }
+}
+
+function clearSearch() {
+    isSearching = false;
+    currentSearchQuery = '';
+    document.getElementById('search-input').value = '';
+    document.getElementById('clear-search-btn').style.display = 'none';
+    loadPosts(1);
+}
+
 async function loadPosts(page = 1) {
     try {
         const limit = 5; // Number of posts per page
@@ -148,7 +188,9 @@ function displayPagination(totalPages, currentPage) {
         const prevButton = document.createElement('button');
         prevButton.textContent = '上一页';
         prevButton.addEventListener('click', () => {
-            loadPosts(currentPage - 1);
+    if (isSearching) searchPosts(currentPage - 1);
+    else loadPosts(currentPage - 1);
+});
         });
         paginationContainer.appendChild(prevButton);
     }
@@ -158,7 +200,9 @@ function displayPagination(totalPages, currentPage) {
         const pageButton = document.createElement('button');
         pageButton.textContent = i;
         pageButton.addEventListener('click', () => {
-            loadPosts(i);
+    if (isSearching) searchPosts(i);
+    else loadPosts(i);
+});
         });
 
         if (i === currentPage) {
@@ -173,7 +217,9 @@ function displayPagination(totalPages, currentPage) {
         const nextButton = document.createElement('button');
         nextButton.textContent = '下一页';
         nextButton.addEventListener('click', () => {
-            loadPosts(currentPage + 1);
+    if (isSearching) searchPosts(currentPage + 1);
+    else loadPosts(currentPage + 1);
+});
         });
         paginationContainer.appendChild(nextButton);
 		// Page jump input
@@ -511,3 +557,6 @@ async function pinUnpinPost(postId, buttonElement) {
         alert("An error occurred while pinning/unpinning the post.");
     }
 }
+
+window.searchPosts = searchPosts;
+window.clearSearch = clearSearch;
