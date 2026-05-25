@@ -341,16 +341,16 @@ const handleClick = () => {
                    // --- 1. HANDLE PAUSE EVENT ---
     videoElement.addEventListener('pause', () => {
         inlineVideoContainer.style.cssText = `
-            width: 120px;
-            height: 120px;
+            width: 300px;
+            height: 240px;
             margin: 10px 0;
             display: inline-block;
             position: relative;
             cursor: pointer;
         `;
         videoElement.style.cssText = `
-            width: 120px;
-            height: 120px;
+            width: 300px;
+            height: 240px;
             object-fit: cover;
             border-radius: 5px;
             display: block;
