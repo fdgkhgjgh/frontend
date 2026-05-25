@@ -293,7 +293,7 @@ const handleClick = () => {
     const inlineVideoContainer = document.createElement('div');
     inlineVideoContainer.style.cssText = `
         width: 240px;
-        width: 190px;
+        height: 190px;
         margin: 10px 0;
         display: inline-block;
         position: relative;
