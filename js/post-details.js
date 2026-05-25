@@ -355,7 +355,7 @@ const handleClick = () => {
             border-radius: 5px;
             display: block;
             cursor: pointer;
-            pointer-events: none; /* 🌟 FIX: Stop the video element from stealing/blocking desktop clicks! */
+            pointer-events: auto; /* 🌟 FIX: Stop the video element from stealing/blocking desktop clicks! */
         `;
 
         // Style the icon and force it to show up
@@ -376,30 +376,15 @@ const handleClick = () => {
         }
     });
 
-    // --- 2. THE CLICK EVENT (RESPONSIBLE FOR RESUMING) ---
-    // 🌟 FIX: Bind back to inlineVideoContainer because the video element passes clicks up to it now
-    inlineVideoContainer.onclick = (e) => {
+    videoElement.onclick = (e) => {
         e.stopPropagation(); 
         
         if (videoElement.paused) {
-            inlineVideoContainer.style.cssText = `
-                width: 300px;
-                height: 240px;
-                margin: 10px 0;
-                display: inline-block;
-                position: relative;
-            `;
-            // Restore video styles and reactivate its pointer controls
-            videoElement.style.cssText = `
-                width: 300px;
-                height: 240px;
-                object-fit: cover;
-                border-radius: 5px;
-                display: block;
-                pointer-events: auto; /* 🌟 RE-ENABLE controls for standard full screen/timeline actions */
-            `;
             playIcon.style.display = 'none'; 
             videoElement.play();
+        } else {
+            // Allows regular clicking on the running video frame to pause it
+            videoElement.pause();
         }
     };
     // --- 4. CLEANUP EVENTS ---
