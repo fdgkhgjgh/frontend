@@ -419,29 +419,7 @@ const handleClick = () => {
         }
     });
 }; // closes handleClick
-    // Close button for PC
-const closeBtn = document.createElement('button');
-closeBtn.textContent = '✕';
-closeBtn.style.cssText = `
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    z-index: 20;
-    background: rgba(0,0,0,0.5);
-    color: white;
-    border: none;
-    padding: 4px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-`;
-closeBtn.onclick = () => {
-    inlineVideoContainer.remove();
-    videoThumbnailContainer.style.display = 'block';
-};
-inlineVideoContainer.style.position = 'relative';
-inlineVideoContainer.appendChild(closeBtn);
-
+  
 // Add the media container to the content (only if there are images OR videos)
 if (post.imageUrls?.length > 0 || post.videoUrls?.length > 0) {
     postBody.appendChild(mediaContainer);
