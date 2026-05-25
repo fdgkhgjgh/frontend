@@ -223,7 +223,8 @@ postElement.appendChild(titleElement);
         if (isOwnProfile) { // Add this Check!
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Delete';
-            deleteButton.addEventListener('click', () => {
+            deleteButton.addEventListener('click', (e) => {
+                e.stopPropagation();
                 deletePost(post._id, postElement); // You'll reuse the deletePost function from app.js
             });
             postElement.appendChild(deleteButton);
