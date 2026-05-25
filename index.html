@@ -222,7 +222,18 @@
         font-size: 0.9rem;
         white-space: nowrap;
         flex-shrink: 0;
-    ">搜索Search</button>
+    ">搜索</button>
+    <button onclick="clearSearch()" id="clear-search-btn" style="
+        display: none;
+        background: #aaa;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    ">清除✕</button>
     <input id="search-input" type="text" placeholder="Search posts, authors..."
         style="
             flex: 1;
@@ -234,17 +245,6 @@
         "
         onkeydown="if(event.key==='Enter') searchPosts()"
     />
-    <button onclick="clearSearch()" id="clear-search-btn" style="
-        display: none;
-        background: #aaa;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        flex-shrink: 0;
-    ">清除搜索✕</button>
 </div>
     <footer class="site-footer">
 
