@@ -754,7 +754,7 @@ postDetailsContainer.addEventListener('click', async (event) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                alert('You must be logged in to vote.');
+                alert('您必须登录后才能点赞You must be logged in to vote.');
                 return;
             }
 
@@ -881,7 +881,7 @@ async function addReply(postId, commentId, replyText, replyToUser, repliesContai
     try {
         const token = localStorage.getItem('token');
         if (!token) {
-            commentMessage.textContent = "You must be logged in to reply.";
+            commentMessage.textContent = "您必须登录后才能回复You must be logged in to reply.";
             commentMessage.style.color = 'red';
             return;
         }
