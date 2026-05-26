@@ -12,6 +12,7 @@ let chatChannel = null;
 let watchId = null;
 let isSharingLocation = false;
 let polylines = {}; // store track lines per user
+let currentMapLayer = 'yandex';
 
 // Get logged in user info
 function getCurrentUser() {
@@ -61,6 +62,14 @@ function initMap() {
         'World Map (Yandex)': yandexLayer,
         'China Map (Amap)': amapLayer
     }).addTo(map);
+
+    map.on('baselayerchange', (e) => {
+    if (e.name.includes('Amap') || e.name.includes('China')) {
+        currentMapLayer = 'amap';
+    } else {
+        currentMapLayer = 'yandex';
+    }
+});
 } // closes initMap
 
 // Create custom marker icon
@@ -253,11 +262,15 @@ async function startSharingLocation() {
 
     watchId = navigator.geolocation.watchPosition(async (pos) => {
     const raw = pos.coords;
+    let latitude = raw.latitude;
+    let longitude = raw.longitude;
 
-    // ✅ Convert to GCJ-02 for accurate display on Amap
-    const converted = wgs84ToGcj02(raw.latitude, raw.longitude);
-    const latitude = converted.lat;
-    const longitude = converted.lng;
+    // Only convert to GCJ-02 if using Amap
+    if (currentMapLayer === 'amap') {
+        const converted = wgs84ToGcj02(raw.latitude, raw.longitude);
+        latitude = converted.lat;
+        longitude = converted.lng;
+    }
 
         await supabaseClient.from('locations').upsert({
             user_id: userId,
