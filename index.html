@@ -51,15 +51,21 @@
   </main>
     <!-- Pagination container will be inserted here by js -->
     <!-- Map Panel (hidden by default) -->
+    <div style="position: relative;">
 <!-- Map Panel (hidden by default) -->
 <div id="map-panel" style="
     display: none;
     flex-direction: column;
     gap: 0;
-    margin: 0 8px 16px 8px;
+    margin: 0 8px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    z-index: 500;
+    bottom: 60px;
 ">
     <!-- Map -->
     <div style="position: relative;">
@@ -169,6 +175,7 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     ">🗺️家庭地图 Family Map</button>
 </div>
+    </div>
 
 <!-- Map Panel Script -->
 <script src="js/map-panel.js"></script>
