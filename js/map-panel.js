@@ -35,34 +35,32 @@ function initMap() {
         zoomControl: true
     });
 
-    // OpenStreetMap - covers whole world
-    const osmLayer = L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-            maxZoom: 18,
-            attribution: '© OpenStreetMap'
-        }
-    );
+    // Azure Maps as default (works in China and worldwide)
+const azureLayer = L.tileLayer(
+    `https://atlas.microsoft.com/map/tile?api-version=2.0&tilesetId=microsoft.base.road&x={x}&y={y}&zoom={z}&subscription-key=9WBhTxxP7pvLalJnrBDvgkAqiI3UoVLEM0FJx5KnoyYbRjh9NCB9JQQJ99CEACYeBjFah6CzAAAgAZMPH4YD`,
+    {
+        maxZoom: 18,
+        attribution: '© Microsoft Azure Maps'
+    }
+);
 
-    // Amap - China detail
-    const amapLayer = L.tileLayer(
-        `https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}&key=${AMAP_KEY}`,
-        {
-            subdomains: ['1', '2', '3', '4'],
-            maxZoom: 18,
-            attribution: '© 高德地图'
-        }
-    );
+// Amap optional for China detail
+const amapLayer = L.tileLayer(
+    `https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}&key=${AMAP_KEY}`,
+    {
+        subdomains: ['1', '2', '3', '4'],
+        maxZoom: 18,
+        attribution: '© 高德地图'
+    }
+);
 
-    // amap as default
-    amapLayer.addTo(map);
+// ✅ Azure Maps as default
+azureLayer.addTo(map);
 
-    // Layer switcher top right
-    L.control.layers({
-        'China Map': amapLayer,
-        'World Map': osmLayer
-    }).addTo(map);
-}
+L.control.layers({
+    'World Map (Azure)': azureLayer,
+    'China Map (Amap)': amapLayer
+}).addTo(map);
 
 // Create custom marker icon
 function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
