@@ -51,6 +51,7 @@
   </main>
     <!-- Pagination container will be inserted here by js -->
     <!-- Map Panel (hidden by default) -->
+<!-- Map Panel (hidden by default) -->
 <div id="map-panel" style="
     display: none;
     flex-direction: column;
@@ -60,64 +61,50 @@
     overflow: hidden;
     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 ">
-    </div>
-         <!-- Map Toggle Button -->
-<div style="text-align: center; margin: 16px 0;">
-    <button id="map-toggle-btn" onclick="toggleMapPanel()" style="
-        background: #4f46e5;
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        border-radius: 20px;
-        font-size: 1rem;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    ">🗺️家庭地图 Family Map</button>
-</div>
-
     <!-- Map -->
     <div style="position: relative;">
         <div id="map-container" style="width: 100%; height: 350px;"></div>
-        <!-- Share location button overlaid on map -->
         <button id="share-location-btn" onclick="toggleLocationSharing()" style="
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    background: rgba(79, 70, 229, 0.5);
-    color: white;
-    border: none;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    transition: background 0.3s;
-" onmouseenter="this.style.background='rgba(79,70,229,1)'"
-   onmouseleave="this.style.background='rgba(79,70,229,0.5)'"
-   ontouchstart="this.style.background='rgba(79,70,229,1)'"
-   ontouchend="this.style.background='rgba(79,70,229,0.5)'
-        ">📍分享我的位置Share My Location</button>
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(79, 70, 229, 0.5);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: background 0.3s;
+        " onmouseenter="this.style.background='rgba(79,70,229,1)'"
+           onmouseleave="this.style.background='rgba(79,70,229,0.5)'"
+           ontouchstart="this.style.background='rgba(79,70,229,1)'"
+           ontouchend="this.style.background='rgba(79,70,229,0.5)'">
+            📍分享我的位置Share My Location
+        </button>
         <button id="toggle-tracks-btn" onclick="toggleTracks()" style="
-    position: absolute;
-    bottom: 12px;
-    left: 10px;
-    z-index: 1000;
-    background: rgba(45, 125, 70, 0.5);
-    color: white;
-    border: none;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    transition: background 0.3s;
-" onmouseenter="this.style.background='rgba(45,125,70,1)'"
-   onmouseleave="this.style.background='rgba(45,125,70,0.5)'"
-   ontouchstart="this.style.background='rgba(45,125,70,1)'"
-   ontouchend="this.style.background='rgba(45,125,70,0.5)'
-">轨迹Tracks</button>
+            position: absolute;
+            bottom: 12px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(45, 125, 70, 0.5);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: background 0.3s;
+        " onmouseenter="this.style.background='rgba(45,125,70,1)'"
+           onmouseleave="this.style.background='rgba(45,125,70,0.5)'"
+           ontouchstart="this.style.background='rgba(45,125,70,1)'"
+           ontouchend="this.style.background='rgba(45,125,70,0.5)'">
+            轨迹Tracks
+        </button>
     </div>
 
     <!-- Chat Panel -->
@@ -145,28 +132,42 @@
             background: #fff;
         ">
             <button onclick="sendChatMessage()" style="
-    background: #4f46e5;
-    color: white;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    flex-shrink: 0;
-">发送</button>
-<input id="chat-input" type="text" placeholder="Type a message..." 
-    onkeydown="if(event.key==='Enter') sendChatMessage()"
-    style="
-        flex: 1;
-        padding: 6px 10px;
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        outline: none;
-        min-width: 0;
-    "/>
+                background: #4f46e5;
+                color: white;
+                border: none;
+                padding: 6px 14px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                flex-shrink: 0;
+            ">发送</button>
+            <input id="chat-input" type="text" placeholder="Type a message..."
+                onkeydown="if(event.key==='Enter') sendChatMessage()"
+                style="
+                    flex: 1;
+                    padding: 6px 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 20px;
+                    font-size: 0.85rem;
+                    outline: none;
+                    min-width: 0;
+                "/>
         </div>
     </div>
+</div>  <!-- ✅ closes map-panel -->
+
+<!-- Map Toggle Button — OUTSIDE and AFTER map panel -->
+<div style="text-align: center; margin: 16px 0;">
+    <button id="map-toggle-btn" onclick="toggleMapPanel()" style="
+        background: #4f46e5;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    ">🗺️家庭地图 Family Map</button>
 </div>
 
 <!-- Map Panel Script -->
