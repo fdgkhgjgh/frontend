@@ -542,7 +542,7 @@ if (addCommentForm) {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                commentMessage.textContent = "You must be logged in to comment.";
+                commentMessage.textContent = "您必须登录后才能评论You must be logged in to comment.";
                 commentMessage.style.color = 'red';
                 return;
             }
