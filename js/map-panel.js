@@ -262,15 +262,15 @@ async function startSharingLocation() {
 
     watchId = navigator.geolocation.watchPosition(async (pos) => {
     const raw = pos.coords;
-    let latitude = raw.latitude;
-    let longitude = raw.longitude;
+let latitude = raw.latitude;
+let longitude = raw.longitude;
 
-    // Only convert to GCJ-02 if using Amap
-    if (currentMapLayer === 'amap') {
-        const converted = wgs84ToGcj02(raw.latitude, raw.longitude);
-        latitude = converted.lat;
-        longitude = converted.lng;
-    }
+// Always convert to GCJ-02 for China users
+// Both Amap and Yandex use GCJ-02 offset in China
+const converted = wgs84ToGcj02(raw.latitude, raw.longitude);
+// Only apply if inside China (wgs84ToGcj02 returns unchanged coords outside China)
+latitude = converted.lat;
+longitude = converted.lng;
 
         await supabaseClient.from('locations').upsert({
             user_id: userId,
