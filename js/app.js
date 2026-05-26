@@ -555,5 +555,25 @@ async function pinUnpinPost(postId, buttonElement) {
     }
 }
 
+// Toggle create post modal
+function togglePostModal() {
+    const modal = document.getElementById('create-post-modal');
+    const isHidden = modal.style.display === 'none' || modal.style.display === '';
+    modal.style.display = isHidden ? 'flex' : 'none';
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('create-post-modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+});
+
+window.togglePostModal = togglePostModal;
 window.searchPosts = searchPosts;
 window.clearSearch = clearSearch;
