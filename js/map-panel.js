@@ -61,6 +61,7 @@ L.control.layers({
     'World Map (Azure)': azureLayer,
     'China Map (Amap)': amapLayer
 }).addTo(map);
+}    
 
 // Create custom marker icon
 function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
