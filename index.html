@@ -21,20 +21,33 @@
 </head>
 <body>
     <header>
+    <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
         <h1>Miniless 物语</h1>
-        <nav>
-            <button id="theme-toggle">&#127769;/&#127762;模式</button>
-            <a href="register.html">注册账号(Register)</a>
-            <a href="login.html">登录(Login)</a>
-            <button id="logout-button" style="display: none;">Logout</button>
-        </nav>
-    </header>
+        <button onclick="togglePostModal()" id="create-post-btn" style="
+            display: inline-flex;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        ">+</button>
+    </div>
+    <nav>
+        <button id="theme-toggle">&#127769;/&#127762;模式</button>
+        <a href="register.html">注册账号(Register)</a>
+        <a href="login.html">登录(Login)</a>
+        <button id="logout-button" style="display: none;">Logout</button>
+    </nav>
+</header>
     <main id="post-list" class="main-post-list">
         <!-- Posts will be dynamically inserted here -->
   </main>
     <!-- Pagination container will be inserted here by js -->
-    <section id="create-post-section">
-        <h2>创建新帖子(Create New Post)</h2>
          <!-- Map Toggle Button -->
 <div style="text-align: center; margin: 16px 0;">
     <button id="map-toggle-btn" onclick="toggleMapPanel()" style="
@@ -155,34 +168,68 @@
 
 <!-- Map Panel Script -->
 <script src="js/map-panel.js"></script>
+       <!-- Create Post Modal -->
+<div id="create-post-modal" style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+">
+    <div style="
+        background: #fff;
+        border-radius: 12px;
+        padding: 24px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+    ">
+        <button onclick="togglePostModal()" style="
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #666;
+        ">✕</button>
+        <h2 style="margin: 0 0 16px 0;">创建新帖子</h2>
         <form id="create-post-form-main">
             <label for="title-main">标题:</label>
-            <input type="text" id="title-main" name="title" required><br><br>
-    
+            <input type="text" id="title-main" name="title" required style="width:100%; margin-bottom:12px;"><br>
+
             <label for="content-main">描述:</label>
-            <textarea id="content-main" name="content" rows="4"></textarea><br><br>
-    
-            <!--  REPLACE THIS LINE -->
-            <!-- <label for="image-main">Image (optional):</label>
-            <input type="file" id="image-main" name="image" accept="image/*"><br><br> -->
-    
-            <!-- WITH THIS -->
+            <textarea id="content-main" name="content" rows="4" style="width:100%; margin-bottom:12px;"></textarea><br>
+
             <label for="file-main">照片或视频(可多选):</label>
-            <input type="file" id="file-main" name="files" accept="image/*, video/*" multiple><br><br>
-    
-            <button type="submit" id="create-post-button">
+            <input type="file" id="file-main" name="files" accept="image/*, video/*" multiple style="margin-bottom:12px;"><br>
+
+            <button type="submit" id="create-post-button" style="
+                background: #4f46e5;
+                color: white;
+                border: none;
+                padding: 10px 24px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 1rem;
+                width: 100%;
+            ">
                 发送新帖子(Send New Post)
-                <span id="button-spinner" style="display: none;">
-                    <!-- You can use a simple Unicode spinner or an SVG here -->
-                    &#x21bb; <!-- Example: Unicode anticlockwise circled arrow -->
-                </span>
-                <span id="button-success-icon" style="display: none;">
-                    &#x2713;  <!-- Example: Unicode checkmark -->
-                </span>
+                <span id="button-spinner" style="display: none;">&#x21bb;</span>
+                <span id="button-success-icon" style="display: none;">&#x2713;</span>
             </button>
         </form>
         <p id="create-post-message-main"></p>
-    </section>
+    </div>
+</div>
     <!-- 1. config.js (for API_BASE_URL) -->
     <script src="js/config.js" type="module"></script>
     <!-- 2. utils.js (for formatDate, or other utilities) -->
