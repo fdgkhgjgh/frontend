@@ -381,6 +381,7 @@ if (createPostFormMain) {
                 setButtonState('default'); // Reset on error
             } else if (response.ok) {
                 createPostMessageMain.textContent = 'Post created successfully!';
+				document.getElementById('create-post-modal').style.display = 'none';
                 createPostMessageMain.style.color = "green";
                 //--- SET BUTTON TO "SUCCESS" STATE ---
                 setButtonState('success');
