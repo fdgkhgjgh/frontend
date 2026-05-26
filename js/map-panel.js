@@ -393,13 +393,37 @@ function appendChatMessage(msg) {
     const chatMessages = document.getElementById('chat-messages');
     const isMe = msg.username === currentUsername;
 
+    // Generate consistent random color for username
+    function getUserColor(username) {
+        const colors = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#3182ce', '#805ad5', '#d53f8c', '#2c7a7b'];
+        let hash = 0;
+        for (let i = 0; i < username.length; i++) {
+            hash = username.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return colors[Math.abs(hash) % colors.length];
+    }
+
+    // Format date to detailed time
+    const date = new Date(msg.created_at);
+    const formattedTime = date.toLocaleString('zh-CN', {
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+
+    const userColor = getUserColor(msg.username);
+
     const div = document.createElement('div');
     div.style.cssText = `
         margin-bottom: 8px;
         text-align: ${isMe ? 'right' : 'left'};
     `;
     div.innerHTML = `
-        <span style="font-size:0.75rem; color:#888;">${msg.username}</span><br>
+        <span style="font-size:0.75rem; color:${userColor}; font-weight:bold;">${msg.username}</span>
+        <span style="font-size:0.75rem; color:#888; margin-left:6px;">${formattedTime}</span><br>
         <span style="
             display: inline-block;
             background: ${isMe ? '#4f46e5' : '#e2e8f0'};
