@@ -37,9 +37,10 @@ function initMap() {
 
     // Azure Maps as default (works in China and worldwide)
 const azureLayer = L.tileLayer(
-    `https://atlas.microsoft.com/map/tile?api-version=2.0&tilesetId=microsoft.base.road&x={x}&y={y}&zoom={z}&subscription-key=9WBhTxxP7pvLalJnrBDvgkAqiI3UoVLEM0FJx5KnoyYbRjh9NCB9JQQJ99CEACYeBjFah6CzAAAgAZMPH4YD`,
+    `https://atlas.microsoft.com/map/tile?api-version=2.0&tilesetId=microsoft.base.road&x={x}&y={y}&z={z}&subscription-key=9WBhTxxP7pvLalJnrBDvgkAqiI3UoVLEM0FJx5KnoyYbRjh9NCB9JQQJ99CEACYeBjFah6CzAAAgAZMPH4YD`,
     {
         maxZoom: 18,
+        tileSize: 256,
         attribution: '© Microsoft Azure Maps'
     }
 );
