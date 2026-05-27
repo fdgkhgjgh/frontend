@@ -939,9 +939,9 @@ button[type="submit"]:disabled {
     color: #fff;
 }
 
-#post-details-container .post-body,
-#post-details-container .post-body * {
-    color: #222 !important;
+/* AFTER */
+#post-details-container .post-body {
+    color: #222;
 }
 
 #post-details-container h2 {
@@ -954,8 +954,8 @@ button[type="submit"]:disabled {
 }
 
 .comment-item {
-    background: rgba(255, 255, 255, 0.92) !important;
-    color: #222 !important;
+    background: rgba(255, 255, 255, 0.92);
+    color: #222;
 }
 
 #comments-section {
@@ -979,12 +979,6 @@ button[type="submit"]:disabled {
 /* Add Comment label */
 label {
     color: #fff;
-}
-
-.post-body p,
-.post-body span,
-.post-body div {
-    color: #222 !important;
 }
 
 /* Comment and reply username color in day mode */
