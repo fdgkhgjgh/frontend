@@ -940,9 +940,13 @@ button[type="submit"]:disabled {
     color: #fff;
 }
 
-/* AFTER */
 #post-details-container .post-body {
-    color: #222;
+    background: #ffffff !important;
+    color: #222 !important;
+}
+
+#post-details-container .post-body p {
+    color: #222 !important;
 }
 
 #post-details-container h2 {
