@@ -100,17 +100,19 @@ function displayPostsWithShowMore(posts) {
 
     const showMoreBtn = document.createElement('button');
     showMoreBtn.textContent = `展开更多 Show More (${allPosts.length - initialCount})`;
-    showMoreBtn.style.cssText = `
-        display: block;
-        width: 100%;
-        padding: 1px;
-        margin: 4px 0;
-        background: #f0f0f0;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        color: #555;
+    showMoreBtn.classList.add('show-more-btn');
+showMoreBtn.style.cssText = `
+    display: block;
+    width: 100%;
+    padding: 0.5px;
+    margin: 4px 0;
+    background: rgba(150, 150, 150, 0.2);
+    border: 1px solid rgba(150, 150, 150, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #555;
+`;
     `;
 
     showMoreBtn.addEventListener('click', () => {
