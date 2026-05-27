@@ -250,3 +250,8 @@ body.dark-mode {
     color: #eee !important;
 }
 
+.dark-mode .comment-item a[href*="profile"],
+.dark-mode .reply-item a[href*="profile"] {
+    color: #f0a500 !important;
+}
+
