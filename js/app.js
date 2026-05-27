@@ -103,7 +103,7 @@ function displayPostsWithShowMore(posts) {
     showMoreBtn.style.cssText = `
         display: block;
         width: 100%;
-        padding: 8px;
+        padding: 1px;
         margin: 4px 0;
         background: #f0f0f0;
         border: 1px solid #ddd;
