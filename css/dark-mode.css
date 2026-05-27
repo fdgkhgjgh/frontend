@@ -202,3 +202,9 @@ body.dark-mode {
     border-color: rgba(255, 255, 255, 0.15) !important;
 }
 
+/* Comment and reply username color in dark mode */
+.comment-item .comment-author,
+.reply .reply-author {
+    color: #f0a500 !important;
+}
+
