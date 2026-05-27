@@ -2,10 +2,10 @@
 
 body {
   font-family: sans-serif;
- background-color: #2d5a27;
+ background-color: #4a7c3f;
     background-image: 
-        radial-gradient(ellipse at 20% 30%, rgba(55,100,45,0.5) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 70%, rgba(40,80,35,0.5) 0%, transparent 50%);
+        radial-gradient(ellipse at 20% 30%, rgba(80,130,65,0.5) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(60,110,50,0.5) 0%, transparent 50%);
   color: #333;
   margin: 0;
   padding: 0;
@@ -922,12 +922,18 @@ button[type="submit"]:disabled {
 }
 
 /* Post detail page text visibility */
-#post-details-container h2 {
+
+#post-details-container {
     color: #fff;
 }
 
+#post-details-container h2 {
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
 #post-details-container > p {
-    color: #ddd;
+    color: #f0f0f0;
 }
 
 .post-body {
@@ -942,6 +948,10 @@ button[type="submit"]:disabled {
     background: rgba(255, 255, 255, 0.9) !important;
 }
 
+#comments-section {
+    color: #fff;
+}
+
 #comments-section h2 {
     color: #fff;
 }
@@ -954,4 +964,9 @@ button[type="submit"]:disabled {
 .post {
     background: rgba(255, 255, 255, 0.12) !important;
     border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Add Comment label */
+label {
+    color: #fff;
 }
