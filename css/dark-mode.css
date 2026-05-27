@@ -271,3 +271,10 @@ body.dark-mode {
     background-color: #246024 !important;
 }
 
+.dark-mode #post-details-container .post-body,
+.dark-mode #post-details-container .post-body p,
+.dark-mode #post-details-container .post-body span,
+.dark-mode #post-details-container .post-body div {
+    background: rgba(30, 30, 50, 0.95) !important;
+    color: #eee !important;
+}
