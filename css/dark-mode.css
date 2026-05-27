@@ -208,3 +208,45 @@ body.dark-mode {
     color: #f0a500 !important;
 }
 
+/* Post body dark background in dark mode */
+.dark-mode .post-body {
+    background: rgba(30, 30, 50, 0.95) !important;
+    color: #eee !important;
+}
+
+.dark-mode .post-body p,
+.dark-mode .post-body span,
+.dark-mode .post-body div {
+    color: #eee !important;
+}
+
+/* Comment username yellow */
+.dark-mode .comment-item a,
+.dark-mode .comment-item strong {
+    color: #f0a500 !important;
+}
+
+/* Reply section dark background */
+.dark-mode .replies-container,
+.dark-mode .reply-item {
+    background: rgba(40, 40, 60, 0.95) !important;
+    color: #eee !important;
+}
+
+/* Reply username yellow */
+.dark-mode .reply-item a,
+.dark-mode .reply-item strong {
+    color: #f0a500 !important;
+}
+
+/* Comment and reply text */
+.dark-mode .comment-item,
+.dark-mode .comment-item * {
+    color: #eee !important;
+}
+
+.dark-mode .reply-item,
+.dark-mode .reply-item * {
+    color: #eee !important;
+}
+
