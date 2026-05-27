@@ -172,22 +172,23 @@ font-size: 0.8em;
   text-decoration: underline; /* Keep the underline on hover */
 }
 
-.dark-mode .post-body {
-  background-color: #2c2c2c;
-  color: #eee;
-}
-
 body.dark-mode #star-canvas {
     z-index: 0;
 }
 
 body.dark-mode .post,
-body.dark-mode .post-body,
 body.dark-mode .comment-item,
 body.dark-mode .reply,
 body.dark-mode nav,
 body.dark-mode header {
-    background-color: rgba(44, 44, 44, 0.85); /* semi-transparent so stars show through */
+    background-color: rgba(44, 44, 44, 0.85);
+    position: relative;
+    z-index: 1;
+}
+
+body.dark-mode .post-body {
+    background: rgba(30, 30, 50, 0.95) !important;
+    color: #eee !important;
     position: relative;
     z-index: 1;
 }
