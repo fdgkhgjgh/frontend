@@ -126,12 +126,20 @@ nav a:hover {
 
 /* content backgroud */
 .post-body {
-  background: rgba(255, 255, 255, 0.92);
-    color: #333;
+  background: rgba(255, 255, 255, 0.95);
+    color: #222;
   border-radius: 8px;
   padding: 16px;
   margin: 8px 0 16px 0;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.post-body p {
+    color: #222 !important;
+}
+
+.post-body * {
+    color: #222 !important;
 }
 
 /* --- Vote Container and Buttons --- */
@@ -936,16 +944,17 @@ button[type="submit"]:disabled {
     color: #f0f0f0;
 }
 
-.post-body {
+.comment-item {
     background: rgba(255, 255, 255, 0.92) !important;
-    color: #333 !important;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 8px 0 16px 0;
+    color: #222 !important;
 }
 
-.comment-item {
-    background: rgba(255, 255, 255, 0.9) !important;
+.comment-item p {
+    color: #222 !important;
+}
+
+.comment-item * {
+    color: #222 !important;
 }
 
 #comments-section {
