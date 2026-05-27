@@ -244,13 +244,18 @@ textarea {
 
 /* Style for reply button */
 .reply-button {
-  background-color: #f0f0f0;
+  background-color: #2d7a2d;
+  color: white;
   border: 1px solid #ccc;
   padding: 5px 10px;
   cursor: pointer;
   border-radius: 3px;
   font-size: 14px;
   margin-top: 5px;
+}
+
+.reply-button:hover {
+    background-color: #246024;
 }
 
 /* Style for reply-container */
