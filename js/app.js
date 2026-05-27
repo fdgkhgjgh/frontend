@@ -60,115 +60,168 @@ function clearSearch() {
 
 async function loadPosts(page = 1) {
     try {
-        const limit = 5; // Number of posts per page
-        const response = await fetch(`${API_BASE_URL}/posts?page=${page}&limit=${limit}`); // Use API_BASE_URL
-        //console.log('Response:', response); // Log the entire response object
+        // Page 1 fetches 20 but shows 5 initially, other pages fetch 20
+        const limit = page === 1 ? 20 : 20;
+        const response = await fetch(`${API_BASE_URL}/posts?page=${page}&limit=${limit}`);
 
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
         }
-        const data = await response.json(); // Parse response as JSON
-        const posts = data.posts; // Get the posts
-        const totalPages = data.totalPages; // Get total pages
-        //console.log('Posts:', posts); // Log the parsed posts data
-        //console.log('totalPages:', totalPages); // Log the parsed posts data
-        displayPosts(posts);
-        displayPagination(totalPages, page); // Display pagination controls
+        const data = await response.json();
+        const posts = data.posts;
+        const totalPages = data.totalPages;
+
+        if (page === 1) {
+            displayPostsWithShowMore(posts);
+        } else {
+            displayPosts(posts);
+        }
+        displayPagination(totalPages, page);
 
     } catch (error) {
         console.error('Error loading posts:', error);
         postList.innerHTML = '<p>Error loading posts. Please try again later.</p>';
     }
 }
+
+function displayPostsWithShowMore(posts) {
+    postList.innerHTML = '';
+    const initialCount = 5;
+    const allPosts = posts;
+    let expanded = false;
+
+    // Show first 5 posts
+    allPosts.slice(0, initialCount).forEach(post => {
+        postList.appendChild(createPostElement(post));
+    });
+
+    // Only add Show More if there are more than 5 posts
+    if (allPosts.length <= initialCount) return;
+
+    const showMoreBtn = document.createElement('button');
+    showMoreBtn.textContent = `展开更多 Show More (${allPosts.length - initialCount})`;
+    showMoreBtn.style.cssText = `
+        display: block;
+        width: 100%;
+        padding: 8px;
+        margin: 4px 0;
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: #555;
+    `;
+
+    showMoreBtn.addEventListener('click', () => {
+        if (!expanded) {
+            // Show remaining posts
+            allPosts.slice(initialCount).forEach(post => {
+                postList.insertBefore(createPostElement(post), showMoreBtn);
+            });
+            showMoreBtn.textContent = '收起 Show Less';
+            expanded = true;
+        } else {
+            // Remove extra posts
+            const allPostElements = postList.querySelectorAll('.post');
+            allPostElements.forEach((el, index) => {
+                if (index >= initialCount) el.remove();
+            });
+            showMoreBtn.textContent = `展开更多 Show More (${allPosts.length - initialCount})`;
+            expanded = false;
+        }
+    });
+
+    postList.appendChild(showMoreBtn);
+}
 // function displayPosts.
+function createPostElement(post) {
+    const postElement = document.createElement('div');
+    postElement.classList.add('post');
+    postElement.style.cssText = `
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        cursor: pointer;
+    `;
+    postElement.addEventListener('click', () => {
+        window.location.href = `post-details.html?id=${post._id}`;
+    });
+
+    const textInfoContainer = document.createElement('div');
+    textInfoContainer.classList.add('text-info-container');
+    textInfoContainer.style.cssText = `
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    `;
+
+    const titleElement = document.createElement('h2');
+    titleElement.style.margin = '0 0 4px 0';
+    titleElement.style.fontSize = '1.1rem';
+
+    const titleLink = document.createElement('a');
+    titleLink.href = `post-details.html?id=${post._id}`;
+    titleLink.textContent = post.title;
+
+    const commentCountSpan = document.createElement('span');
+    commentCountSpan.textContent = ` ( ${post.totalComments})`;
+    commentCountSpan.style.fontWeight = 'normal';
+    titleLink.appendChild(commentCountSpan);
+    titleElement.appendChild(titleLink);
+
+    const authorDateElement = document.createElement('p');
+    authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
+    authorDateElement.style.cssText = 'margin: 0; font-size: 0.8rem; color: #666;';
+
+    textInfoContainer.appendChild(titleElement);
+    textInfoContainer.appendChild(authorDateElement);
+
+    const currentUserId = localStorage.getItem('userId');
+    if (currentUserId && post.author && post.author._id && currentUserId === post.author._id.toString()) {
+        const pinButton = document.createElement('button');
+        pinButton.textContent = post.pinned ? 'Unpin' : 'Pin';
+        pinButton.classList.add('pin-button');
+        pinButton.dataset.postId = post._id;
+        pinButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            pinUnpinPost(post._id, event.target);
+        });
+        textInfoContainer.appendChild(pinButton);
+    }
+
+    let mediaElement = null;
+    if (post.imageUrls && post.imageUrls.length > 0) {
+        mediaElement = document.createElement('img');
+        mediaElement.src = post.imageUrls[0];
+        mediaElement.alt = post.title;
+        mediaElement.classList.add('post-list-image');
+    } else if (post.videoUrls && post.videoUrls.length > 0) {
+        mediaElement = document.createElement('img');
+        mediaElement.src = post.videoUrls[0]
+            .replace('/upload/', '/upload/so_0/')
+            .replace(/\.(mp4|mov|avi|webm)$/i, '.jpg');
+        mediaElement.alt = post.title;
+        mediaElement.classList.add('post-list-image');
+    }
+
+    postElement.appendChild(textInfoContainer);
+    if (mediaElement) {
+        postElement.appendChild(mediaElement);
+    }
+
+    return postElement;
+}
+
 function displayPosts(posts) {
-    postList.innerHTML = ''; // Clear existing posts
+    postList.innerHTML = '';
     posts.forEach(post => {
-        const postElement = document.createElement('div');
-        postElement.classList.add('post');
-        postElement.style.cssText = `
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-			cursor: pointer;
-        `; // ✅ closing backtick and semicolon was missing
-		// ✅ Click anywhere on post to open it
-postElement.addEventListener('click', () => {
-    window.location.href = `post-details.html?id=${post._id}`;
-});
-
-        // --- Main Container for Content ---
-        const textInfoContainer = document.createElement('div');
-        textInfoContainer.classList.add('text-info-container');
-        textInfoContainer.style.cssText = `
-            flex: 1;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        `;
-
-        const titleElement = document.createElement('h2');
-        titleElement.style.margin = '0 0 4px 0';
-        titleElement.style.fontSize = '0.95rem';
-
-        const titleLink = document.createElement('a');
-        titleLink.href = `post-details.html?id=${post._id}`;
-        titleLink.textContent = post.title;
-
-        const commentCountSpan = document.createElement('span');
-        commentCountSpan.textContent = ` ( ${post.totalComments})`;
-        commentCountSpan.style.fontWeight = 'normal';
-        titleLink.appendChild(commentCountSpan);
-        titleElement.appendChild(titleLink);
-
-        const authorDateElement = document.createElement('p');
-        authorDateElement.textContent = `By: ${post.author.username} on ${formatDate(post.createdAt)}`;
-        authorDateElement.style.cssText = 'margin: 0; font-size: 0.8rem; color: #666;';
-
-        textInfoContainer.appendChild(titleElement);
-        textInfoContainer.appendChild(authorDateElement);
-
-        // Pin button
-        const currentUserId = localStorage.getItem('userId');
-        if (currentUserId && post.author && post.author._id && currentUserId === post.author._id.toString()) {
-            const pinButton = document.createElement('button');
-            pinButton.textContent = post.pinned ? 'Unpin' : 'Pin';
-            pinButton.classList.add('pin-button');
-            pinButton.dataset.postId = post._id;
-            pinButton.addEventListener('click', (event) => {
-    event.stopPropagation(); // ✅ prevent opening post detail page
-    pinUnpinPost(post._id, event.target);
-});
-            textInfoContainer.appendChild(pinButton);
-        }
-
-        // --- Right: image/video thumbnail ---
-        let mediaElement = null;
-        if (post.imageUrls && post.imageUrls.length > 0) {
-            mediaElement = document.createElement('img');
-            mediaElement.src = post.imageUrls[0];
-            mediaElement.alt = post.title;
-            mediaElement.classList.add('post-list-image');
-        } else if (post.videoUrls && post.videoUrls.length > 0) {
-            mediaElement = document.createElement('img');
-            mediaElement.src = post.videoUrls[0]
-                .replace('/upload/', '/upload/so_0/')
-                .replace(/\.(mp4|mov|avi|webm)$/i, '.jpg');
-            mediaElement.alt = post.title;
-            mediaElement.classList.add('post-list-image');
-        }
-
-        // --- Combine: text left, image right ---
-        postElement.appendChild(textInfoContainer);
-        if (mediaElement) {
-            postElement.appendChild(mediaElement);
-        }
-        postList.appendChild(postElement);
-
-    });  // <--- CLOSING CURLY BRACE for forEach LOOP
+        postList.appendChild(createPostElement(post));
+    });
 }
 // Function to display pagination controls
 function displayPagination(totalPages, currentPage) {
