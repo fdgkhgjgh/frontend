@@ -935,6 +935,11 @@ button[type="submit"]:disabled {
     color: #fff;
 }
 
+#post-details-container .post-body,
+#post-details-container .post-body * {
+    color: #222 !important;
+}
+
 #post-details-container h2 {
     color: #fff;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
@@ -978,4 +983,19 @@ button[type="submit"]:disabled {
 /* Add Comment label */
 label {
     color: #fff;
+}
+
+/* Fix post body content */
+.post-body {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #222 !important;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px 0 16px 0;
+}
+
+.post-body p,
+.post-body span,
+.post-body div {
+    color: #222 !important;
 }
