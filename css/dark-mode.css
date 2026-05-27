@@ -261,3 +261,13 @@ body.dark-mode {
     color: #eee !important;
 }
 
+.dark-mode .reply-button {
+    background-color: #2d7a2d !important;
+    color: white !important;
+    border-color: #2d7a2d !important;
+}
+
+.dark-mode .reply-button:hover {
+    background-color: #246024 !important;
+}
+
