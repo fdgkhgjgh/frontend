@@ -256,3 +256,8 @@ body.dark-mode {
     color: #f0a500 !important;
 }
 
+.dark-mode #post-details-container .post-body {
+    background: rgba(30, 30, 50, 0.95) !important;
+    color: #eee !important;
+}
+
