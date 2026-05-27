@@ -127,7 +127,6 @@ nav a:hover {
 /* content backgroud */
 .post-body {
   background: rgba(255, 255, 255, 0.95);
-    color: #222;
   border-radius: 8px;
   padding: 16px;
   margin: 8px 0 16px 0;
@@ -959,14 +958,6 @@ button[type="submit"]:disabled {
     color: #222 !important;
 }
 
-.comment-item p {
-    color: #222 !important;
-}
-
-.comment-item * {
-    color: #222 !important;
-}
-
 #comments-section {
     color: #fff;
 }
@@ -988,15 +979,6 @@ button[type="submit"]:disabled {
 /* Add Comment label */
 label {
     color: #fff;
-}
-
-/* Fix post body content */
-.post-body {
-    background: rgba(255, 255, 255, 0.95) !important;
-    color: #222 !important;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 8px 0 16px 0;
 }
 
 .post-body p,
