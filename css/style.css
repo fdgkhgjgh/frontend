@@ -872,7 +872,6 @@ button[type="submit"]:disabled {
     }
 
 }
-}
 
 #map-container {
     z-index: 1;
@@ -920,4 +919,39 @@ button[type="submit"]:disabled {
     0%   { box-shadow: 0 0 6px rgba(79, 70, 229, 0.6); }
     50%  { box-shadow: 0 0 16px rgba(79, 70, 229, 1), 0 0 30px rgba(79, 70, 229, 0.4); }
     100% { box-shadow: 0 0 6px rgba(79, 70, 229, 0.6); }
+}
+
+/* Post detail page text visibility */
+#post-details-container h2 {
+    color: #fff;
+}
+
+#post-details-container > p {
+    color: #ddd;
+}
+
+.post-body {
+    background: rgba(255, 255, 255, 0.92) !important;
+    color: #333 !important;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px 0 16px 0;
+}
+
+.comment-item {
+    background: rgba(255, 255, 255, 0.9) !important;
+}
+
+#comments-section h2 {
+    color: #fff;
+}
+
+/* Post list username/date */
+.post p {
+    color: #e0e0e0 !important;
+}
+
+.post {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
 }
