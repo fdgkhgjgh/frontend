@@ -327,7 +327,7 @@ if (createPostFormMain) {
             switch (state) {
                 case 'sending':
                     createPostButton.disabled = true;
-                    createPostButton.textContent = 'Sending...';
+                    createPostButton.textContent = '发送中Sending...';
                     buttonSpinner.style.display = 'inline-block';
                     buttonSuccessIcon.style.display = 'none';
                     break;
