@@ -1004,3 +1004,14 @@ label {
 .post-body div {
     color: #222 !important;
 }
+
+/* Comment and reply username color in day mode */
+.comment-item p a,
+.reply p a {
+    color: #c45c00;
+}
+
+.comment-item p a:hover,
+.reply p a:hover {
+    color: #a34800;
+}
