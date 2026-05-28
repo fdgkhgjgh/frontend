@@ -41,6 +41,10 @@ nav a, nav button {
   border: 1px solid #ccc;
   border-radius: 2px;
   background-color: #CCBBFF;
+  margin-bottom: 5px;   /* 你原本保留的边距 */
+  display: flex;        /* 开启 Flex 布局，强制让里面的子元素横向排列 */
+  justify-content: center; /* 让所有按钮在中间居中对齐 */
+  gap: 6px;             /* 按钮和按钮之间的横向间距，你可以根据喜好微调 */
 }
 
 nav button:hover,
