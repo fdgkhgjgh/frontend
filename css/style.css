@@ -213,18 +213,19 @@ textarea {
 }
 
 
-/* --- 优化后的评论单条容器 --- */
 .comment-item {
-  position: relative;     /* 必须保留：作为右上角数字定位的基准 */
-  padding: 12px 15px;     /* 重新调整内边距，给上下左右留出舒适的空间 */
+  position: relative;   
+  padding: 10px !important; /* 🌟 加上 !important，强行覆盖浏览器自带的所有默认边距 */
   margin-bottom: 5px;    
   border: 1px solid #ddd; 
   border-radius: 4px;    
   background: rgba(255, 255, 255, 0.9); 
   
-  /* 👇 核心新增：彻底去掉最右边/最左边的奇怪小黑点 */
+  /* 👇 再加两行保险锁，彻底清除由于列表标签（li/ul）带来的左侧隐形空白 */
+  padding-left: 12px !important; 
   list-style: none !important; 
 }
+
 
 /* --- 移动到右上角的评论楼数 --- */
 .comment-number {
