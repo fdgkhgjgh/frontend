@@ -703,7 +703,7 @@ if (comment.videoUrls && comment.videoUrls.length > 0) {
         downloadBtn.href = downloadableVideoUrl;
         downloadBtn.setAttribute('download', 'comment-video.mp4');
         downloadBtn.target = '_blank';
-        downloadBtn.textContent = '⬇ Download Video';
+        downloadBtn.textContent = '⬇ 下载此视频';
         downloadBtn.classList.add('download-btn');
         // ---------------------------
 
