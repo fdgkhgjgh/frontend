@@ -242,6 +242,12 @@ textarea {
   padding: 10px;
 }
 
+/* Bigger font size in comment and reply textareas */
+#comment-text,
+.reply-textarea {
+    font-size: 1rem;
+}
+
 /* Style for reply button */
 .reply-button {
   background-color: #2d7a2d;
