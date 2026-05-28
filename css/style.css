@@ -1029,3 +1029,25 @@ label {
 .reply p a:hover {
     color: #FF923F;
 }
+
+/* ==========================================================================
+   帖子详情页（Post Detail）：用户名在白天和夜间模式下统一改为橙色
+   ========================================================================== */
+
+/* 1. 强行锁定白天和夜间模式下的颜色为深橙色 */
+#post-details-container .post .post-content p a,
+.dark-mode #post-details-container .post .post-content p a,
+[class*="dark"] #post-details-container .post .post-content p a {
+    color: #d97706 !important;   /* 使用与主页标题一致的饱满深橙色 */
+    font-weight: bold;           /* 适当加粗，让用户名更明显 */
+    text-decoration: none;       /* 默认去掉下划线 */
+}
+
+/* 2. 鼠标悬停时的效果（稍微变深并加上下划线） */
+#post-details-container .post .post-content p a:hover,
+.dark-mode #post-details-container .post .post-content p a:hover,
+[class*="dark"] #post-details-container .post .post-content p a:hover {
+    color: #b45309 !important;   /* 悬停时变为更深的琥珀橙 */
+    text-decoration: underline;  /* 悬停时显示下划线 */
+}
+
