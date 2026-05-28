@@ -12,7 +12,7 @@ body {
 }
 
 header {
-  background-color: #4D944D;
+  background-color: #3F7F3F;
   padding: 1px;
   text-align: center;
 }
@@ -698,7 +698,7 @@ button[type="submit"]:disabled {
 
 /* Style usernames in comments (day mode) */
 .comment-item a {
-  color: rgb(255, 244, 79); /* Set to your desired color for day mode */
+  color: rgb(255, 146, 63); /* Set to your desired color for day mode */
   text-decoration: none; /* Remove underline */
 }
 
@@ -709,7 +709,7 @@ button[type="submit"]:disabled {
 
 /* Style usernames in replies (day mode) */
 .reply a {
-  color: rgb(255, 244, 79); /* Set to your desired color for day mode */
+  color: rgb(255, 146, 63); /* Set to your desired color for day mode */
   text-decoration: none; /* Remove underline */
 }
 
@@ -989,10 +989,10 @@ label {
 /* Comment and reply username color in day mode */
 .comment-item p a,
 .reply p a {
-    color: #FFF44F;
+    color: #FF923F;
 }
 
 .comment-item p a:hover,
 .reply p a:hover {
-    color: #FFF44F;
+    color: #FF923F;
 }
