@@ -638,7 +638,7 @@ button[type="submit"]:disabled {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 2em;
+  font-size: 4em;
   color: white;
   opacity: 0.9;
   cursor: pointer;
@@ -1081,6 +1081,29 @@ label {
     font-size: 20px !important;
     font-weight: bold !important;
     padding: 8px 16px !important;
+}
+
+/* ==========================================================================
+   强制纠正：确保视频播放三角形图标在任何模式下都是白色
+   ========================================================================== */
+
+/* 1. 强行锁定白天模式和夜间模式下的播放图标为白色 */
+.video-thumbnail-container .video-play-icon,
+.dark-mode .video-thumbnail-container .video-play-icon,
+[class*="dark"] .video-thumbnail-container .video-play-icon {
+    color: #ffffff !important;        /* 🌟 核心：强制改为纯白色 */
+    opacity: 0.95 !important;         /* 略微调高一点不透明度，让它更亮 */
+    
+    /* 强力黑色文字阴影：即便在很亮的白色视频背景上，有了这层黑阴影，白色三角形也绝对能看清 */
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 4px rgba(0, 0, 0, 1) !important; 
+}
+
+/* 2. 鼠标悬停在视频上时，让三角形稍微放大或变得100%纯白，增加动态交互感 */
+.video-thumbnail-container:hover .video-play-icon {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) scale(1.1) !important; /* 保持居中的同时放大 1.1 倍 */
+    transition: all 0.2s ease;
 }
 
 
