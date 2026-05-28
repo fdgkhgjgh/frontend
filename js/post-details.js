@@ -824,12 +824,12 @@ commentsList.addEventListener('click', (event) => {
         const replyToUserId = event.target.dataset.replyToUserId || null;
         const replyToUsername = event.target.dataset.replyToUsername || null;
         
-        showReplyForm(commentId, replyToUserId, replyToUsername); 
+        showReplyForm(commentId, replyToUserId, replyToUsername, event.target);
     }
 });
 
 // Update showReplyForm to accept those parameters
-function showReplyForm(commentId, replyToUserId = null, replyToUsername = null) {
+function showReplyForm(commentId, replyToUserId = null, replyToUsername = null, clickedButton = null) {
     // Check if form already exists to avoid duplication
     const repliesContainer = document.getElementById(`replies-${commentId}`);
     const existingForm = repliesContainer.querySelector('.reply-form');
@@ -863,7 +863,12 @@ function showReplyForm(commentId, replyToUserId = null, replyToUsername = null) 
         }
     }
 
+    // ✅ Insert right after clicked button
+if (clickedButton) {
+    clickedButton.insertAdjacentElement('afterend', replyForm);
+} else {
     repliesContainer.appendChild(replyForm);
+}
 
     replyForm.addEventListener('submit', async (e) => {
         e.preventDefault();
