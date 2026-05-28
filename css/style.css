@@ -469,6 +469,7 @@ button[type="submit"]:disabled {
 #add-comment-button {
   background-color: #4CAF50; /* Or your preferred color */
   color: blue;
+  font-size: 1.4rem;
   padding: 7px 14px;
   border: none;
   border-radius: 6px;
