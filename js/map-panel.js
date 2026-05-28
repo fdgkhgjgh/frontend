@@ -46,22 +46,22 @@ function initMap() {
     );
 
     // Amap for China detail
-    const amapLayer = L.tileLayer(
-        `https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}&key=${AMAP_KEY}`,
-        {
-            subdomains: ['1', '2', '3', '4'],
-            maxZoom: 18,
-            attribution: '© 高德地图'
-        }
-    );
+    // const amapLayer = L.tileLayer(
+        // `https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}&key=${AMAP_KEY}`,
+        // {
+           // subdomains: ['1', '2', '3', '4'],
+           // maxZoom: 18,
+           // attribution: '© 高德地图'
+       // }
+   // );
 
     // ✅ Yandex as default
     yandexLayer.addTo(map);
 
-    L.control.layers({
-        'World Map (Yandex)': yandexLayer,
-        'China Map (Amap)': amapLayer
-    }).addTo(map);
+   // L.control.layers({
+       // 'World Map (Yandex)': yandexLayer,
+       // 'China Map (Amap)': amapLayer
+   // }).addTo(map);
 
     map.on('baselayerchange', (e) => {
     if (e.name.includes('Amap') || e.name.includes('China')) {
