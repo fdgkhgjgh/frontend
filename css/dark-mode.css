@@ -197,12 +197,16 @@ body.dark-mode {
     background-color: #0a0a1a;
 }
 
-[class*="dark"] .view-more-replies-button,
-[class*="dark"] .show-more-btn {
+/* This targets the buttons in dark mode more reliably and uses a legible light blue */
+body[class*="dark"] .view-more-replies-button,
+body[class*="dark"] .show-more-btn,
+.dark-mode .view-more-replies-button,
+.dark-mode .show-more-btn {
     background: rgba(0, 0, 0, 0.7) !important;
-    color: #007BFF !important;
+    color: #8AB4F8 !important; /* Changed to a bright, readable pastel blue for dark mode */
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
+
 
 
 /* Comment and reply username color in dark mode */
