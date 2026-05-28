@@ -228,14 +228,21 @@ textarea {
     color: #fff;
 }
 
+/* 修改后的评论数字样式：调大字号并确保可见 */
 .comment-number {
   position: absolute;
-  left: 0;
-  top: 0;
-  font-size: 0.8em;
-  color: #777;
-  padding: 10px;
+  left: 6px;            /* 稍微往右挪一点，防止贴边剪切 */
+  top: 6px;             /* 稍微往下挪一点，更美观 */
+  padding: 0;           /* 清除默认多余的 padding */
+  
+  /* 👇 核心修改：放大字体 */
+  font-size: 1.15rem;   /* 从原来的 0.8em 大幅放大，你可以根据效果微调 */
+  font-weight: bold;    /* 加粗，让数字更显眼 */
+  
+  /* 👇 核心修改：解决看不见的问题（采用高对比度颜色） */
+  color: #333333 !important; /* 白天模式下使用醒目的深灰色 */
 }
+
 
 /* Bigger font size in comment and reply textareas */
 #comment-text,
