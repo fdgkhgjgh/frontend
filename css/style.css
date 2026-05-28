@@ -243,6 +243,25 @@ textarea {
   color: #333333 !important; 
 }
 
+/* ==========================================================================
+   终极修复：彻底清除白天模式下评论列表左侧的顽固空白
+   ========================================================================== */
+
+/* 1. 抓取包裹评论的列表容器，强行清空浏览器默认自带的左侧 40px 内边距 */
+#comments-section ul,
+.comment-list, 
+ul#comments-list {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    list-style: none !important;
+}
+
+/* 2. 规范每一条评论的内部边距，确保白天黑夜完全一致且对称 */
+.comment-item {
+    padding: 12px 15px !important; /* 上下 12px，左右 15px 完美对称 */
+}
+
+
 
 #comments-section h2 {
     color: #fff;
