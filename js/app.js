@@ -111,7 +111,7 @@ showMoreBtn.style.cssText = `
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.85rem;
-    color: #66B3FF;
+    color: #66B3FF !important;
     `;
 
     showMoreBtn.addEventListener('click', () => {
