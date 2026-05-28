@@ -503,7 +503,7 @@ async function updateHeader() {
         userLink.href = `profile.html?id=${userId}`; // Set the link to profile.html with the user's ID
         userLink.textContent = username; // The username is the link text
 
-        usernameDisplay.textContent = 'Logged in as: ';  //Text before link
+        usernameDisplay.textContent = '登录为: ';  //Text before link
         usernameDisplay.appendChild(userLink);           // Put link in the span.
 
         // Create a red notification badge if unreadCount > 0
