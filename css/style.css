@@ -185,16 +185,6 @@ nav a:hover {
   color: #f44336; /* Keep, adjust, or remove */
 }
 
-.delete-button {
-  margin-top: auto; /* Push the delete button to the bottom */
-  align-self: flex-start; /* Align to the start (left) of its container */
-  background-color: #f44336;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
 /* --- Form Styles (General) --- */
 form {
@@ -253,12 +243,29 @@ textarea {
   background-color: #2d7a2d;
   color: white;
   border: 1px solid #ccc;
-  padding: 2px 4px;
+  padding: 1px 2px;     /* 统一的大小 */
   cursor: pointer;
   border-radius: 3px;
-  font-size: 14px;
+  font-size: 9px;       /* 统一的字号 */
   margin-top: 5px;
 }
+
+/* Style for delete button */
+.delete-button {
+  margin-top: auto; 
+  align-self: flex-start; 
+  background-color: #f44336;
+  color: white;
+  border: 1px solid #ccc; /* 建议加上和回复按钮一样的边框，否则肉眼看大小会差 1 像素 */
+  
+  /* 👇 以下两行已修改为 reply-button 的数值 */
+  padding: 1px 2px;       
+  font-size: 9px;         
+  
+  border-radius: 3px;     /* 圆角也统一改为 3px 看起来更一致 */
+  cursor: pointer;
+}
+
 
 .reply-button:hover {
     background-color: #246024;
