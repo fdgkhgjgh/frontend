@@ -26,10 +26,11 @@ h1 {
     -2px  2px 0 #2d5a1b,
      2px  2px 0 #2d5a1b;
   letter-spacing: 3px;
+  margin: 0;
 }
 
 nav {
-  margin-bottom: 5px;
+  margin-bottom: 1px;
 }
 
 nav a, nav button {
