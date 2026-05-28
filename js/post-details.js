@@ -718,7 +718,7 @@ if (comment.videoUrls && comment.videoUrls.length > 0) {
         const currentUserId = localStorage.getItem('userId');
         if (currentUserId && currentUserId === comment.author?._id.toString()) {
             const deleteButton = document.createElement('button');
-            deleteButton.textContent = "Delete";
+            deleteButton.textContent = "删除delete";
             deleteButton.classList.add('delete-button');
             deleteButton.addEventListener('click', () => {
                 deleteComment(comment._id, commentItem)
