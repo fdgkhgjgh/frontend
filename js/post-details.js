@@ -843,7 +843,7 @@ function showReplyForm(commentId, replyToUserId = null, replyToUsername = null, 
     replyTextarea.classList.add('reply-textarea');
     replyTextarea.rows = 3;
     // 🌟 Make the placeholder clear about who they are replying to
-    replyTextarea.placeholder = replyToUsername ? `Replying to @${replyToUsername}...` : '点此写下您的评论...';
+    replyTextarea.placeholder = replyToUsername ? `Replying to @${replyToUsername}...` : '点此写下您的回复...';
     replyForm.appendChild(replyTextarea);
 
     const replyButton = document.createElement('button');
