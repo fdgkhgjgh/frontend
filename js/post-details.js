@@ -834,6 +834,7 @@ function showReplyForm(commentId, replyToUserId = null, replyToUsername = null, 
     if (existingForm) {
         existingForm.remove();
         return; //
+    }
 
     const replyForm = document.createElement('form');
     replyForm.classList.add('reply-form');
