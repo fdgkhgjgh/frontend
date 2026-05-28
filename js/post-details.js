@@ -978,7 +978,7 @@ async function loadReplies(commentId, repliesContainer) {
             const currentUserId = localStorage.getItem('userId');
             if (currentUserId && currentUserId === reply.author?._id.toString()) {
                 const deleteButton = document.createElement('button');
-                deleteButton.textContent = '删除Delete';
+                deleteButton.textContent = '删除delete';
                 deleteButton.classList.add('delete-button');
                 deleteButton.addEventListener('click', () => {
                     deleteReply(reply._id, replyElement, commentId);
@@ -989,7 +989,7 @@ async function loadReplies(commentId, repliesContainer) {
             // 🌟 NEW: Add a Reply Button to this sub-reply item!
             const subReplyButton = document.createElement('button');
             subReplyButton.classList.add('reply-button', 'sub-reply-btn');
-            subReplyButton.textContent = '回复Reply';
+            subReplyButton.textContent = '回复reply';
             // Crucial: The commentId remains the top-level parent ID so it stays in this column!
             subReplyButton.dataset.commentId = commentId; 
             subReplyButton.dataset.replyToUserId = reply.author?._id;
