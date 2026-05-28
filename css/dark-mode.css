@@ -198,7 +198,7 @@ body.dark-mode {
 }
 
 .dark-mode .show-more-btn {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
     color: #aaa !important;
     border-color: rgba(255, 255, 255, 0.15) !important;
 }
