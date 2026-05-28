@@ -1075,3 +1075,11 @@ label {
     text-decoration: underline;  /* 悬停时显示下划线 */
 }
 
+/* 放大注册页面提交按钮的字体 */
+#register-form button[type="submit"] {
+    font-size: 20px !important;   /* 👈 20px 是比较大的字体，你可以根据需要改成 18px 或 24px */
+    font-weight: bold !important; /* 让字体加粗，看起来更醒目 */
+    padding: 8px 16px !important; /* 顺便把按钮的上下厚度撑开一点，更配大字体 */
+}
+
+
