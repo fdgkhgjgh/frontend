@@ -693,12 +693,12 @@ button[type="submit"]:disabled {
 
 /* Style usernames in post detail page */
 #post-details-container .post .post-content p a {
-  color: rgb(255, 245, 190); /* Or your desired color for day mode */
+  color: rgb(255, 244, 79); /* Or your desired color for day mode */
 }
 
 /* Style usernames in comments (day mode) */
 .comment-item a {
-  color: rgb(255, 245, 190); /* Set to your desired color for day mode */
+  color: rgb(255, 244, 79); /* Set to your desired color for day mode */
   text-decoration: none; /* Remove underline */
 }
 
@@ -709,7 +709,7 @@ button[type="submit"]:disabled {
 
 /* Style usernames in replies (day mode) */
 .reply a {
-  color: rgb(255, 245, 190); /* Set to your desired color for day mode */
+  color: rgb(255, 244, 79); /* Set to your desired color for day mode */
   text-decoration: none; /* Remove underline */
 }
 
@@ -989,10 +989,10 @@ label {
 /* Comment and reply username color in day mode */
 .comment-item p a,
 .reply p a {
-    color: #c45c00;
+    color: #FFF44F;
 }
 
 .comment-item p a:hover,
 .reply p a:hover {
-    color: #a34800;
+    color: #FFF44F;
 }
