@@ -213,34 +213,38 @@ textarea {
 }
 
 
-/*Comment list*/
+/* --- 优化后的评论单条容器 --- */
 .comment-item {
-  position: relative;   /* For positioning the comment number */
-  padding: 10px;          /* Add some padding around the comment content */
-  margin-bottom: 5px;    /* Add space between comments */
-  border: 1px solid #ddd; /* Add a subtle border */
-  border-radius: 4px;    /* Optional: Round the corners */
-  background: rgba(255, 255, 255, 0.9); /* Optional: Light background color */
-  padding-left: 35px;
+  position: relative;     /* 必须保留：作为右上角数字定位的基准 */
+  padding: 12px 15px;     /* 重新调整内边距，给上下左右留出舒适的空间 */
+  margin-bottom: 5px;    
+  border: 1px solid #ddd; 
+  border-radius: 4px;    
+  background: rgba(255, 255, 255, 0.9); 
+  
+  /* 👇 核心新增：彻底去掉最右边/最左边的奇怪小黑点 */
+  list-style: none !important; 
 }
+
+/* --- 移动到右上角的评论楼数 --- */
+.comment-number {
+  position: absolute;
+  /* 👇 核心修改：从左上角挪到右上角 */
+  right: 12px;          /* 距离右边框 12 像素 */
+  top: 10px;            /* 距离顶边框 10 像素 */
+  left: auto;           /* 🌟 必须加这行！强行清除之前设置的 left: 0，否则位置会错乱 */
+  
+  padding: 0;          
+  font-size: 1.15rem;   /* 保持你之前要的放大字号 */
+  font-weight: bold;    /* 保持加粗 */
+  
+  /* 👇 核心修改：白天模式下的深色字体 */
+  color: #333333 !important; 
+}
+
 
 #comments-section h2 {
     color: #fff;
-}
-
-/* 修改后的评论数字样式：调大字号并确保可见 */
-.comment-number {
-  position: absolute;
-  left: 6px;            /* 稍微往右挪一点，防止贴边剪切 */
-  top: 6px;             /* 稍微往下挪一点，更美观 */
-  padding: 0;           /* 清除默认多余的 padding */
-  
-  /* 👇 核心修改：放大字体 */
-  font-size: 1.15rem;   /* 从原来的 0.8em 大幅放大，你可以根据效果微调 */
-  font-weight: bold;    /* 加粗，让数字更显眼 */
-  
-  /* 👇 核心修改：解决看不见的问题（采用高对比度颜色） */
-  color: #333333 !important; /* 白天模式下使用醒目的深灰色 */
 }
 
 
