@@ -832,8 +832,10 @@ commentsList.addEventListener('click', (event) => {
 function showReplyForm(commentId, replyToUserId = null, replyToUsername = null, clickedButton = null) {
     // Check if form already exists to avoid duplication
     const repliesContainer = document.getElementById(`replies-${commentId}`);
-    const existingForm = repliesContainer.querySelector('.reply-form');
-    if (existingForm) existingForm.remove();
+    const existingForm = document.querySelector(`.reply-form[data-comment-id="${commentId}"]`);
+    if (existingForm) {
+        existingForm.remove();
+        return; //
 
     const replyForm = document.createElement('form');
     replyForm.classList.add('reply-form');
