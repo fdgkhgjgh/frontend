@@ -99,7 +99,7 @@ function displayPostsWithShowMore(posts) {
     if (allPosts.length <= initialCount) return;
 
     const showMoreBtn = document.createElement('button');
-    showMoreBtn.textContent = `展开更多 Show More (${allPosts.length - initialCount})`;
+    showMoreBtn.textContent = `展开更多帖子Show More (${allPosts.length - initialCount})`;
     showMoreBtn.classList.add('show-more-btn');
 showMoreBtn.style.cssText = `
     display: block;
