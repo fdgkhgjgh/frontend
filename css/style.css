@@ -1106,5 +1106,27 @@ label {
     transition: all 0.2s ease;
 }
 
+/* ==========================================================================
+   白天模式特供：美化视频下载按钮的字体颜色
+   ========================================================================== */
+
+/* 1. 静态状态：白天模式下，把下载按钮改成高级的深蓝色或绿色 */
+.download-btn {
+    color: #e65100 !important;        /* 🌟 白天用深蓝色，看起来像一个标准的、权威的下载链接 */
+    text-decoration: none !important;  /* 去掉下划线 */
+    font-size: 14px !important;       
+    display: inline-block !important;
+    margin-left: 8px !important;      
+    font-weight: 500 !important;      /* 稍微加粗一点点，更好看 */
+    transition: color 0.2s ease !important; 
+}
+
+/* 2. 交互状态：鼠标悬停或手指按住时，变成更亮眼的蓝色，并加上下划线 */
+.download-btn:hover {
+    color: #004499 !important;        /* 🌟 悬停时变成更深的科技蓝 */
+    text-decoration: underline !important; 
+}
+
+
 
 
