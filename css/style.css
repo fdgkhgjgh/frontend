@@ -999,7 +999,7 @@ button[type="submit"]:disabled {
 
 /* Post list username/date */
 .post p {
-    color: #e0e0e0 !important;
+    color: #888888 !important;
 }
 
 .post {
