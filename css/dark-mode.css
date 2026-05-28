@@ -310,5 +310,26 @@ body[class*="dark"] .show-more-btn,
     text-decoration: underline; /* 悬停时显示下划线 */
 }
 
+/* ==========================================================================
+   夜间模式特供：修复视频下载按钮的字体颜色
+   ========================================================================== */
+
+/* 1. 强行把下载按钮的颜色改成醒目的橙色 */
+.download-btn {
+    color: #ff9800 !important;        /* 🌟 改为明亮的橙色，在暗色背景下非常显眼 */
+    text-decoration: none !important;  /* 去掉下划线，让它更像一个干净的按钮 */
+    font-size: 14px !important;       /* 规范一下字体大小 */
+    display: inline-block !important;
+    margin-left: 8px !important;      /* 稍微和视频缩略图隔开一点距离 */
+    transition: color 0.2s ease !important; /* 增加过渡动画，让变色更柔和 */
+}
+
+/* 2. 补全这里：当鼠标悬停或手指按住下载按钮时，变成更亮发光的浅黄色 */
+.download-btn:hover {
+    color: #ffd54f !important;        /* 🌟 变成明亮的浅黄，提示用户“可以点击” */
+    text-decoration: underline !important; /* 悬停时加上下划线，增强视觉反馈 */
+}
+
+
 
 
