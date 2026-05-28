@@ -284,3 +284,28 @@ body[class*="dark"] .show-more-btn,
     background: rgba(30, 30, 50, 0.95) !important;
     color: #eee !important;
 }
+
+/* ==========================================================================
+   夜间模式下：username and date on postlist主页帖子列表用户名和日期的灰白色设置
+   ========================================================================== */
+
+/* 同时兼容类名为 .dark-mode 或包含 dark 的情况 */
+.dark-mode .post p,
+[class*="dark"] .post p {
+    color: #dddddd !important; /* 核心：将段落文字（包含日期）改为柔和的灰白色 */
+}
+
+/* 确保如果用户名是可点击的链接（a标签），在夜间模式下也同步变为灰白色 */
+.dark-mode .post p a,
+[class*="dark"] .post p a {
+    color: #dddddd !important;
+    text-decoration: none;    /* 默认不显示下划线 */
+}
+
+/* 鼠标悬停在用户名上时，稍微变亮一点（变成纯白），增加互动感 */
+.dark-mode .post p a:hover,
+[class*="dark"] .post p a:hover {
+    color: #ffffff !important;
+    text-decoration: underline; /* 悬停时显示下划线 */
+}
+
