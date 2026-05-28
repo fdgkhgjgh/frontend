@@ -790,7 +790,7 @@ postDetailsContainer.addEventListener('click', async (event) => {
 async function deleteComment(commentId, commentElement) {
     const postId = new URLSearchParams(window.location.search).get('id');
     // *** ADD CONFIRMATION DIALOG HERE ***
-    const confirmDelete = confirm("Are you sure you want to delete this comment?");
+    const confirmDelete = confirm("您确定删除这条评论吗delete this comment?");
     if (!confirmDelete) {
         return; // If the user cancels, exit the function
     }
@@ -1022,7 +1022,7 @@ async function loadReplies(commentId, repliesContainer) {
 
 //delete reply
 async function deleteReply(replyId, replyElement, commentId) {
-    if (!confirm('Delete this reply?')) return;
+    if (!confirm('删除这条回复？Delete this reply?')) return;
 
     try {
         const token = localStorage.getItem('token');
