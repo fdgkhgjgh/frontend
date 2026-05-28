@@ -338,25 +338,20 @@ textarea {
 }
 
 
+
   nav a,
-
   nav button {
-
-      display: block;
-
-      width: 100%;
-
-      box-sizing: border-box;
-
-      margin: 0;
-
-      margin-bottom: 1px;
-
-      padding: 5px 2px;
-
-      font-size: 16px;
+      display: inline-block;    /* 允许横向排列并设置宽高 */
+      box-sizing: border-box;   /* 防止边框撑大按钮 */
+      flex: 1;                  /* 🌟 核心：让三个按钮自动、平均地平分这一行的宽度 */
+      max-width: 110px;         /* 限制最大宽度，防止在稍大一点的手机屏幕上被拉得太长变形 */
+      padding: 6px 2px;         /* 稍微缩减左右内边距，确保手机窄屏下文字不会挤出边界 */
+      font-size: 13px;          /* 稍微调小一点字号，保证“注册账号(Register)”等长文字能在一行放下 */
+      text-align: center;       /* 文字和 Emoji 严格居中 */
+      margin: 0;                /* 清除之前的纵向 margin，防止高低不平 */
   }
 }
+
 
 @media (max-width: 600px) {
   .modal-content {
