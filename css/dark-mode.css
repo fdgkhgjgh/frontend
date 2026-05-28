@@ -310,3 +310,24 @@ body[class*="dark"] .show-more-btn,
     text-decoration: underline; /* 悬停时显示下划线 */
 }
 
+/* ==========================================================================
+   终极修复：彻底拔除夜间模式下视频播放图标周围的“长方形阴影/黑块”
+   ========================================================================== */
+
+.video-thumbnail-container .video-play-icon,
+.dark-mode .video-thumbnail-container .video-play-icon,
+[class*="dark"] .video-thumbnail-container .video-play-icon {
+    /* 1. 强行剥离可能被污染的背景色，恢复透明，干掉长方形块 */
+    background: transparent !important;
+    background-color: transparent !important;
+    
+    /* 2. 强行清除多余的盒阴影（防止有些地方误写了 box-shadow） */
+    box-shadow: none !important;
+    border: none !important;
+
+    /* 3. 只保留纯粹的、贴着三角形边缘的滤镜或文字发光阴影 */
+    color: #ffffff !important;
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.7)) !important; /* 🌟 现代浏览器最完美的贴边阴影方案 */
+}
+
+
