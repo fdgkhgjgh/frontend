@@ -77,14 +77,15 @@ textarea {
   position: relative; /* To contain absolute positioned comment numbers */
 }
 
-/*Style of comment number*/
-.dark-mode .comment-number{
-color: #999; /* Adjust the color for dark mode */
-position: absolute; /* Positioning the number */
-top: 5px;
-left: 5px;
-font-size: 0.8em;
+/* ==========================================================================
+   夜间模式下：评论区数字（12345...）的颜色适配
+   ========================================================================== */
+.dark-mode .comment-number,
+[class*="dark"] .comment-number {
+    color: #ffb74d !important; /* 夜间模式下变成明亮的琥珀橙色，极其清晰且好看 */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.6); /* 稍微加点阴影，质感更好 */
 }
+
 
 .dark-mode .comments-section li:last-child {
   border-bottom: none;
