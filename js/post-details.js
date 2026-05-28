@@ -848,7 +848,7 @@ function showReplyForm(commentId, replyToUserId = null, replyToUsername = null) 
 
     const replyButton = document.createElement('button');
     replyButton.type = 'submit';
-    replyButton.innerHTML = `Submit Reply <span id="reply-button-spinner" style="display: none;">&#x21bb;</span>`;
+    replyButton.innerHTML = `发送回复Reply <span id="reply-button-spinner" style="display: none;">&#x21bb;</span>`;
     replyForm.appendChild(replyButton);
 
     const replyButtonSpinner = replyForm.querySelector('#reply-button-spinner');
@@ -856,10 +856,10 @@ function showReplyForm(commentId, replyToUserId = null, replyToUsername = null) 
     function setReplyButtonState(state) {
         if (state === 'sending') {
             replyButton.disabled = true;
-            replyButton.textContent = 'Sending...';
+            replyButton.textContent = '发送中...';
         } else {
             replyButton.disabled = false;
-            replyButton.innerHTML = `Submit Reply <span id="reply-button-spinner" style="display: none;">&#x21bb;</span>`;
+            replyButton.innerHTML = `发送回复Reply <span id="reply-button-spinner" style="display: none;">&#x21bb;</span>`;
         }
     }
 
