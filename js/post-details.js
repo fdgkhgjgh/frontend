@@ -211,7 +211,9 @@ modalImageContainer.addEventListener('touchstart', (e) => {
 }, { passive: true });
 
 modalImageContainer.addEventListener('touchend', (e) => {
-    if (e.touches.length > 0 || e.changedTouches.length > 1) return;
+    if (e.touches.length > 0) return;
+    if (e.changedTouches.length > 1) return;
+    if (swipeTouchStartX === -1) return;
     const swipeTouchEndX = e.changedTouches[0].clientX;
     const diffX = swipeTouchStartX - swipeTouchEndX;
     if (Math.abs(diffX) > 50) { // swipe at least 50px
@@ -1165,7 +1167,9 @@ modalImageContainer.addEventListener('touchstart', (e) => {
 }, { passive: true });
 
 modalImageContainer.addEventListener('touchend', (e) => {
-    if (e.touches.length > 0 || e.changedTouches.length > 1) return;
+    if (e.touches.length > 0) return;
+    if (e.changedTouches.length > 1) return;
+    if (swipeTouchStartX === -1) return;
     const swipeTouchEndX = e.changedTouches[0].clientX;
     const diffX = swipeTouchStartX - swipeTouchEndX;
     if (Math.abs(diffX) > 50) { // swipe at least 50px
