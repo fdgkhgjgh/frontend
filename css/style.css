@@ -1127,18 +1127,6 @@ label {
     text-decoration: underline !important; 
 }
 
-/* ==========================================================================
-   白天模式：全网通缉视频关闭按钮，防死黑美化
-   ========================================================================== */
-
-[class*="close" i], 
-[id*="close" i],
-button:has(i[class*="close"]),
-.modal button,
-.modal span {
-    color: #333333 !important;         /* 白天变成有质感的深灰 */
-    background-color: rgba(0, 0, 0, 0.08) !important; /* 给它一层淡淡的黑圈底色 */
-}
 
 
 
