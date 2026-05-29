@@ -1,7 +1,7 @@
 // dm.js
-const SUPABASE_URL = 'https://brxbaaxhzflqwmkfieid.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGJhYXhoemZscXdta2ZpZWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MzU0MzcsImV4cCI6MjA5NTExMTQzN30.iVKmvcUAYsI_-MzGrFEkF7KNxfQBsKCD1zkkyd8xPSI';
-const API_BASE = 'https://api.mless.cc.cd/api';
+const DM_SUPABASE_URL = 'https://brxbaaxhzflqwmkfieid.supabase.co';
+const DM_SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGJhYXhoemZscXdta2ZpZWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MzU0MzcsImV4cCI6MjA5NTExMTQzN30.iVKmvcUAYsI_-MzGrFEkF7KNxfQBsKCD1zkkyd8xPSI';
+const DM_API_BASE = 'https://api.mless.cc.cd/api';
 
 let dmSupabase = null;
 let dmChannel = null;
@@ -18,7 +18,7 @@ function getDMUser() {
 
 function initDMSupabase() {
     if (!dmSupabase) {
-        dmSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+        dmSupabase = window.supabase.createClient(DM_SUPABASE_URL, DM_SUPABASE_ANON);
     }
 }
 
@@ -48,7 +48,7 @@ async function loadDMUserList() {
     userListEl.innerHTML = '<p style="color:#888; font-size:0.85rem; padding:8px;">Loading...</p>';
 
     try {
-        const response = await fetch(`${API_BASE}/auth/users`, {
+        const response = await fetch(`${DM_API_BASE}/auth/users`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         const users = await response.json();
