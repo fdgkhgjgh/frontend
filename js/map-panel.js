@@ -1,7 +1,7 @@
 // map-panel.js
 // Supabase config
-const SUPABASE_URL = 'https://brxbaaxhzflqwmkfieid.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGJhYXhoemZscXdta2ZpZWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MzU0MzcsImV4cCI6MjA5NTExMTQzN30.iVKmvcUAYsI_-MzGrFEkF7KNxfQBsKCD1zkkyd8xPSI';
+const MAP_SUPABASE_URL = 'https://brxbaaxhzflqwmkfieid.supabase.co';
+const MAP_SUPABASE_ANON = 'eyJ...';
 const AMAP_KEY = 'd22286ac342a5152d00afbb62674e814';
 
 let map = null;
