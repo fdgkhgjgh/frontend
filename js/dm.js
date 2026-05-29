@@ -51,7 +51,8 @@ async function loadDMUserList() {
         const response = await fetch(`${DM_API_BASE}/auth/users`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
-        const users = await response.json();
+        const data = await response.json();
+const users = Array.isArray(data) ? data : [];
 
         userListEl.innerHTML = '';
 
