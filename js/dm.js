@@ -1,0 +1,310 @@
+// dm.js
+const SUPABASE_URL = 'https://brxbaaxhzflqwmkfieid.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJyeGJhYXhoemZscXdta2ZpZWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MzU0MzcsImV4cCI6MjA5NTExMTQzN30.iVKmvcUAYsI_-MzGrFEkF7KNxfQBsKCD1zkkyd8xPSI';
+const API_BASE = 'https://api.mless.cc.cd/api';
+
+let dmSupabase = null;
+let dmChannel = null;
+let currentChatUserId = null;
+let currentChatUsername = null;
+let dmPanelOpen = false;
+
+function getDMUser() {
+    return {
+        userId: localStorage.getItem('userId'),
+        username: localStorage.getItem('username')
+    };
+}
+
+function initDMSupabase() {
+    if (!dmSupabase) {
+        dmSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    }
+}
+
+// Toggle DM panel open/close
+function toggleDMPanel() {
+    initDMSupabase();
+    const panel = document.getElementById('dm-panel');
+    const overlay = document.getElementById('dm-overlay');
+    dmPanelOpen = !dmPanelOpen;
+
+    if (dmPanelOpen) {
+        panel.style.display = 'flex';
+        overlay.style.display = 'block';
+        loadDMUserList();
+        subscribeUnread();
+    } else {
+        panel.style.display = 'none';
+        overlay.style.display = 'none';
+        if (dmChannel) dmChannel.unsubscribe();
+    }
+}
+
+// Load all users from backend
+async function loadDMUserList() {
+    const { userId } = getDMUser();
+    const userListEl = document.getElementById('dm-user-list');
+    userListEl.innerHTML = '<p style="color:#888; font-size:0.85rem; padding:8px;">Loading...</p>';
+
+    try {
+        const response = await fetch(`${API_BASE}/auth/users`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+        const users = await response.json();
+
+        userListEl.innerHTML = '';
+
+        // Get unread counts
+        const { data: unreadData } = await dmSupabase
+            .from('direct_messages')
+            .select('sender_id')
+            .eq('receiver_id', userId)
+            .eq('is_read', false);
+
+        const unreadCounts = {};
+        if (unreadData) {
+            unreadData.forEach(msg => {
+                unreadCounts[msg.sender_id] = (unreadCounts[msg.sender_id] || 0) + 1;
+            });
+        }
+
+        users.filter(u => u._id !== userId).forEach(user => {
+            const userBtn = document.createElement('div');
+            userBtn.style.cssText = `
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 12px;
+                cursor: pointer;
+                border-bottom: 1px solid #f0f0f0;
+                position: relative;
+            `;
+            userBtn.onmouseenter = () => userBtn.style.background = '#f5f5f5';
+            userBtn.onmouseleave = () => userBtn.style.background = '';
+
+            const avatar = document.createElement('div');
+            if (user.profilePictureUrl) {
+                avatar.innerHTML = `<img src="${user.profilePictureUrl}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">`;
+            } else {
+                avatar.innerHTML = `<div style="width:36px;height:36px;border-radius:50%;background:#4f46e5;color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;">${user.username.charAt(0).toUpperCase()}</div>`;
+            }
+
+            const nameEl = document.createElement('span');
+            nameEl.textContent = user.username;
+            nameEl.style.cssText = 'flex:1; font-size:0.9rem;';
+
+            userBtn.appendChild(avatar);
+            userBtn.appendChild(nameEl);
+
+            // Unread badge
+            const count = unreadCounts[user._id] || 0;
+            if (count > 0) {
+                const badge = document.createElement('span');
+                badge.textContent = count;
+                badge.style.cssText = `
+                    background:red; color:white; border-radius:50%;
+                    width:18px; height:18px; line-height:18px;
+                    text-align:center; font-size:0.7rem; font-weight:bold;
+                `;
+                userBtn.appendChild(badge);
+            }
+
+            userBtn.addEventListener('click', () => openDMChat(user._id, user.username));
+            userListEl.appendChild(userBtn);
+        });
+
+        if (userListEl.children.length === 0) {
+            userListEl.innerHTML = '<p style="color:#888;padding:8px;">No other users yet.</p>';
+        }
+
+    } catch (err) {
+        console.error('Load users error:', err);
+        userListEl.innerHTML = '<p style="color:red;padding:8px;">Failed to load users.</p>';
+    }
+}
+
+// Open chat with a specific user
+async function openDMChat(userId, username) {
+    currentChatUserId = userId;
+    currentChatUsername = username;
+
+    document.getElementById('dm-user-list').style.display = 'none';
+    const chatWindow = document.getElementById('dm-chat-window');
+    chatWindow.style.display = 'flex';
+    document.getElementById('dm-chat-username').textContent = username;
+
+    await loadDMMessages();
+    subscribeDMChat();
+
+    // Mark messages as read
+    const { userId: myId } = getDMUser();
+    await dmSupabase.from('direct_messages')
+        .update({ is_read: true })
+        .eq('sender_id', userId)
+        .eq('receiver_id', myId);
+
+    updateUnreadBadge();
+}
+
+// Show user list again
+function showDMUserList() {
+    currentChatUserId = null;
+    document.getElementById('dm-chat-window').style.display = 'none';
+    document.getElementById('dm-user-list').style.display = 'block';
+    if (dmChannel) dmChannel.unsubscribe();
+    loadDMUserList();
+}
+
+// Load chat messages
+async function loadDMMessages() {
+    const { userId: myId } = getDMUser();
+    const messagesEl = document.getElementById('dm-messages');
+    messagesEl.innerHTML = '';
+
+    const { data, error } = await dmSupabase
+        .from('direct_messages')
+        .select('*')
+        .or(`and(sender_id.eq.${myId},receiver_id.eq.${currentChatUserId}),and(sender_id.eq.${currentChatUserId},receiver_id.eq.${myId})`)
+        .order('created_at', { ascending: true })
+        .limit(100);
+
+    if (error) { console.error('Load DM error:', error); return; }
+    data.forEach(msg => appendDMMessage(msg));
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+// Append a single message
+function appendDMMessage(msg) {
+    const { userId: myId } = getDMUser();
+    const isMe = msg.sender_id === myId;
+    const messagesEl = document.getElementById('dm-messages');
+
+    const date = new Date(msg.created_at);
+    const timeStr = date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+
+    const div = document.createElement('div');
+    div.style.cssText = `margin-bottom:8px; text-align:${isMe ? 'right' : 'left'};`;
+    div.innerHTML = `
+        <div style="font-size:0.7rem; color:#aaa; margin-bottom:2px;">${timeStr}</div>
+        <span style="
+            display:inline-block;
+            background:${isMe ? '#4f46e5' : '#e2e8f0'};
+            color:${isMe ? '#fff' : '#333'};
+            padding:6px 10px;
+            border-radius:12px;
+            font-size:0.85rem;
+            max-width:80%;
+            word-break:break-word;
+        ">${msg.message}</span>
+    `;
+    messagesEl.appendChild(div);
+}
+
+// Subscribe to realtime DM messages
+function subscribeDMChat() {
+    const { userId: myId } = getDMUser();
+    if (dmChannel) dmChannel.unsubscribe();
+
+    dmChannel = dmSupabase
+        .channel('dm-chat-' + currentChatUserId)
+        .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'direct_messages'
+        }, async (payload) => {
+            const msg = payload.new;
+            const isRelevant = (
+                (msg.sender_id === myId && msg.receiver_id === currentChatUserId) ||
+                (msg.sender_id === currentChatUserId && msg.receiver_id === myId)
+            );
+            if (isRelevant) {
+                appendDMMessage(msg);
+                const messagesEl = document.getElementById('dm-messages');
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+
+                // Mark as read if received
+                if (msg.sender_id !== myId) {
+                    await dmSupabase.from('direct_messages')
+                        .update({ is_read: true })
+                        .eq('id', msg.id);
+                }
+            }
+        })
+        .subscribe();
+}
+
+// Send a DM
+async function sendDM() {
+    const input = document.getElementById('dm-input');
+    const message = input.value.trim();
+    if (!message || !currentChatUserId) return;
+
+    const { userId: myId, username: myUsername } = getDMUser();
+    if (!myId) { alert('Please login to send messages'); return; }
+
+    const { error } = await dmSupabase.from('direct_messages').insert({
+        sender_id: myId,
+        sender_username: myUsername,
+        receiver_id: currentChatUserId,
+        receiver_username: currentChatUsername,
+        message
+    });
+
+    if (error) { console.error('Send DM error:', error); return; }
+    input.value = '';
+}
+
+// Update unread badge on DM button
+async function updateUnreadBadge() {
+    const { userId: myId } = getDMUser();
+    if (!myId || !dmSupabase) return;
+
+    const { data } = await dmSupabase
+        .from('direct_messages')
+        .select('id')
+        .eq('receiver_id', myId)
+        .eq('is_read', false);
+
+    const badge = document.getElementById('dm-unread-badge');
+    const count = data ? data.length : 0;
+    if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : count;
+        badge.style.display = 'block';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// Subscribe to unread messages globally
+function subscribeUnread() {
+    const { userId: myId } = getDMUser();
+    if (!myId) return;
+
+    dmSupabase.channel('dm-unread')
+        .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'direct_messages',
+            filter: `receiver_id=eq.${myId}`
+        }, () => {
+            updateUnreadBadge();
+        })
+        .subscribe();
+
+    updateUnreadBadge();
+}
+
+// Expose functions globally
+window.toggleDMPanel = toggleDMPanel;
+window.sendDM = sendDM;
+window.showDMUserList = showDMUserList;
+
+// Init unread badge on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const { userId } = getDMUser();
+    if (userId) {
+        initDMSupabase();
+        subscribeUnread();
+    }
+});
