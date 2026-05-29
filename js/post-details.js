@@ -1182,7 +1182,7 @@ modalImageContainer.addEventListener('touchend', (e) => {
         modal.style.display = 'none';
     }, 10);
 }
-}, { passive: true });
+});
 
                 // PC: click left/right to navigate
                 modalImageContainer.onclick = (e) => {
