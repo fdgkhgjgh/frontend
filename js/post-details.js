@@ -223,9 +223,13 @@ modalImageContainer.addEventListener('touchend', (e) => {
         }
     } else {
         // short tap = close
-        modal.style.display = 'none';
+        e.preventDefault();
+        e.stopPropagation();
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 10);
     }
-}, { passive: true });
+});
 
             // PC: click left/right to navigate
             modalImageContainer.onclick = (e) => {
@@ -1171,9 +1175,13 @@ modalImageContainer.addEventListener('touchend', (e) => {
             modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
         }
     } else {
-        // short tap = close
+    // short tap = close
+    e.preventDefault();
+    e.stopPropagation();
+    setTimeout(() => {
         modal.style.display = 'none';
-    }
+    }, 10);
+}
 }, { passive: true });
 
                 // PC: click left/right to navigate
