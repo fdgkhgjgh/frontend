@@ -290,10 +290,6 @@ async function sendDM() {
     
     // ✅ Let poll pick it up instead of manually appending
     await loadDMMessages();
-    // ✅ Only auto-scroll if near bottom
-const isNearBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 100;
-if (isNearBottom) {
-    messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
 // Update unread badge on DM button
