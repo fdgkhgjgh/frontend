@@ -303,23 +303,19 @@ async function sendDM() {
     const { userId: myId, username: myUsername } = getDMUser();
     if (!myId) { alert('Please login to send messages'); return; }
 
-    const newMsg = {
+    const { error } = await dmSupabase.from('direct_messages').insert({
         sender_id: myId,
         sender_username: myUsername,
         receiver_id: currentChatUserId,
         receiver_username: currentChatUsername,
-        message,
-        created_at: new Date().toISOString()
-    };
+        message
+    });
 
-    const { error } = await dmSupabase.from('direct_messages').insert(newMsg);
     if (error) { console.error('Send DM error:', error); return; }
-    
-    // ✅ Manually append since realtime may lag
-    appendDMMessage(newMsg);
-    const messagesEl = document.getElementById('dm-messages');
-    messagesEl.scrollTop = messagesEl.scrollHeight;
     input.value = '';
+    
+    // ✅ Let poll pick it up instead of manually appending
+    await loadDMMessages();
 }
 
 // Update unread badge on DM button
