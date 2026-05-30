@@ -406,6 +406,19 @@ body[class*="dark"] .show-more-btn,
     opacity: 1 !important;
 }
 
+.dark-mode #dm-chat-username {
+    color: #eee !important;
+}
+
+.dark-mode #dm-chat-header {
+    background: #2c2c3e !important;
+    color: #eee !important;
+}
+
+.dark-mode #dm-chat-header button {
+    color: #eee !important;
+}
+
 
 
 
