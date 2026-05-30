@@ -495,7 +495,7 @@ const currentUserId = localStorage.getItem('userId');
 if (currentUserId && post.author && post.author._id && currentUserId === post.author._id.toString()) {
     const editButton = document.createElement('button');
     editButton.textContent = '✏️ Edit';
-    editButton.classList.add('vote-button');
+    editButton.classList.add('edit-button');
     editButton.style.marginLeft = '12px';
 
     editButton.addEventListener('click', () => {
