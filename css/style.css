@@ -1127,6 +1127,13 @@ label {
     text-decoration: underline !important; 
 }
 
+/* Login and register input font size */
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    font-size: 1rem;
+}
+
 
 
 
