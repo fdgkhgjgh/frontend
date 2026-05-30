@@ -171,13 +171,17 @@ async function openDMChat(userId, username) {
         await loadDMMessages();
     }, 3000);
 
-    const { userId: myId } = getDMUser();
-    await dmSupabase.from('direct_messages')
-        .update({ is_read: true })
-        .eq('sender_id', userId)
-        .eq('receiver_id', myId);
+    // Mark messages as read
+// Mark messages as read
+const { userId: myId } = getDMUser();
+await dmSupabase.from('direct_messages')
+    .update({ is_read: true })
+    .eq('sender_id', currentChatUserId)
+    .eq('receiver_id', myId)
+    .eq('is_read', false);
 
-    updateUnreadBadge();
+// ✅ Update badge immediately after marking read
+await updateUnreadBadge();
 }
 
 // Show user list again
@@ -255,43 +259,7 @@ function appendDMMessage(msg) {
 
 // Subscribe to realtime DM messages
 function subscribeDMChat() {
-    const { userId: myId } = getDMUser();
-    if (dmChannel) {
-        dmChannel.unsubscribe();
-        dmChannel = null;
-    }
-
-    const channelName = `dm-${[myId, currentChatUserId].sort().join('-')}`;
-
-    dmChannel = dmSupabase
-    .channel(channelName)
-    .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'direct_messages',
-        filter: `receiver_id=eq.${myId}`
-    }, async (payload) => {
-            const msg = payload.new;
-            const isRelevant = (
-                (msg.sender_id === myId && msg.receiver_id === currentChatUserId) ||
-                (msg.sender_id === currentChatUserId && msg.receiver_id === myId)
-            );
-            if (isRelevant) {
-                // ✅ Avoid duplicate — check if message already in DOM
-                const existing = document.querySelector(`[data-msg-id="${msg.id}"]`);
-                if (!existing) {
-                    appendDMMessage(msg);
-                    const messagesEl = document.getElementById('dm-messages');
-                    messagesEl.scrollTop = messagesEl.scrollHeight;
-                }
-                if (msg.sender_id !== myId) {
-                    await dmSupabase.from('direct_messages')
-                        .update({ is_read: true })
-                        .eq('id', msg.id);
-                }
-            }
-        })
-        .subscribe();
+    // removed - using polling instead
 }
 
 // Send a DM
@@ -344,31 +312,7 @@ async function updateUnreadBadge() {
 let unreadChannel = null;
 
 function subscribeUnread() {
-    const { userId: myId } = getDMUser();
-    if (!myId) return;
-
-    if (unreadChannel) {
-        updateUnreadBadge();
-        return;
-    }
-
-    unreadChannel = dmSupabase
-        .channel('dm-unread-' + myId)
-        .on('postgres_changes', {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'direct_messages'
-        }, (payload) => {
-            if (payload.new.receiver_id === myId) {
-                updateUnreadBadge();
-                if (dmPanelOpen && !currentChatUserId) {
-                    loadDMUserList();
-                }
-            }
-        })
-        .subscribe();
-
-    updateUnreadBadge();
+    // removed - using polling instead
 }
 
 // Expose functions globally
