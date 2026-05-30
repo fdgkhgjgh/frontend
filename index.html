@@ -312,14 +312,14 @@
     </div>
 
     <!-- User list / Chat area -->
-    <div id="dm-content" style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+    <div id="dm-content" style="flex:1; display:flex; flex-direction:column; min-height:0; overflow:hidden;">
         <!-- User list shown by default -->
         <div id="dm-user-list" style="padding:8px;">
             <p style="color:#888; font-size:0.85rem; padding:8px;">Loading users...</p>
         </div>
 
         <!-- Chat window (hidden until user selected) -->
-        <div id="dm-chat-window" style="display:none; flex-direction:column; height:100%;">
+        <div id="dm-chat-window" style="display:none; flex-direction:column; flex:1; min-height:0; height:100%;">
             <div id="dm-chat-header" style="
                 padding: 8px 12px;
                 background: #f0f0f0;
@@ -342,7 +342,6 @@
                 padding:10px;
                 font-size:0.85rem;
                 min-height:0;
-                max-height: calc(100vh - 160px);
             "></div>
             <div style="
     display:flex;
