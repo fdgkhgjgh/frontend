@@ -1151,6 +1151,21 @@ label {
     color: #666666 !important;
 }
 
+/* ==========================================================================
+   帖子详情页（Post Details Page）：修复内容文本不换行、连成一团的问题
+   ========================================================================= */
+
+/* 1. 锁死详情页的内容展示区域（兼容你可能使用的各种常见类名和 ID） */
+#post-details-content,
+#post-detail-content,
+.post-detail-body,
+.post-details p,
+.comment-section ~ p {
+    white-space: pre-line !important; /* 🌟 核心：强制保留用户输入的回车换行符 */
+    word-break: break-all !important;  /* 防止超长英文单词或不可读长链接撑破手机排版 */
+}
+
+
 
 /* Login and register input font size */
 input[type="text"],
