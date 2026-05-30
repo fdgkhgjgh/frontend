@@ -290,7 +290,6 @@
     box-shadow: -4px 0 16px rgba(0,0,0,0.2);
     z-index: 99998;
     flex-direction: column;
-    transition: transform 0.3s;
 ">
     <!-- Header -->
     <div style="
@@ -300,6 +299,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-shrink: 0;
     ">
         <span style="font-weight:bold;">💬 Messages</span>
         <button onclick="toggleDMPanel()" style="
@@ -311,70 +311,83 @@
         ">✕</button>
     </div>
 
-    <!-- User list / Chat area -->
-    <div id="dm-content" style="flex:1; display:flex; flex-direction:column; min-height:0; overflow:hidden;">
-        <!-- User list shown by default -->
-        <div id="dm-user-list" style="padding:8px;">
-            <p style="color:#888; font-size:0.85rem; padding:8px;">Loading users...</p>
+    <!-- User list -->
+    <div id="dm-user-list" style="
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px;
+    ">
+        <p style="color:#888; font-size:0.85rem; padding:8px;">Loading users...</p>
+    </div>
+
+    <!-- Chat window -->
+    <div id="dm-chat-window" style="
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+    ">
+        <!-- Chat header -->
+        <div style="
+            padding: 8px 12px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #ddd;
+            flex-shrink: 0;
+        ">
+            <button onclick="showDMUserList()" style="
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 1rem;
+            ">←</button>
+            <span id="dm-chat-username" style="font-weight:bold;"></span>
         </div>
 
-        <!-- Chat window (hidden until user selected) -->
-        <div id="dm-chat-window" style="display:none; flex-direction:column; flex:1; min-height:0; height:100%;">
-            <div id="dm-chat-header" style="
-                padding: 8px 12px;
-                background: #f0f0f0;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                border-bottom: 1px solid #ddd;
-            ">
-                <button onclick="showDMUserList()" style="
-                    background: none;
-                    border: none;
-                    cursor: pointer;
-                    font-size: 1rem;
-                ">←</button>
-                <span id="dm-chat-username" style="font-weight:bold;"></span>
-            </div>
-            <div id="dm-messages" style="
-                flex:1;
-                overflow-y:auto;
-                padding:10px;
-                font-size:0.85rem;
-                min-height:0;
-            "></div>
-            <div style="
-    display:flex;
-    gap:6px;
-    padding:8px;
-    border-top:1px solid #ddd;
-    align-items:center;
-    flex-shrink:0;
-">
-    <button onclick="sendDM()" style="
-        background:#4f46e5;
-        color:white;
-        border:none;
-        padding:6px 12px;
-        border-radius:16px;
-        cursor:pointer;
-        font-size:0.85rem;
-        flex-shrink:0;
-        white-space:nowrap;
-    ">Send</button>
-    <input id="dm-input" type="text" placeholder="Type..."
-        onkeydown="if(event.key==='Enter') sendDM()"
-        style="
-            flex:1;
-            padding:6px 10px;
-            border:1px solid #ddd;
-            border-radius:16px;
-            font-size:0.85rem;
-            outline:none;
-            min-width:0;
-            width:0;
-        "/>
-</div>
+        <!-- Messages -->
+        <div id="dm-messages" style="
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            font-size: 0.85rem;
+        "></div>
+
+        <!-- Input row — fixed at bottom -->
+        <div style="
+            display: flex;
+            gap: 6px;
+            padding: 8px;
+            border-top: 1px solid #ddd;
+            background: #fff;
+            flex-shrink: 0;
+        ">
+            <button onclick="sendDM()" style="
+                background: #4f46e5;
+                color: white;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 16px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                flex-shrink: 0;
+            ">Send</button>
+            <input id="dm-input" type="text" placeholder="Type..."
+                onkeydown="if(event.key==='Enter') sendDM()"
+                style="
+                    flex: 1;
+                    padding: 6px 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 16px;
+                    font-size: 0.85rem;
+                    outline: none;
+                    min-width: 0;
+                "/>
         </div>
     </div>
 </div>
