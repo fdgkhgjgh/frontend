@@ -345,33 +345,37 @@
                 max-height: calc(100vh - 160px);
             "></div>
             <div style="
-                display:flex;
-                gap:6px;
-                padding:8px;
-                border-top:1px solid #ddd;
-            ">
-                <button onclick="sendDM()" style="
-                    background:#4f46e5;
-                    color:white;
-                    border:none;
-                    padding:6px 12px;
-                    border-radius:16px;
-                    cursor:pointer;
-                    font-size:0.85rem;
-                    flex-shrink:0;
-                ">Send</button>
-                <input id="dm-input" type="text" placeholder="Type a message..."
-                    onkeydown="if(event.key==='Enter') sendDM()"
-                    style="
-                        flex:1;
-                        padding:6px 10px;
-                        border:1px solid #ddd;
-                        border-radius:16px;
-                        font-size:0.85rem;
-                        outline:none;
-                        min-width:0;
-                    "/>
-            </div>
+    display:flex;
+    gap:6px;
+    padding:8px;
+    border-top:1px solid #ddd;
+    align-items:center;
+    flex-shrink:0;
+">
+    <button onclick="sendDM()" style="
+        background:#4f46e5;
+        color:white;
+        border:none;
+        padding:6px 12px;
+        border-radius:16px;
+        cursor:pointer;
+        font-size:0.85rem;
+        flex-shrink:0;
+        white-space:nowrap;
+    ">Send</button>
+    <input id="dm-input" type="text" placeholder="Type..."
+        onkeydown="if(event.key==='Enter') sendDM()"
+        style="
+            flex:1;
+            padding:6px 10px;
+            border:1px solid #ddd;
+            border-radius:16px;
+            font-size:0.85rem;
+            outline:none;
+            min-width:0;
+            width:0;
+        "/>
+</div>
         </div>
     </div>
 </div>
