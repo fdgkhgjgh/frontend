@@ -368,6 +368,57 @@ body[class*="dark"] .show-more-btn,
     background: #1a1a2e !important;
 }
 
+/* ==========================================================================
+   夜间模式特供：“创建新帖子”弹窗（Modal）全盘黑化与清晰度修复
+   ========================================================================== */
+
+/* 1. 强行把弹窗的大背景变成高级的深色，并修复最顶部的标题颜色 */
+.modal, 
+.modal-content, 
+[class*="modal-content"], 
+[class*="modal-body"] {
+    background-color: #1e1e2e !important; /* 🌟 极具质感的深色背景，不再晃眼 */
+    color: #ffffff !important;           /* 🌟 强行将“创建新帖子”等所有文字变为纯白 */
+    border: 1px solid #333355 !important;
+}
+
+/* 2. 修复弹窗内部的标题（防止有独立的h2/h3标签变灰白） */
+.modal h2, 
+.modal h3, 
+.modal-content p,
+.modal-content label {
+    color: #ffffff !important;           /* 确保所有标签、提示文字都是清晰的白色 */
+}
+
+/* 3. 修复那两个死黑的输入框（Title 和 Content） */
+.modal input[type="text"], 
+.modal textarea,
+.modal-content input,
+.modal-content textarea {
+    background-color: #2b2b3a !important; /* 🌟 输入框背景改为略浅一点的灰黑色 */
+    color: #ffffff !important;           /* 🌟 用户输入的文字必须是纯白色 */
+    border: 1px solid #444466 !important; /* 边框稍微提亮，看得清边界 */
+    border-radius: 6px !important;
+}
+
+/* 4. 修复“Choose Files”文件上传控件的文字颜色 */
+.modal input[type="file"] {
+    color: #e0e0e0 !important;           /* 🌟 强行把文件选择提示字变成亮灰色 */
+}
+
+/* 5. 右上角的 X 关闭按钮：在夜间弹窗里也要保持清晰可见 */
+.modal .close,
+.modal [class*="close"] {
+    color: #ffffff !important;           /* X 变成纯白 */
+    opacity: 0.8 !important;
+    text-shadow: none !important;
+}
+.modal .close:hover,
+.modal [class*="close"]:hover {
+    opacity: 1 !important;
+}
+
+
 
 
 
