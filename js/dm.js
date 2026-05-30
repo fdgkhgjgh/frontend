@@ -9,6 +9,7 @@ let currentChatUserId = null;
 let currentChatUsername = null;
 let dmPanelOpen = false;
 let previousUnreadCount = 0;
+let userScrollingUp = false;
 
 function getDMUser() {
     return {
@@ -151,6 +152,12 @@ async function openDMChat(userId, username) {
     document.getElementById('dm-user-list').style.display = 'none';
     const chatWindow = document.getElementById('dm-chat-window');
     chatWindow.style.display = 'flex';
+    // Track if user scrolls up
+document.getElementById('dm-messages').addEventListener('scroll', () => {
+    const messagesEl = document.getElementById('dm-messages');
+    const distanceFromBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight;
+    userScrollingUp = distanceFromBottom > 100;
+});
     document.getElementById('dm-chat-username').textContent = username;
 
     // ✅ Set messages area height dynamically
@@ -219,11 +226,10 @@ async function loadDMMessages(isFirstLoad = false) {
     
     // ✅ Always scroll on first load, otherwise only if near bottom
     if (isFirstLoad) {
+        userScrollingUp = false;
         messagesEl.scrollTop = messagesEl.scrollHeight;
     } else {
-        const distanceFromBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight;
-        // ✅ If clientHeight is 0 (not visible), skip scroll
-        if (messagesEl.clientHeight > 0 && distanceFromBottom < 100) {
+        if (!userScrollingUp) {
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
     }
