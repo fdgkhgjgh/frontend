@@ -23,8 +23,12 @@ function getCurrentUser() {
 
 // Initialize Supabase
 function initSupabase() {
-    supabaseClient = window.dmSupabaseClient || window.supabase.createClient(MAP_SUPABASE_URL, MAP_SUPABASE_ANON);
-    window.dmSupabaseClient = supabaseClient;
+    if (window.sharedSupabaseClient) {
+        supabaseClient = window.sharedSupabaseClient;
+    } else {
+        supabaseClient = window.supabase.createClient(MAP_SUPABASE_URL, MAP_SUPABASE_ANON);
+        window.sharedSupabaseClient = supabaseClient;
+    }
 }
 
 // Initialize map
