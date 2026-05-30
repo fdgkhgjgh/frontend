@@ -222,6 +222,7 @@ async function loadDMMessages() {
 const isNearBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 100;
 if (isNearBottom) {
     messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
 }
 
 // Append a single message
