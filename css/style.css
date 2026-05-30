@@ -1164,9 +1164,14 @@ input[type="email"] {
     font-size: 1.1rem;
 }
 
-#logged-in-user {
+#user-info a {
     color: #c45c00;
     font-weight: bold;
+    text-decoration: none;
+}
+
+#user-info a:hover {
+    text-decoration: underline;
 }
 
 
