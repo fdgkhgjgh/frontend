@@ -544,17 +544,5 @@ window.addEventListener('appinstalled', () => {
     document.getElementById('pwa-banner').style.display = 'none';
 });
 </script>
-    <script>
-// Show iOS install instructions
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches;
-
-if (isIOS && !isInStandaloneMode) {
-    document.getElementById('pwa-banner').style.display = 'flex';
-    document.getElementById('pwa-banner').querySelector('span').textContent = 
-        '📱 Install: tap Share → Add to Home Screen';
-    document.getElementById('pwa-install-btn').style.display = 'none';
-}
-</script>
 </body>
 </html>
