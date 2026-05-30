@@ -159,6 +159,7 @@ document.getElementById('dm-messages').addEventListener('scroll', () => {
     userScrollingUp = distanceFromBottom > 100;
 });
     document.getElementById('dm-chat-username').textContent = username;
+    document.getElementById('dm-messages').innerHTML = '';
 
     // ✅ Set messages area height dynamically
     const panelHeight = window.innerHeight;
