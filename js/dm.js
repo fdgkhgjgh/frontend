@@ -49,9 +49,14 @@ async function loadDMUserList() {
 
     try {
         const response = await fetch(`${DM_API_BASE}/auth/users`, {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        });
-        const data = await response.json();
+    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+});
+if (!response.ok) {
+    console.error('Users fetch failed:', response.status);
+    userListEl.innerHTML = '<p style="color:red;padding:8px;">Please login to see users.</p>';
+    return;
+}
+const data = await response.json();
 const users = Array.isArray(data) ? data : [];
 
         userListEl.innerHTML = '';
@@ -278,11 +283,19 @@ async function updateUnreadBadge() {
 }
 
 // Subscribe to unread messages globally
+let unreadChannel = null;
+
 function subscribeUnread() {
     const { userId: myId } = getDMUser();
     if (!myId) return;
 
-    dmSupabase.channel('dm-unread')
+    // ✅ Don't subscribe twice
+    if (unreadChannel) {
+        updateUnreadBadge();
+        return;
+    }
+
+    unreadChannel = dmSupabase.channel('dm-unread')
         .on('postgres_changes', {
             event: 'INSERT',
             schema: 'public',
