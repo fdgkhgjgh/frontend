@@ -147,6 +147,14 @@ async function openDMChat(userId, username) {
 
     await loadDMMessages();
     subscribeDMChat();
+    // Poll every 3 seconds as fallback for realtime
+const pollInterval = setInterval(async () => {
+    if (!currentChatUserId) {
+        clearInterval(pollInterval);
+        return;
+    }
+    await loadDMMessages();
+}, 3000);
 
     // Mark messages as read
     const { userId: myId } = getDMUser();
@@ -164,6 +172,7 @@ function showDMUserList() {
     document.getElementById('dm-chat-window').style.display = 'none';
     document.getElementById('dm-user-list').style.display = 'block';
     if (dmChannel) dmChannel.unsubscribe();
+    if (window.dmPollInterval) clearInterval(window.dmPollInterval);
     loadDMUserList();
 }
 
