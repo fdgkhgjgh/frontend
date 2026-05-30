@@ -189,7 +189,15 @@ function appendDMMessage(msg) {
     const messagesEl = document.getElementById('dm-messages');
 
     const date = new Date(msg.created_at);
-    const timeStr = date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+const timeStr = date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+});
 
     const div = document.createElement('div');
     div.style.cssText = `margin-bottom:8px; text-align:${isMe ? 'right' : 'left'};`;
@@ -251,15 +259,22 @@ async function sendDM() {
     const { userId: myId, username: myUsername } = getDMUser();
     if (!myId) { alert('Please login to send messages'); return; }
 
-    const { error } = await dmSupabase.from('direct_messages').insert({
+    const newMsg = {
         sender_id: myId,
         sender_username: myUsername,
         receiver_id: currentChatUserId,
         receiver_username: currentChatUsername,
-        message
-    });
+        message,
+        created_at: new Date().toISOString()
+    };
 
+    const { error } = await dmSupabase.from('direct_messages').insert(newMsg);
     if (error) { console.error('Send DM error:', error); return; }
+    
+    // ✅ Manually append since realtime may lag
+    appendDMMessage(newMsg);
+    const messagesEl = document.getElementById('dm-messages');
+    messagesEl.scrollTop = messagesEl.scrollHeight;
     input.value = '';
 }
 
