@@ -356,20 +356,24 @@ function subscribeUnread() {
     const { userId: myId } = getDMUser();
     if (!myId) return;
 
-    // ✅ Don't subscribe twice
     if (unreadChannel) {
         updateUnreadBadge();
         return;
     }
 
-    unreadChannel = dmSupabase.channel('dm-unread')
+    unreadChannel = dmSupabase
+        .channel('dm-unread-' + myId)
         .on('postgres_changes', {
             event: 'INSERT',
             schema: 'public',
-            table: 'direct_messages',
-            filter: `receiver_id=eq.${myId}`
-        }, () => {
-            updateUnreadBadge();
+            table: 'direct_messages'
+        }, (payload) => {
+            if (payload.new.receiver_id === myId) {
+                updateUnreadBadge();
+                if (dmPanelOpen && !currentChatUserId) {
+                    loadDMUserList();
+                }
+            }
         })
         .subscribe();
 
