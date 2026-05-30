@@ -1127,6 +1127,31 @@ label {
     text-decoration: underline !important; 
 }
 
+/* ==========================================================================
+   白天模式特供：修复“创建新帖子”弹窗文字隐形问题
+   ========================================================================== */
+
+/* 强行锁死白天模式下，发帖弹窗内的所有文本标签颜色为深色 */
+#create-post-modal label,
+#create-post-modal h2,
+#create-post-modal p {
+    color: #333333 !important; /* 🌟 变成清晰的深灰色，不再隐形 */
+}
+
+/* 顺便规范白天模式下的输入框边框和文字颜色 */
+#create-post-form-main input[type="text"],
+#create-post-form-main textarea {
+    background-color: #ffffff !important;
+    color: #000000 !important; /* 白天输入的文字是黑色 */
+    border: 1px solid #cccccc !important; /* 浅灰色边框 */
+}
+
+/* 右上角关闭按钮在白天恢复正常的深色 */
+#create-post-modal button[onclick="togglePostModal()"] {
+    color: #666666 !important;
+}
+
+
 /* Login and register input font size */
 input[type="text"],
 input[type="password"],
