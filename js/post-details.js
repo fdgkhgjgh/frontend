@@ -490,6 +490,76 @@ saveButton.addEventListener('click', async (e) => {
 });
 
 voteContainer.appendChild(saveButton);
+    // --- Edit Button (only for post owner) ---
+const currentUserId = localStorage.getItem('userId');
+if (currentUserId && post.author && post.author._id && currentUserId === post.author._id.toString()) {
+    const editButton = document.createElement('button');
+    editButton.textContent = '✏️ Edit';
+    editButton.classList.add('vote-button');
+    editButton.style.marginLeft = '12px';
+
+    editButton.addEventListener('click', () => {
+        // Replace post body content with edit form
+        const postBody = document.querySelector('.post-body');
+        const originalContent = postBody.innerHTML;
+
+        postBody.innerHTML = `
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <input id="edit-title" type="text" value="${post.title}" style="
+                    width:100%; padding:8px; font-size:1rem;
+                    border:1px solid #ddd; border-radius:6px;
+                "/>
+                <textarea id="edit-content" rows="5" style="
+                    width:100%; padding:8px; font-size:1rem;
+                    border:1px solid #ddd; border-radius:6px;
+                ">${post.content || ''}</textarea>
+                <div style="display:flex; gap:8px;">
+                    <button id="save-edit-btn" style="
+                        background:#4f46e5; color:white; border:none;
+                        padding:8px 16px; border-radius:6px; cursor:pointer;
+                    ">Save</button>
+                    <button id="cancel-edit-btn" style="
+                        background:#aaa; color:white; border:none;
+                        padding:8px 16px; border-radius:6px; cursor:pointer;
+                    ">Cancel</button>
+                </div>
+            </div>
+        `;
+
+        // Cancel edit
+        document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+            postBody.innerHTML = originalContent;
+        });
+
+        // Save edit
+        document.getElementById('save-edit-btn').addEventListener('click', async () => {
+            const newTitle = document.getElementById('edit-title').value.trim();
+            const newContent = document.getElementById('edit-content').value.trim();
+
+            if (!newTitle) { alert('Title cannot be empty'); return; }
+
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_BASE_URL}/posts/${post._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ title: newTitle, content: newContent })
+            });
+
+            if (response.ok) {
+                alert('Post updated!');
+                window.location.reload();
+            } else {
+                const data = await response.json();
+                alert(`Error: ${data.message}`);
+            }
+        });
+    });
+
+    voteContainer.appendChild(editButton);
+}
 postBody.appendChild(voteContainer);
 
     postElement.appendChild(contentContainer);
