@@ -406,17 +406,28 @@ body[class*="dark"] .show-more-btn,
     opacity: 1 !important;
 }
 
-.dark-mode #dm-chat-username {
-    color: #eee !important;
+.dark-mode #dm-panel * {
+    border-color: #444 !important;
 }
 
 .dark-mode #dm-chat-header {
     background: #2c2c3e !important;
+}
+
+.dark-mode #dm-chat-header span,
+.dark-mode #dm-chat-header button {
     color: #eee !important;
 }
 
-.dark-mode #dm-chat-header button {
+.dark-mode #dm-chat-window > div:last-child {
+    background: #2c2c3e !important;
+    border-top-color: #444 !important;
+}
+
+.dark-mode #dm-input {
+    background: #1a1a2e !important;
     color: #eee !important;
+    border-color: #555 !important;
 }
 
 
