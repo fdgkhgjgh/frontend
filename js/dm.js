@@ -18,9 +18,12 @@ function getDMUser() {
 
 function initDMSupabase() {
     if (!dmSupabase) {
-        // Reuse map-panel's client if available, otherwise create new
-        dmSupabase = window.dmSupabaseClient || window.supabase.createClient(DM_SUPABASE_URL, DM_SUPABASE_ANON);
-        window.dmSupabaseClient = dmSupabase;
+        if (window.sharedSupabaseClient) {
+            dmSupabase = window.sharedSupabaseClient;
+        } else {
+            dmSupabase = window.supabase.createClient(DM_SUPABASE_URL, DM_SUPABASE_ANON);
+            window.sharedSupabaseClient = dmSupabase;
+        }
     }
 }
 
@@ -188,18 +191,22 @@ function appendDMMessage(msg) {
     const isMe = msg.sender_id === myId;
     const messagesEl = document.getElementById('dm-messages');
 
+    // ✅ Prevent duplicates
+    if (msg.id && document.querySelector(`[data-msg-id="${msg.id}"]`)) return;
+
     const date = new Date(msg.created_at);
-const timeStr = date.toLocaleString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-});
+    const timeStr = date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
 
     const div = document.createElement('div');
+    if (msg.id) div.setAttribute('data-msg-id', msg.id);
     div.style.cssText = `margin-bottom:8px; text-align:${isMe ? 'right' : 'left'};`;
     div.innerHTML = `
         <div style="font-size:0.7rem; color:#aaa; margin-bottom:2px;">${timeStr}</div>
@@ -220,10 +227,15 @@ const timeStr = date.toLocaleString('zh-CN', {
 // Subscribe to realtime DM messages
 function subscribeDMChat() {
     const { userId: myId } = getDMUser();
-    if (dmChannel) dmChannel.unsubscribe();
+    if (dmChannel) {
+        dmChannel.unsubscribe();
+        dmChannel = null;
+    }
+
+    const channelName = `dm-${[myId, currentChatUserId].sort().join('-')}`;
 
     dmChannel = dmSupabase
-        .channel('dm-chat-' + currentChatUserId)
+        .channel(channelName)
         .on('postgres_changes', {
             event: 'INSERT',
             schema: 'public',
@@ -235,11 +247,13 @@ function subscribeDMChat() {
                 (msg.sender_id === currentChatUserId && msg.receiver_id === myId)
             );
             if (isRelevant) {
-                appendDMMessage(msg);
-                const messagesEl = document.getElementById('dm-messages');
-                messagesEl.scrollTop = messagesEl.scrollHeight;
-
-                // Mark as read if received
+                // ✅ Avoid duplicate — check if message already in DOM
+                const existing = document.querySelector(`[data-msg-id="${msg.id}"]`);
+                if (!existing) {
+                    appendDMMessage(msg);
+                    const messagesEl = document.getElementById('dm-messages');
+                    messagesEl.scrollTop = messagesEl.scrollHeight;
+                }
                 if (msg.sender_id !== myId) {
                     await dmSupabase.from('direct_messages')
                         .update({ is_read: true })
@@ -336,6 +350,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const { userId } = getDMUser();
     if (userId) {
         initDMSupabase();
-        subscribeUnread();
+        // ✅ Always subscribe to unread on page load
+        setTimeout(() => {
+            subscribeUnread();
+        }, 1000); // wait for Supabase to load
     }
 });
