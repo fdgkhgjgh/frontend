@@ -178,7 +178,7 @@ document.getElementById('dm-messages').addEventListener('scroll', () => {
             clearInterval(window.dmPollInterval);
             return;
         }
-        await loadDMMessages(true);
+        await loadDMMessages(false);
     }, 3000);
 
     // Mark messages as read
