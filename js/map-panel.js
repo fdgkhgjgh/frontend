@@ -23,7 +23,8 @@ function getCurrentUser() {
 
 // Initialize Supabase
 function initSupabase() {
-    supabaseClient = window.supabase.createClient(MAP_SUPABASE_URL, MAP_SUPABASE_ANON);
+    supabaseClient = window.dmSupabaseClient || window.supabase.createClient(MAP_SUPABASE_URL, MAP_SUPABASE_ANON);
+    window.dmSupabaseClient = supabaseClient;
 }
 
 // Initialize map
