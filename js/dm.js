@@ -272,7 +272,7 @@ async function sendDM() {
     if (!message || !currentChatUserId) return;
 
     const { userId: myId, username: myUsername } = getDMUser();
-    if (!myId) { alert('Please login to send messages'); return; }
+    if (!myId) { alert('请登录后再发送私信Please login to send messages'); return; }
 
     const { error } = await dmSupabase.from('direct_messages').insert({
         sender_id: myId,
