@@ -65,7 +65,7 @@ async function loadDMUserList() {
 });
 if (!response.ok) {
     console.error('Users fetch failed:', response.status);
-    userListEl.innerHTML = '<p style="color:red;padding:8px;">Please login to see users.</p>';
+    userListEl.innerHTML = '<p style="color:red;padding:8px;">请登录后再发送私信Please login to see users.</p>';
     return;
 }
 const data = await response.json();
@@ -286,7 +286,7 @@ async function sendDM() {
     if (!message || !currentChatUserId) return;
 
     const { userId: myId, username: myUsername } = getDMUser();
-    if (!myId) { alert('请登录后再发送私信Please login to send messages'); return; }
+    if (!myId) { alert('Please login to send messages'); return; }
 
     const { error } = await dmSupabase.from('direct_messages').insert({
         sender_id: myId,
