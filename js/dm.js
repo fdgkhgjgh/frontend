@@ -235,12 +235,13 @@ function subscribeDMChat() {
     const channelName = `dm-${[myId, currentChatUserId].sort().join('-')}`;
 
     dmChannel = dmSupabase
-        .channel(channelName)
-        .on('postgres_changes', {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'direct_messages'
-        }, async (payload) => {
+    .channel(channelName)
+    .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'direct_messages',
+        filter: `receiver_id=eq.${myId}`
+    }, async (payload) => {
             const msg = payload.new;
             const isRelevant = (
                 (msg.sender_id === myId && msg.receiver_id === currentChatUserId) ||
