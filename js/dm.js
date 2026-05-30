@@ -319,24 +319,34 @@ async function sendDM() {
 }
 
 // Update unread badge on DM button
-async function updateUnreadBadge() {
+function subscribeUnread() {
     const { userId: myId } = getDMUser();
-    if (!myId || !dmSupabase) return;
+    if (!myId) return;
 
-    const { data } = await dmSupabase
-        .from('direct_messages')
-        .select('id')
-        .eq('receiver_id', myId)
-        .eq('is_read', false);
-
-    const badge = document.getElementById('dm-unread-badge');
-    const count = data ? data.length : 0;
-    if (count > 0) {
-        badge.textContent = count > 99 ? '99+' : count;
-        badge.style.display = 'block';
-    } else {
-        badge.style.display = 'none';
+    if (unreadChannel) {
+        updateUnreadBadge();
+        return;
     }
+
+    unreadChannel = dmSupabase
+        .channel('dm-unread-' + myId)
+        .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'direct_messages'
+        }, (payload) => {
+            // ✅ Check manually instead of relying on filter
+            if (payload.new.receiver_id === myId) {
+                updateUnreadBadge();
+                // ✅ Also refresh user list if panel is open
+                if (dmPanelOpen && !currentChatUserId) {
+                    loadDMUserList();
+                }
+            }
+        })
+        .subscribe();
+
+    updateUnreadBadge();
 }
 
 // Subscribe to unread messages globally
@@ -383,9 +393,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const { userId } = getDMUser();
     if (userId) {
         initDMSupabase();
-        // ✅ Always subscribe to unread on page load
         setTimeout(() => {
             subscribeUnread();
-        }, 1000); // wait for Supabase to load
+            // ✅ Poll badge every 5 seconds as fallback
+            setInterval(() => {
+                updateUnreadBadge();
+            }, 5000);
+        }, 1000);
     }
 });
