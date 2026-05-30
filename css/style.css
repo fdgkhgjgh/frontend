@@ -1164,6 +1164,11 @@ input[type="email"] {
     font-size: 1.1rem;
 }
 
+#logged-in-user {
+    color: #c45c00;
+    font-weight: bold;
+}
+
 
 
 
