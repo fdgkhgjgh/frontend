@@ -89,7 +89,7 @@ authorDateElement.append(` on ${formatDate(post.createdAt)}${editedText}`);
             return formattedLine.trimEnd();
         }).join('\n'); // Join all formatted lines
 
-        contentElement.textContent = formattedContent;
+        contentElement.innerHTML = formattedContent.replace(/\n/g, '<br>');
     } else {
         contentElement.textContent = ''; // or some placeholder if content is empty
     }
