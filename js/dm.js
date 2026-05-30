@@ -35,6 +35,9 @@ function toggleDMPanel() {
     dmPanelOpen = !dmPanelOpen;
 
     if (dmPanelOpen) {
+        // ✅ Set exact pixel height via JS
+        const vh = window.innerHeight;
+        panel.style.height = vh + 'px';
         panel.style.display = 'flex';
         overlay.style.display = 'block';
         loadDMUserList();
@@ -43,8 +46,10 @@ function toggleDMPanel() {
         panel.style.display = 'none';
         overlay.style.display = 'none';
         if (dmChannel) dmChannel.unsubscribe();
+        if (window.dmPollInterval) clearInterval(window.dmPollInterval);
     }
 }
+
 
 // Load all users from backend
 async function loadDMUserList() {
@@ -145,18 +150,27 @@ async function openDMChat(userId, username) {
     chatWindow.style.display = 'flex';
     document.getElementById('dm-chat-username').textContent = username;
 
+    // ✅ Set messages area height dynamically
+    const panelHeight = window.innerHeight;
+    const headerHeight = 50; // panel header
+    const chatHeaderHeight = 44; // chat header with back button
+    const inputHeight = 52; // send button + input
+    const messagesHeight = panelHeight - headerHeight - chatHeaderHeight - inputHeight;
+    document.getElementById('dm-messages').style.height = messagesHeight + 'px';
+    document.getElementById('dm-messages').style.maxHeight = messagesHeight + 'px';
+
     await loadDMMessages();
     subscribeDMChat();
-    // Poll every 3 seconds as fallback for realtime
-const pollInterval = setInterval(async () => {
-    if (!currentChatUserId) {
-        clearInterval(pollInterval);
-        return;
-    }
-    await loadDMMessages();
-}, 3000);
 
-    // Mark messages as read
+    if (window.dmPollInterval) clearInterval(window.dmPollInterval);
+    window.dmPollInterval = setInterval(async () => {
+        if (!currentChatUserId) {
+            clearInterval(window.dmPollInterval);
+            return;
+        }
+        await loadDMMessages();
+    }, 3000);
+
     const { userId: myId } = getDMUser();
     await dmSupabase.from('direct_messages')
         .update({ is_read: true })
@@ -180,7 +194,6 @@ function showDMUserList() {
 async function loadDMMessages() {
     const { userId: myId } = getDMUser();
     const messagesEl = document.getElementById('dm-messages');
-    messagesEl.innerHTML = '';
 
     const { data, error } = await dmSupabase
         .from('direct_messages')
@@ -190,7 +203,14 @@ async function loadDMMessages() {
         .limit(100);
 
     if (error) { console.error('Load DM error:', error); return; }
-    data.forEach(msg => appendDMMessage(msg));
+    
+    // ✅ Only add new messages, don't clear existing
+    data.forEach(msg => {
+        if (!document.querySelector(`[data-msg-id="${msg.id}"]`)) {
+            appendDMMessage(msg);
+        }
+    });
+    
     messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
@@ -354,6 +374,13 @@ function subscribeUnread() {
 window.toggleDMPanel = toggleDMPanel;
 window.sendDM = sendDM;
 window.showDMUserList = showDMUserList;
+
+window.addEventListener('resize', () => {
+    if (dmPanelOpen) {
+        const panel = document.getElementById('dm-panel');
+        panel.style.height = window.innerHeight + 'px';
+    }
+});
 
 // Init unread badge on page load
 document.addEventListener('DOMContentLoaded', () => {
