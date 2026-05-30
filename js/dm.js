@@ -221,8 +221,9 @@ async function loadDMMessages(isFirstLoad = false) {
     if (isFirstLoad) {
         messagesEl.scrollTop = messagesEl.scrollHeight;
     } else {
-        const isNearBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 100;
-        if (isNearBottom) {
+        const distanceFromBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight;
+        // ✅ If clientHeight is 0 (not visible), skip scroll
+        if (messagesEl.clientHeight > 0 && distanceFromBottom < 100) {
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
     }
