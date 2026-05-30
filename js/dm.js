@@ -8,6 +8,7 @@ let dmChannel = null;
 let currentChatUserId = null;
 let currentChatUsername = null;
 let dmPanelOpen = false;
+let previousUnreadCount = 0;
 
 function getDMUser() {
     return {
@@ -118,6 +119,7 @@ const users = Array.isArray(data) ? data : [];
             const count = unreadCounts[user._id] || 0;
             if (count > 0) {
                 const badge = document.createElement('span');
+                badge.classList.add('user-unread-badge');
                 badge.textContent = count;
                 badge.style.cssText = `
                     background:red; color:white; border-radius:50%;
@@ -301,6 +303,13 @@ async function updateUnreadBadge() {
     const badge = document.getElementById('dm-unread-badge');
     if (!badge) return;
     const count = data ? data.length : 0;
+
+    // ✅ Play sound if new messages arrived
+    if (count > previousUnreadCount) {
+        playNotificationSound();
+    }
+    previousUnreadCount = count;
+
     if (count > 0) {
         badge.textContent = count > 99 ? '99+' : count;
         badge.style.display = 'block';
@@ -327,6 +336,20 @@ window.addEventListener('resize', () => {
         panel.style.height = window.innerHeight + 'px';
     }
 });
+//sound
+function playNotificationSound() {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    oscillator.frequency.value = 880;
+    oscillator.type = 'sine';
+    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.3);
+}
 
 // Init unread badge on page load
 document.addEventListener('DOMContentLoaded', () => {
