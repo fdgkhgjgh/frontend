@@ -330,6 +330,44 @@ body[class*="dark"] .show-more-btn,
     text-decoration: underline !important; /* 悬停时加上下划线，增强视觉反馈 */
 }
 
+.dark-mode #dm-panel {
+    background: #1a1a2e !important;
+    color: #eee !important;
+}
+
+.dark-mode #dm-user-list {
+    background: #1a1a2e !important;
+}
+
+.dark-mode #dm-user-list div {
+    color: #eee !important;
+    border-bottom-color: #333 !important;
+}
+
+.dark-mode #dm-user-list div:hover {
+    background: #2c2c3e !important;
+}
+
+.dark-mode #dm-chat-header {
+    background: #2c2c3e !important;
+    color: #eee !important;
+    border-bottom-color: #444 !important;
+}
+
+.dark-mode #dm-messages {
+    background: #1a1a2e !important;
+}
+
+.dark-mode #dm-input {
+    background: #2c2c3e !important;
+    color: #eee !important;
+    border-color: #444 !important;
+}
+
+.dark-mode #dm-chat-window {
+    background: #1a1a2e !important;
+}
+
 
 
 
