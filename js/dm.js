@@ -319,34 +319,25 @@ async function sendDM() {
 }
 
 // Update unread badge on DM button
-function subscribeUnread() {
+async function updateUnreadBadge() {
     const { userId: myId } = getDMUser();
-    if (!myId) return;
+    if (!myId || !dmSupabase) return;
 
-    if (unreadChannel) {
-        updateUnreadBadge();
-        return;
+    const { data } = await dmSupabase
+        .from('direct_messages')
+        .select('id')
+        .eq('receiver_id', myId)
+        .eq('is_read', false);
+
+    const badge = document.getElementById('dm-unread-badge');
+    if (!badge) return;
+    const count = data ? data.length : 0;
+    if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : count;
+        badge.style.display = 'block';
+    } else {
+        badge.style.display = 'none';
     }
-
-    unreadChannel = dmSupabase
-        .channel('dm-unread-' + myId)
-        .on('postgres_changes', {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'direct_messages'
-        }, (payload) => {
-            // ✅ Check manually instead of relying on filter
-            if (payload.new.receiver_id === myId) {
-                updateUnreadBadge();
-                // ✅ Also refresh user list if panel is open
-                if (dmPanelOpen && !currentChatUserId) {
-                    loadDMUserList();
-                }
-            }
-        })
-        .subscribe();
-
-    updateUnreadBadge();
 }
 
 // Subscribe to unread messages globally
