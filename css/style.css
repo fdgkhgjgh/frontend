@@ -1174,6 +1174,12 @@ input[type="email"] {
     text-decoration: underline;
 }
 
+/* Allow long press save on images in PWA */
+img {
+    -webkit-touch-callout: default !important;
+    pointer-events: auto !important;
+}
+
 
 
 
