@@ -335,50 +335,48 @@ document.addEventListener('DOMContentLoaded', () => {
         initDMSupabase();
         setTimeout(() => {
             subscribeUnread();
-            // ✅ Poll badge every 5 seconds as fallback
             setInterval(async () => {
-    updateUnreadBadge();
-    
-    if (currentChatUserId) {
-        loadDMMessages();
-    }
-    
-    if (dmPanelOpen && !currentChatUserId) {
-        // ✅ Only update badges, don't rebuild whole list
-        const { userId: myId } = getDMUser();
-        const { data: unreadData } = await dmSupabase
-            .from('direct_messages')
-            .select('sender_id')
-            .eq('receiver_id', myId)
-            .eq('is_read', false);
+                updateUnreadBadge();
 
-        const unreadCounts = {};
-        if (unreadData) {
-            unreadData.forEach(msg => {
-                unreadCounts[msg.sender_id] = (unreadCounts[msg.sender_id] || 0) + 1;
-            });
-        }
-
-        // Update existing badges without rebuilding list
-        const userListEl = document.getElementById('dm-user-list');
-        const userItems = userListEl.querySelectorAll('[data-user-id]');
-        userItems.forEach(item => {
-            const uid = item.getAttribute('data-user-id');
-            let badge = item.querySelector('.user-unread-badge');
-            const count = unreadCounts[uid] || 0;
-            if (count > 0) {
-                if (!badge) {
-                    badge = document.createElement('span');
-                    badge.classList.add('user-unread-badge');
-                    badge.style.cssText = `background:red;color:white;border-radius:50%;width:18px;height:18px;line-height:18px;text-align:center;font-size:0.7rem;font-weight:bold;`;
-                    item.appendChild(badge);
+                if (currentChatUserId) {
+                    loadDMMessages();
                 }
-                badge.textContent = count;
-            } else if (badge) {
-                badge.remove();
-            }
-        });
-    }
-}, 3000);
-    }
-});
+
+                if (dmPanelOpen && !currentChatUserId) {
+                    const { userId: myId } = getDMUser();
+                    const { data: unreadData } = await dmSupabase
+                        .from('direct_messages')
+                        .select('sender_id')
+                        .eq('receiver_id', myId)
+                        .eq('is_read', false);
+
+                    const unreadCounts = {};
+                    if (unreadData) {
+                        unreadData.forEach(msg => {
+                            unreadCounts[msg.sender_id] = (unreadCounts[msg.sender_id] || 0) + 1;
+                        });
+                    }
+
+                    const userListEl = document.getElementById('dm-user-list');
+                    const userItems = userListEl.querySelectorAll('[data-user-id]');
+                    userItems.forEach(item => {
+                        const uid = item.getAttribute('data-user-id');
+                        let badge = item.querySelector('.user-unread-badge');
+                        const count = unreadCounts[uid] || 0;
+                        if (count > 0) {
+                            if (!badge) {
+                                badge = document.createElement('span');
+                                badge.classList.add('user-unread-badge');
+                                badge.style.cssText = `background:red;color:white;border-radius:50%;width:18px;height:18px;line-height:18px;text-align:center;font-size:0.7rem;font-weight:bold;`;
+                                item.appendChild(badge);
+                            }
+                            badge.textContent = count;
+                        } else if (badge) {
+                            badge.remove();
+                        }
+                    });
+                }
+            }, 3000);
+        }, 1000); // ✅ closes setTimeout
+    } // ✅ closes if (userId)
+}); // ✅ closes DOMContentLoaded
