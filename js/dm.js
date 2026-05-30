@@ -96,6 +96,7 @@ const users = Array.isArray(data) ? data : [];
                 border-bottom: 1px solid #f0f0f0;
                 position: relative;
             `;
+            userBtn.setAttribute('data-user-id', user._id);
             userBtn.onmouseenter = () => userBtn.style.background = '#f5f5f5';
             userBtn.onmouseleave = () => userBtn.style.background = '';
 
@@ -335,9 +336,49 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             subscribeUnread();
             // ✅ Poll badge every 5 seconds as fallback
-            setInterval(() => {
-                updateUnreadBadge();
-            }, 5000);
-        }, 1000);
+            setInterval(async () => {
+    updateUnreadBadge();
+    
+    if (currentChatUserId) {
+        loadDMMessages();
+    }
+    
+    if (dmPanelOpen && !currentChatUserId) {
+        // ✅ Only update badges, don't rebuild whole list
+        const { userId: myId } = getDMUser();
+        const { data: unreadData } = await dmSupabase
+            .from('direct_messages')
+            .select('sender_id')
+            .eq('receiver_id', myId)
+            .eq('is_read', false);
+
+        const unreadCounts = {};
+        if (unreadData) {
+            unreadData.forEach(msg => {
+                unreadCounts[msg.sender_id] = (unreadCounts[msg.sender_id] || 0) + 1;
+            });
+        }
+
+        // Update existing badges without rebuilding list
+        const userListEl = document.getElementById('dm-user-list');
+        const userItems = userListEl.querySelectorAll('[data-user-id]');
+        userItems.forEach(item => {
+            const uid = item.getAttribute('data-user-id');
+            let badge = item.querySelector('.user-unread-badge');
+            const count = unreadCounts[uid] || 0;
+            if (count > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.classList.add('user-unread-badge');
+                    badge.style.cssText = `background:red;color:white;border-radius:50%;width:18px;height:18px;line-height:18px;text-align:center;font-size:0.7rem;font-weight:bold;`;
+                    item.appendChild(badge);
+                }
+                badge.textContent = count;
+            } else if (badge) {
+                badge.remove();
+            }
+        });
+    }
+}, 3000);
     }
 });
