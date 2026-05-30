@@ -59,7 +59,8 @@ function displayPostDetails(post) {
     authorLink.textContent = ` ${post.author.username} `; //The username here
 
     authorDateElement.appendChild(authorLink) // Link to the profile page
-    authorDateElement.append(` on ${formatDate(post.createdAt)}`);
+    const editedText = post.editedAt ? ` (edited ${formatDate(post.editedAt)})` : '';
+authorDateElement.append(` on ${formatDate(post.createdAt)}${editedText}`);
 
     contentContainer.appendChild(authorDateElement);
 
