@@ -18,7 +18,9 @@ function getDMUser() {
 
 function initDMSupabase() {
     if (!dmSupabase) {
-        dmSupabase = window.supabase.createClient(DM_SUPABASE_URL, DM_SUPABASE_ANON);
+        // Reuse map-panel's client if available, otherwise create new
+        dmSupabase = window.dmSupabaseClient || window.supabase.createClient(DM_SUPABASE_URL, DM_SUPABASE_ANON);
+        window.dmSupabaseClient = dmSupabase;
     }
 }
 
