@@ -162,7 +162,7 @@ async function openDMChat(userId, username) {
     document.getElementById('dm-messages').style.height = messagesHeight + 'px';
     document.getElementById('dm-messages').style.maxHeight = messagesHeight + 'px';
 
-    await loadDMMessages();
+    await loadDMMessages(true);
     subscribeDMChat();
 
     if (window.dmPollInterval) clearInterval(window.dmPollInterval);
@@ -171,7 +171,7 @@ async function openDMChat(userId, username) {
             clearInterval(window.dmPollInterval);
             return;
         }
-        await loadDMMessages();
+        await loadDMMessages(true);
     }, 3000);
 
     // Mark messages as read
@@ -198,7 +198,7 @@ function showDMUserList() {
 }
 
 // Load chat messages
-async function loadDMMessages() {
+async function loadDMMessages(isFirstLoad = false) {
     const { userId: myId } = getDMUser();
     const messagesEl = document.getElementById('dm-messages');
 
@@ -211,17 +211,20 @@ async function loadDMMessages() {
 
     if (error) { console.error('Load DM error:', error); return; }
     
-    // ✅ Only add new messages, don't clear existing
     data.forEach(msg => {
         if (!document.querySelector(`[data-msg-id="${msg.id}"]`)) {
             appendDMMessage(msg);
         }
     });
     
-    // ✅ Only auto-scroll if user is near the bottom
-const isNearBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 100;
-if (isNearBottom) {
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+    // ✅ Always scroll on first load, otherwise only if near bottom
+    if (isFirstLoad) {
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    } else {
+        const isNearBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 100;
+        if (isNearBottom) {
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
     }
 }
 
