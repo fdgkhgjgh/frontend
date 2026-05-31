@@ -378,7 +378,7 @@ function playNotificationSound() {
 }
 
 // ==========================================================================
-// 移动端虚拟键盘核心防遮挡补丁（全机型 100% 显形）
+// 移动端虚拟键盘对齐补丁（防止重复顶高、压扁聊天框）
 // ==========================================================================
 
 function adjustPanelHeightForKeyboard() {
@@ -388,43 +388,68 @@ function adjustPanelHeightForKeyboard() {
     const messagesEl = document.getElementById('dm-messages');
     if (!panel) return;
 
-    // 🌟 如果支持高级的 visualViewport（手机端几乎都支持）
+    // 🌟 核心思路：不再死卡 panel 的 height，而是动态调整 panel 的底部留白，把输入框顺上去
     if (window.visualViewport) {
-        const vpHeight = window.visualViewport.height; // 这是去掉键盘后的纯净空高度
-        
-        // 1. 强行把整个私信面板拉伸到只有净空高度那么高
-        panel.style.height = vpHeight + 'px';
-        
-        // 2. 动态重新计算聊天消息区域的最高限制，把输入框逼到键盘顶端
+        const totalHeight = window.innerHeight;            // 整个网页饱满高度
+        const viewportHeight = window.visualViewport.height; // 扣除键盘后的净高度
+        const keyboardHeight = totalHeight - viewportHeight; // 算出键盘的真实高度
+
+        if (keyboardHeight > 100) {
+            // 【键盘弹起状态】
+            // 1. 面板高度保持满屏，但缩减底部 padding，把底部的输入框刚好抬高到键盘上方
+            panel.style.height = '100dvh';
+            panel.style.paddingBottom = keyboardHeight + 'px';
+        } else {
+            // 【键盘收起状态】
+            panel.style.height = '100dvh';
+            panel.style.paddingBottom = '0px';
+        }
+
+        // 2. 让聊天消息区域保持弹性自适应
         const headerHeight = 50; 
         const chatHeaderHeight = 44; 
         const inputHeight = document.getElementById('dm-input') ? document.getElementById('dm-input').parentElement.offsetHeight : 52;
-        const messagesHeight = vpHeight - headerHeight - chatHeaderHeight - inputHeight;
         
-        if (messagesEl) {
+        // 消息区域的纯净高度计算
+        const messagesHeight = viewportHeight - headerHeight - chatHeaderHeight - inputHeight;
+        
+        if (messagesEl && messagesHeight > 100) {
             messagesEl.style.height = messagesHeight + 'px';
             messagesEl.style.maxHeight = messagesHeight + 'px';
-            // 键盘弹起时，自动滚到聊天最底部，防止看不见新消息
-            messagesEl.scrollTop = messagesEl.scrollHeight;
+            
+            // 自动滚到聊天最底部看最新消息
+            setTimeout(() => {
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            }, 50);
         }
     }
 }
 
-// 监听视觉视口的变化（键盘弹起、缩回、手机横竖屏切换时都会完美触发）
+// 维持原有的视觉视口监听
 if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', adjustPanelHeightForKeyboard);
-    window.visualViewport.addEventListener('scroll', adjustPanelHeightForKeyboard);
-} else {
-    // 备用低版本兼容
-    window.addEventListener('resize', adjustPanelHeightForKeyboard);
 }
 
-// 针对你说的“第一次点击被覆盖”，在点击输入框聚焦时，强行主动触发一次计算
+// 用户点击输入框聚焦时触发
 document.addEventListener('focusin', (e) => {
     if (e.target && e.target.id === 'dm-input') {
-        setTimeout(adjustPanelHeightForKeyboard, 200); // 延迟200毫秒等键盘完全弹起
+        setTimeout(adjustPanelHeightForKeyboard, 100);
     }
 });
+
+// 用户退出输入框时恢复初始
+document.addEventListener('focusout', (e) => {
+    if (e.target && e.target.id === 'dm-input') {
+        setTimeout(() => {
+            const panel = document.getElementById('dm-panel');
+            if (panel) {
+                panel.style.height = '100dvh';
+                panel.style.paddingBottom = '0px';
+            }
+        }, 100);
+    }
+});
+
 
 
 // Init unread badge on page load
