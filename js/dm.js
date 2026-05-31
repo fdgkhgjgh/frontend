@@ -204,6 +204,7 @@ chatWindow.style.display = 'flex';
     // Track if user scrolls up
 document.getElementById('dm-messages').addEventListener('scroll', () => {
     const messagesEl = document.getElementById('dm-messages');
+    messagesEl.style.paddingBottom = '80px';
     const distanceFromBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight;
     userScrollingUp = distanceFromBottom > 100;
 });
