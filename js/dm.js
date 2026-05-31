@@ -237,6 +237,7 @@ async function loadDMMessages(isFirstLoad = false) {
 }
 
 // Append a single message
+// Append a single message (已完美修复多行文本从右向左扩张、隐形看不清的问题)
 function appendDMMessage(msg) {
     const { userId: myId } = getDMUser();
     const isMe = msg.sender_id === myId;
@@ -258,22 +259,36 @@ function appendDMMessage(msg) {
 
     const div = document.createElement('div');
     if (msg.id) div.setAttribute('data-msg-id', msg.id);
-    div.style.cssText = `margin-bottom:8px; text-align:${isMe ? 'right' : 'left'};`;
+    
+    // 🌟 核心修改 1：通过 Flex 布局，把属于“我”的消息一整块推到右边 (flex-end)，对方的在左边 (flex-start)
+    div.style.cssText = `
+        margin-bottom: 12px; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: ${isMe ? 'flex-end' : 'flex-start'};
+        width: 100%;
+    `;
+
+    // 🌟 核心修改 2：气泡内部使用 text-align: left 强行锁死从左往右的书写流！
+    // 🌟 核心修改 3：添加 white-space: pre-line，顺便完美支持用户敲回车发送换行！
     div.innerHTML = `
-        <div style="font-size:0.7rem; color:#aaa; margin-bottom:2px;">${timeStr}</div>
+        <div style="font-size:0.7rem; color:#aaa; margin-bottom:4px; text-align:${isMe ? 'right' : 'left'};">${timeStr}</div>
         <span style="
-            display:inline-block;
-            background:${isMe ? '#4f46e5' : '#e2e8f0'};
-            color:${isMe ? '#fff' : '#333'};
-            padding:6px 10px;
-            border-radius:12px;
-            font-size:0.85rem;
-            max-width:80%;
-            word-break:break-word;
+            display: inline-block;
+            background: ${isMe ? '#4f46e5' : '#e2e8f0'};
+            color: ${isMe ? '#fff' : '#333'};
+            padding: 8px 14px;
+            border-radius: ${isMe ? '16px 16px 2px 16px' : '16px 16px 16px 2px'};
+            font-size: 1.1rem;
+            max-width: 75%;
+            word-break: break-word;
+            text-align: left;
+            white-space: pre-line;
         ">${msg.message}</span>
     `;
     messagesEl.appendChild(div);
 }
+
 
 // Subscribe to realtime DM messages
 function subscribeDMChat() {
