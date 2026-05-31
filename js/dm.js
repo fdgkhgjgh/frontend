@@ -171,6 +171,8 @@ document.getElementById('dm-messages').addEventListener('scroll', () => {
 
     await loadDMMessages(true);
     subscribeDMChat();
+if (typeof adjustPanelHeightForKeyboard === 'function') { adjustPanelHeightForKeyboard(); }
+
 
     if (window.dmPollInterval) clearInterval(window.dmPollInterval);
     window.dmPollInterval = setInterval(async () => {
@@ -374,6 +376,56 @@ function playNotificationSound() {
     oscillator.start(ctx.currentTime);
     oscillator.stop(ctx.currentTime + 0.3);
 }
+
+// ==========================================================================
+// 移动端虚拟键盘核心防遮挡补丁（全机型 100% 显形）
+// ==========================================================================
+
+function adjustPanelHeightForKeyboard() {
+    if (!dmPanelOpen) return;
+
+    const panel = document.getElementById('dm-panel');
+    const messagesEl = document.getElementById('dm-messages');
+    if (!panel) return;
+
+    // 🌟 如果支持高级的 visualViewport（手机端几乎都支持）
+    if (window.visualViewport) {
+        const vpHeight = window.visualViewport.height; // 这是去掉键盘后的纯净空高度
+        
+        // 1. 强行把整个私信面板拉伸到只有净空高度那么高
+        panel.style.height = vpHeight + 'px';
+        
+        // 2. 动态重新计算聊天消息区域的最高限制，把输入框逼到键盘顶端
+        const headerHeight = 50; 
+        const chatHeaderHeight = 44; 
+        const inputHeight = document.getElementById('dm-input') ? document.getElementById('dm-input').parentElement.offsetHeight : 52;
+        const messagesHeight = vpHeight - headerHeight - chatHeaderHeight - inputHeight;
+        
+        if (messagesEl) {
+            messagesEl.style.height = messagesHeight + 'px';
+            messagesEl.style.maxHeight = messagesHeight + 'px';
+            // 键盘弹起时，自动滚到聊天最底部，防止看不见新消息
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+    }
+}
+
+// 监听视觉视口的变化（键盘弹起、缩回、手机横竖屏切换时都会完美触发）
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', adjustPanelHeightForKeyboard);
+    window.visualViewport.addEventListener('scroll', adjustPanelHeightForKeyboard);
+} else {
+    // 备用低版本兼容
+    window.addEventListener('resize', adjustPanelHeightForKeyboard);
+}
+
+// 针对你说的“第一次点击被覆盖”，在点击输入框聚焦时，强行主动触发一次计算
+document.addEventListener('focusin', (e) => {
+    if (e.target && e.target.id === 'dm-input') {
+        setTimeout(adjustPanelHeightForKeyboard, 200); // 延迟200毫秒等键盘完全弹起
+    }
+});
+
 
 // Init unread badge on page load
 document.addEventListener('DOMContentLoaded', () => {
