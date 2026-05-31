@@ -299,6 +299,7 @@ async function sendDM() {
 
     if (error) { console.error('Send DM error:', error); return; }
     input.value = '';
+    input.style.height = '36px'; // ✅ reset height after send
     
     // ✅ Let poll pick it up instead of manually appending
     await loadDMMessages();
