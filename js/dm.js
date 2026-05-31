@@ -360,12 +360,6 @@ window.toggleDMPanel = toggleDMPanel;
 window.sendDM = sendDM;
 window.showDMUserList = showDMUserList;
 
-window.addEventListener('resize', () => {
-    if (dmPanelOpen) {
-        const panel = document.getElementById('dm-panel');
-        panel.style.height = window.innerHeight + 'px';
-    }
-});
 //sound
 function playNotificationSound() {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
