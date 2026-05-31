@@ -56,7 +56,6 @@ function toggleDMPanel() {
         // ✅ Set exact pixel height via JS
         const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
 panel.style.height = height + 'px';
-        panel.style.height = vh + 'px';
         panel.style.display = 'flex';
         overlay.style.display = 'block';
         loadDMUserList();
