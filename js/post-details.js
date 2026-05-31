@@ -300,8 +300,8 @@ if (post.videoUrls && post.videoUrls.length > 0) {
 const handleClick = () => {
     const inlineVideoContainer = document.createElement('div');
     inlineVideoContainer.style.cssText = `
-        width: 240px;
-        height: 190px;
+        width: 120px;
+        height: 180px;
         margin: 10px 0;
         display: inline-block;
         position: relative;
@@ -311,8 +311,8 @@ const handleClick = () => {
     videoElement.src = firstVideoUrl;
     videoElement.controls = true;
     videoElement.style.cssText = `
-        width: 240px;
-        height: 190px;
+        width: 120px;
+        height: 180px;
         object-fit: cover;
         border-radius: 5px;
         display: block;
@@ -349,16 +349,16 @@ const handleClick = () => {
                    // --- 1. HANDLE PAUSE EVENT ---
     videoElement.addEventListener('pause', () => {
         inlineVideoContainer.style.cssText = `
-            width: 240px;
-            height: 190px;
+            width: 120px;
+            height: 180px;
             margin: 10px 0;
             display: inline-block;
             position: relative;
             cursor: pointer;
         `;
         videoElement.style.cssText = `
-            width: 240px;
-            height: 190px;
+            width: 120px;
+            height: 180px;
             object-fit: cover;
             border-radius: 5px;
             display: block;
