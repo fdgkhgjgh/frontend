@@ -377,7 +377,29 @@ function playNotificationSound() {
     oscillator.stop(ctx.currentTime + 0.3);
 }
 
+//keyboard jump
+function scrollToBottomOnKeyboard() {
+    if (!dmPanelOpen) return;
+    const messagesEl = document.getElementById('dm-messages');
+    if (messagesEl) {
+        // 🌟 键盘弹起需要一点点时间（约200ms），延迟一点点强行滚到最底部，确保能看到最新消息
+        setTimeout(() => {
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }, 200);
+    }
+}
 
+// 监听手机键盘弹起引起的视口变化
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', scrollToBottomOnKeyboard);
+}
+
+// 当用户点击输入框时，也主动触发一次滚动
+document.addEventListener('focusin', (e) => {
+    if (e.target && e.target.id === 'dm-input') {
+        scrollToBottomOnKeyboard();
+    }
+});
 
 
 // Init unread badge on page load
