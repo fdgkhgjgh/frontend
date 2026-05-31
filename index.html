@@ -361,15 +361,17 @@
 
     <!-- Chat window -->
     <div id="dm-chat-window" style="
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: #fff;
-    ">
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: auto;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background: #fff;
+    z-index: 99999;
+">
         <!-- Chat header -->
         <div style="
             padding: 8px 12px;
