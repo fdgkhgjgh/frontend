@@ -161,7 +161,12 @@ document.getElementById('dm-messages').addEventListener('scroll', () => {
     document.getElementById('dm-messages').innerHTML = '';
     // ✅ Recalculate heights when keyboard opens on mobile
 const dmInput = document.getElementById('dm-input');
-dmInput.addEventListener('focusin', () => {
+
+// ✅ Remove old listeners first to prevent stacking
+const newDmInput = dmInput.cloneNode(true);
+dmInput.parentNode.replaceChild(newDmInput, dmInput);
+
+newDmInput.addEventListener('focusin', () => {
     setTimeout(() => {
         const panelHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
         const headerHeight = 50;
@@ -172,11 +177,10 @@ dmInput.addEventListener('focusin', () => {
         messagesEl.style.height = messagesHeight + 'px';
         messagesEl.style.maxHeight = messagesHeight + 'px';
         messagesEl.scrollTop = messagesEl.scrollHeight;
-    }, 300); // wait for keyboard animation
-}, { once: false });
+    }, 300);
+});
 
-// ✅ Restore height when keyboard closes
-dmInput.addEventListener('focusout', () => {
+newDmInput.addEventListener('focusout', () => {
     setTimeout(() => {
         const panelHeight = window.innerHeight;
         const headerHeight = 50;
@@ -187,6 +191,14 @@ dmInput.addEventListener('focusout', () => {
         messagesEl.style.height = messagesHeight + 'px';
         messagesEl.style.maxHeight = messagesHeight + 'px';
     }, 300);
+});
+
+// ✅ Also update sendDM to use newDmInput
+newDmInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        sendDM();
+        e.preventDefault();
+    }
 });
 
     // ✅ Set messages area height dynamically
