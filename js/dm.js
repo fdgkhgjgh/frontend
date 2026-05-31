@@ -213,7 +213,7 @@ document.getElementById('dm-messages').addEventListener('scroll', () => {
 const inputBar = document.getElementById('dm-input-bar');
 if (inputBar) inputBar.style.bottom = '0px';
     
-    document.getElementById('dm-messages').style.paddingBottom = '80px';
+    document.getElementById('dm-messages').style.paddingBottom = '60px';
     await loadDMMessages(true);
     subscribeDMChat();
 
