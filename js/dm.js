@@ -37,9 +37,7 @@ function toggleDMPanel() {
     dmPanelOpen = !dmPanelOpen;
 
     if (dmPanelOpen) {
-        // ✅ Set exact pixel height via JS
-        const vh = window.innerHeight;
-        panel.style.height = vh + 'px';
+        // 🌟 彻底删除之前在这里硬编码 panel.style.height = vh + 'px' 的两行代码！
         panel.style.display = 'flex';
         overlay.style.display = 'block';
         loadDMUserList();
@@ -51,6 +49,7 @@ function toggleDMPanel() {
         if (window.dmPollInterval) clearInterval(window.dmPollInterval);
     }
 }
+
 
 
 // Load all users from backend
