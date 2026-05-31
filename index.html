@@ -402,16 +402,20 @@
     "></div>
 
     <!-- Input row -->
-    <div style="
-        display: flex;
-        gap: 6px;
-        padding: 8px;
-        border-top: 1px solid #ddd;
-        background: #fff;
-        flex-shrink: 0;
-        position: sticky;
-        bottom: 0;
-    ">
+<div id="dm-input-bar" style="
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    border-top: 1px solid #ddd;
+    background: #fff;
+    flex-shrink: 0;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    box-sizing: border-box;
+    z-index: 100000;
+">
         <button onclick="sendDM()" style="
             background: #4f46e5;
             color: white;
