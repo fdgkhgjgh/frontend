@@ -11,6 +11,39 @@ let dmPanelOpen = false;
 let previousUnreadCount = 0;
 let userScrollingUp = false;
 
+// ✅ Register keyboard handlers once on page load
+function initKeyboardHandlers() {
+    const dmInput = document.getElementById('dm-input');
+    if (!dmInput) return;
+
+    dmInput.addEventListener('focusin', () => {
+        if (!currentChatUserId) return;
+        setTimeout(() => {
+            const panelHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            const messagesHeight = panelHeight - 50 - 44 - 52;
+            const messagesEl = document.getElementById('dm-messages');
+            if (messagesEl) {
+                messagesEl.style.height = messagesHeight + 'px';
+                messagesEl.style.maxHeight = messagesHeight + 'px';
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+        }, 300);
+    });
+
+    dmInput.addEventListener('focusout', () => {
+        if (!currentChatUserId) return;
+        setTimeout(() => {
+            const panelHeight = window.innerHeight;
+            const messagesHeight = panelHeight - 50 - 44 - 52;
+            const messagesEl = document.getElementById('dm-messages');
+            if (messagesEl) {
+                messagesEl.style.height = messagesHeight + 'px';
+                messagesEl.style.maxHeight = messagesHeight + 'px';
+            }
+        }, 300);
+    });
+}
+
 function getDMUser() {
     return {
         userId: localStorage.getItem('userId'),
@@ -159,47 +192,7 @@ document.getElementById('dm-messages').addEventListener('scroll', () => {
 });
     document.getElementById('dm-chat-username').textContent = username;
     document.getElementById('dm-messages').innerHTML = '';
-    // ✅ Recalculate heights when keyboard opens on mobile
-const dmInput = document.getElementById('dm-input');
-
-// ✅ Remove old listeners first to prevent stacking
-const newDmInput = dmInput.cloneNode(true);
-dmInput.parentNode.replaceChild(newDmInput, dmInput);
-
-newDmInput.addEventListener('focusin', () => {
-    setTimeout(() => {
-        const panelHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-        const headerHeight = 50;
-        const chatHeaderHeight = 44;
-        const inputHeight = 52;
-        const messagesHeight = panelHeight - headerHeight - chatHeaderHeight - inputHeight;
-        const messagesEl = document.getElementById('dm-messages');
-        messagesEl.style.height = messagesHeight + 'px';
-        messagesEl.style.maxHeight = messagesHeight + 'px';
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-    }, 300);
-});
-
-newDmInput.addEventListener('focusout', () => {
-    setTimeout(() => {
-        const panelHeight = window.innerHeight;
-        const headerHeight = 50;
-        const chatHeaderHeight = 44;
-        const inputHeight = 52;
-        const messagesHeight = panelHeight - headerHeight - chatHeaderHeight - inputHeight;
-        const messagesEl = document.getElementById('dm-messages');
-        messagesEl.style.height = messagesHeight + 'px';
-        messagesEl.style.maxHeight = messagesHeight + 'px';
-    }, 300);
-});
-
-// ✅ Also update sendDM to use newDmInput
-newDmInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        sendDM();
-        e.preventDefault();
-    }
-});
+    
 
     // ✅ Set messages area height dynamically
     const panelHeight = window.innerHeight;
@@ -428,6 +421,7 @@ window.addEventListener('resize', () => {
 
 // Init unread badge on page load
 document.addEventListener('DOMContentLoaded', () => {
+    initKeyboardHandlers();
     const { userId } = getDMUser();
     if (userId) {
         initDMSupabase();
