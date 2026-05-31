@@ -1180,6 +1180,10 @@ img {
     pointer-events: auto !important;
 }
 
+#dm-input {
+    font-size: 1rem;
+}
+
 
 
 
