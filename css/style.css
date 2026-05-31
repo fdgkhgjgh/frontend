@@ -1180,6 +1180,16 @@ img {
     pointer-events: auto !important;
 }
 
+#dm-chat-window {
+    height: 100dvh;
+}
+
+#dm-messages {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
 
 
 
