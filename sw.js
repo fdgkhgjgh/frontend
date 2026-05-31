@@ -15,14 +15,10 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-    // Only cache CSS files, pass everything else through
-    if (event.request.url.includes('/css/')) {
-        event.respondWith(
-            caches.match(event.request)
-                .then(response => response || fetch(event.request))
-        );
-        return;
-    }
-    // Everything else passes through normally
-    event.respondWith(fetch(event.request));
+    event.respondWith(
+        fetch(event.request).catch(() => {
+            // Return empty response on network failure
+            return new Response('', { status: 408 });
+        })
+    );
 });
