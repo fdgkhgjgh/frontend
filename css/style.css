@@ -1191,6 +1191,9 @@ img {
     padding-bottom: 65px;
 }
 
+#dm-input-bar {
+    transition: bottom 0.15s ease;
+}
 
 
 
