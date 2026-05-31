@@ -417,37 +417,37 @@
     z-index: 100000;
     align-items: center;
 ">
-        <button onclick="sendDM()" style="
-            background: #4f46e5;
-            color: white;
-            border: none;
-            padding: 6px 12px;
+    <button onclick="sendDM()" style="
+        background: #4f46e5;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 16px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+        align-self: center;
+    ">发送</button>
+    <textarea id="dm-input" placeholder="点此输入...Type..."
+        style="
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
             border-radius: 16px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-            align-self: flex-end;
-        ">发送</button>
-        <textarea id="dm-input" placeholder="点此输入...Type..."
-            style="
-                flex: 1;
-                padding: 10px 14px;
-                border: 1px solid #ddd;
-                border-radius: 16px;
-                font-size: 1.1rem;
-                outline: none;
-                min-width: 0;
-                resize: none;
-                min-height: 36px;
-                max-height: 120px;
-                overflow-y: auto;
-                line-height: 1.4;
-                font-family: inherit;
-            "
-            oninput="this.style.height='36px'; this.style.height=Math.min(this.scrollHeight, 120)+'px';"
-            rows="1"
-        ></textarea>
-    </div>
+            font-size: 1.1rem;
+            outline: none;
+            min-width: 0;
+            resize: none;
+            min-height: 36px;
+            max-height: 120px;
+            overflow-y: auto;
+            line-height: 1.4;
+            font-family: inherit;
+        "
+        oninput="this.style.height='36px'; this.style.height=Math.min(this.scrollHeight, 120)+'px';"
+        rows="1"
+    ></textarea>
+</div>
 </div>
 </div>
 
