@@ -11,36 +11,19 @@ let dmPanelOpen = false;
 let previousUnreadCount = 0;
 let userScrollingUp = false;
 
-// ✅ Register keyboard handlers once on page load
-function initKeyboardHandlers() {
-    const dmInput = document.getElementById('dm-input');
-    if (!dmInput) return;
-
-    dmInput.addEventListener('focusin', () => {
+// ✅ iOS keyboard fix using visualViewport
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
         if (!currentChatUserId) return;
-        setTimeout(() => {
-            const panelHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-            const messagesHeight = panelHeight - 50 - 44 - 52;
-            const messagesEl = document.getElementById('dm-messages');
-            if (messagesEl) {
-                messagesEl.style.height = messagesHeight + 'px';
-                messagesEl.style.maxHeight = messagesHeight + 'px';
-                messagesEl.scrollTop = messagesEl.scrollHeight;
-            }
-        }, 300);
-    });
-
-    dmInput.addEventListener('focusout', () => {
-        if (!currentChatUserId) return;
-        setTimeout(() => {
-            const panelHeight = window.innerHeight;
-            const messagesHeight = panelHeight - 50 - 44 - 52;
-            const messagesEl = document.getElementById('dm-messages');
-            if (messagesEl) {
-                messagesEl.style.height = messagesHeight + 'px';
-                messagesEl.style.maxHeight = messagesHeight + 'px';
-            }
-        }, 300);
+        const chatWindow = document.getElementById('dm-chat-window');
+        if (chatWindow && chatWindow.style.display !== 'none') {
+            chatWindow.style.height = window.visualViewport.height + 'px';
+            // Scroll to bottom after resize
+            setTimeout(() => {
+                const messagesEl = document.getElementById('dm-messages');
+                if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+            }, 100);
+        }
     });
 }
 
@@ -71,7 +54,8 @@ function toggleDMPanel() {
 
     if (dmPanelOpen) {
         // ✅ Set exact pixel height via JS
-        const vh = window.innerHeight;
+        const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+panel.style.height = height + 'px';
         panel.style.height = vh + 'px';
         panel.style.display = 'flex';
         overlay.style.display = 'block';
@@ -185,7 +169,8 @@ async function openDMChat(userId, username) {
 
     document.getElementById('dm-user-list').style.display = 'none';
     const chatWindow = document.getElementById('dm-chat-window');
-    chatWindow.style.display = 'flex';
+chatWindow.style.height = (window.visualViewport ? window.visualViewport.height : window.innerHeight) + 'px';
+chatWindow.style.display = 'flex';
     // Track if user scrolls up
 document.getElementById('dm-messages').addEventListener('scroll', () => {
     const messagesEl = document.getElementById('dm-messages');
