@@ -349,8 +349,8 @@ const handleClick = () => {
                    // --- 1. HANDLE PAUSE EVENT ---
     videoElement.addEventListener('pause', () => {
         inlineVideoContainer.style.cssText = `
-            width: 300px;
-            height: 240px;
+            width: 240px;
+            height: 190px;
             margin: 10px 0;
             display: inline-block;
             position: relative;
