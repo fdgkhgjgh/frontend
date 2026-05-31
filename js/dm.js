@@ -194,15 +194,6 @@ document.getElementById('dm-messages').addEventListener('scroll', () => {
     document.getElementById('dm-messages').innerHTML = '';
     
 
-    // ✅ Set messages area height dynamically
-    const panelHeight = window.innerHeight;
-    const headerHeight = 50; // panel header
-    const chatHeaderHeight = 44; // chat header with back button
-    const inputHeight = 52; // send button + input
-    const messagesHeight = panelHeight - headerHeight - chatHeaderHeight - inputHeight;
-    document.getElementById('dm-messages').style.height = messagesHeight + 'px';
-    document.getElementById('dm-messages').style.maxHeight = messagesHeight + 'px';
-
     await loadDMMessages(true);
     subscribeDMChat();
 if (typeof adjustPanelHeightForKeyboard === 'function') { adjustPanelHeightForKeyboard(); }
