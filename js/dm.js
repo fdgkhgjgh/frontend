@@ -196,7 +196,6 @@ document.getElementById('dm-messages').addEventListener('scroll', () => {
 
     await loadDMMessages(true);
     subscribeDMChat();
-if (typeof adjustPanelHeightForKeyboard === 'function') { adjustPanelHeightForKeyboard(); }
 
 
     if (window.dmPollInterval) clearInterval(window.dmPollInterval);
