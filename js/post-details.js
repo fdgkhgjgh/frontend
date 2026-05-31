@@ -357,8 +357,8 @@ const handleClick = () => {
             cursor: pointer;
         `;
         videoElement.style.cssText = `
-            width: 300px;
-            height: 240px;
+            width: 240px;
+            height: 190px;
             object-fit: cover;
             border-radius: 5px;
             display: block;
