@@ -14,11 +14,15 @@ let userScrollingUp = false;
 // ✅ iOS keyboard fix using visualViewport
 if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
+        const inputBar = document.getElementById('dm-input-bar');
         const chatWindow = document.getElementById('dm-chat-window');
-        if (!chatWindow || chatWindow.style.display === 'none') return;
-        if (!currentChatUserId) return;
-        
-        chatWindow.style.height = window.visualViewport.height + 'px';
+        if (!inputBar || !chatWindow || chatWindow.style.display === 'none') return;
+
+        // Move input bar up by the keyboard height
+        const keyboardHeight = window.innerHeight - window.visualViewport.height;
+        inputBar.style.bottom = keyboardHeight + 'px';
+
+        // Scroll messages to bottom
         setTimeout(() => {
             const messagesEl = document.getElementById('dm-messages');
             if (messagesEl && !userScrollingUp) {
