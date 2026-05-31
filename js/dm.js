@@ -32,6 +32,31 @@ if (window.visualViewport) {
     });
 }
 
+// ✅ Focus/blur to track keyboard on iOS
+document.addEventListener('DOMContentLoaded', () => {
+    const dmInput = document.getElementById('dm-input');
+    if (!dmInput) return;
+
+    dmInput.addEventListener('focus', () => {
+        setTimeout(() => {
+            const inputBar = document.getElementById('dm-input-bar');
+            if (!inputBar) return;
+            const keyboardHeight = window.innerHeight - (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+            inputBar.style.bottom = keyboardHeight + 'px';
+            const messagesEl = document.getElementById('dm-messages');
+            if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+        }, 400);
+    });
+
+    dmInput.addEventListener('blur', () => {
+        setTimeout(() => {
+            const inputBar = document.getElementById('dm-input-bar');
+            if (inputBar) inputBar.style.bottom = '0px';
+        }, 100);
+    });
+});
+
+//first function
 function getDMUser() {
     return {
         userId: localStorage.getItem('userId'),
@@ -184,6 +209,9 @@ document.getElementById('dm-messages').addEventListener('scroll', () => {
 });
     document.getElementById('dm-chat-username').textContent = username;
     document.getElementById('dm-messages').innerHTML = '';
+    // Reset input bar position when opening chat
+const inputBar = document.getElementById('dm-input-bar');
+if (inputBar) inputBar.style.bottom = '0px';
     
 
     await loadDMMessages(true);
@@ -218,6 +246,9 @@ function showDMUserList() {
     document.getElementById('dm-chat-window').style.display = 'none';
     document.getElementById('dm-user-list').style.display = 'block';
     if (dmChannel) dmChannel.unsubscribe();
+    // Reset input bar position when going back to user list
+const inputBar = document.getElementById('dm-input-bar');
+if (inputBar) inputBar.style.bottom = '0px';
     if (window.dmPollInterval) clearInterval(window.dmPollInterval);
     loadDMUserList();
 }
