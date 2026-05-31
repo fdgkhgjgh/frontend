@@ -14,16 +14,17 @@ let userScrollingUp = false;
 // ✅ iOS keyboard fix using visualViewport
 if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
-        if (!currentChatUserId) return;
         const chatWindow = document.getElementById('dm-chat-window');
-        if (chatWindow && chatWindow.style.display !== 'none') {
-            chatWindow.style.height = window.visualViewport.height + 'px';
-            // Scroll to bottom after resize
-            setTimeout(() => {
-                const messagesEl = document.getElementById('dm-messages');
-                if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
-            }, 100);
-        }
+        if (!chatWindow || chatWindow.style.display === 'none') return;
+        if (!currentChatUserId) return;
+        
+        chatWindow.style.height = window.visualViewport.height + 'px';
+        setTimeout(() => {
+            const messagesEl = document.getElementById('dm-messages');
+            if (messagesEl && !userScrollingUp) {
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+        }, 100);
     });
 }
 
@@ -168,7 +169,8 @@ async function openDMChat(userId, username) {
 
     document.getElementById('dm-user-list').style.display = 'none';
     const chatWindow = document.getElementById('dm-chat-window');
-chatWindow.style.height = (window.visualViewport ? window.visualViewport.height : window.innerHeight) + 'px';
+const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+chatWindow.style.height = vh + 'px';
 chatWindow.style.display = 'flex';
     // Track if user scrolls up
 document.getElementById('dm-messages').addEventListener('scroll', () => {
@@ -397,7 +399,6 @@ window.addEventListener('resize', () => {
 
 // Init unread badge on page load
 document.addEventListener('DOMContentLoaded', () => {
-    initKeyboardHandlers();
     const { userId } = getDMUser();
     if (userId) {
         initDMSupabase();
