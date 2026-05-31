@@ -415,17 +415,26 @@
                 font-size: 0.85rem;
                 flex-shrink: 0;
             ">发送</button>
-            <input id="dm-input" type="text" placeholder="点此输入...Type..."
-                onkeydown="if(event.key==='Enter') sendDM()"
-                style="
-                    flex: 1;
-                    padding: 10px 14px;
-                    border: 1px solid #ddd;
-                    border-radius: 16px;
-                    font-size: 1.1rem;
-                    outline: none;
-                    min-width: 0;
-                "/>
+            <textarea id="dm-input" placeholder="点此输入...Type..."
+    onkeydown="if(event.key==='Enter' && !event.shiftKey) { sendDM(); event.preventDefault(); }"
+    style="
+        flex: 1;
+        padding: 10px 14px;
+        border: 1px solid #ddd;
+        border-radius: 16px;
+        font-size: 1.1rem;
+        outline: none;
+        min-width: 0;
+        resize: none;
+        min-height: 36px;
+        max-height: 120px;
+        overflow-y: auto;
+        line-height: 1.4;
+        font-family: inherit;
+    "
+    oninput="this.style.height='36px'; this.style.height=Math.min(this.scrollHeight, 120)+'px';"
+    rows="1"
+></textarea>
         </div>
     </div>
 </div>
