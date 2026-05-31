@@ -159,6 +159,35 @@ document.getElementById('dm-messages').addEventListener('scroll', () => {
 });
     document.getElementById('dm-chat-username').textContent = username;
     document.getElementById('dm-messages').innerHTML = '';
+    // ✅ Recalculate heights when keyboard opens on mobile
+const dmInput = document.getElementById('dm-input');
+dmInput.addEventListener('focusin', () => {
+    setTimeout(() => {
+        const panelHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        const headerHeight = 50;
+        const chatHeaderHeight = 44;
+        const inputHeight = 52;
+        const messagesHeight = panelHeight - headerHeight - chatHeaderHeight - inputHeight;
+        const messagesEl = document.getElementById('dm-messages');
+        messagesEl.style.height = messagesHeight + 'px';
+        messagesEl.style.maxHeight = messagesHeight + 'px';
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }, 300); // wait for keyboard animation
+}, { once: false });
+
+// ✅ Restore height when keyboard closes
+dmInput.addEventListener('focusout', () => {
+    setTimeout(() => {
+        const panelHeight = window.innerHeight;
+        const headerHeight = 50;
+        const chatHeaderHeight = 44;
+        const inputHeight = 52;
+        const messagesHeight = panelHeight - headerHeight - chatHeaderHeight - inputHeight;
+        const messagesEl = document.getElementById('dm-messages');
+        messagesEl.style.height = messagesHeight + 'px';
+        messagesEl.style.maxHeight = messagesHeight + 'px';
+    }, 300);
+});
 
     // ✅ Set messages area height dynamically
     const panelHeight = window.innerHeight;
@@ -377,30 +406,13 @@ function playNotificationSound() {
     oscillator.stop(ctx.currentTime + 0.3);
 }
 
-//keyboard jump
-function scrollToBottomOnKeyboard() {
-    if (!dmPanelOpen) return;
-    const messagesEl = document.getElementById('dm-messages');
-    if (messagesEl) {
-        // 🌟 键盘弹起需要一点点时间（约200ms），延迟一点点强行滚到最底部，确保能看到最新消息
-        setTimeout(() => {
-            messagesEl.scrollTop = messagesEl.scrollHeight;
-        }, 200);
-    }
-}
-
-// 监听手机键盘弹起引起的视口变化
-if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', scrollToBottomOnKeyboard);
-}
-
-// 当用户点击输入框时，也主动触发一次滚动
-document.addEventListener('focusin', (e) => {
-    if (e.target && e.target.id === 'dm-input') {
-        scrollToBottomOnKeyboard();
+window.addEventListener('resize', () => {
+    if (dmPanelOpen) {
+        const panel = document.getElementById('dm-panel');
+        const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        panel.style.height = height + 'px';
     }
 });
-
 
 // Init unread badge on page load
 document.addEventListener('DOMContentLoaded', () => {
