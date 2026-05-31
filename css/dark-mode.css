@@ -430,6 +430,13 @@ body[class*="dark"] .show-more-btn,
     border-color: #555 !important;
 }
 
+.dark-mode #edit-title,
+.dark-mode #edit-content {
+    background: #2c2c3e !important;
+    color: #eee !important;
+    border-color: #444 !important;
+}
+
 
 
 
