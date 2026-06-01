@@ -415,6 +415,7 @@ const handleClick = () => {
 
     imgElement.addEventListener('click', handleClick);
     playIcon.addEventListener('click', handleClick);
+    videoThumbnailContainer.addEventListener('click', handleClick);
     mediaContainer.appendChild(videoThumbnailContainer);
 
 
