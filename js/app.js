@@ -210,10 +210,30 @@ function createPostElement(post) {
     mediaElement.classList.add('post-list-image');
 
     if (isR2Video) {
-        // R2 video - show dark placeholder
+    const tempVideo = document.createElement('video');
+    tempVideo.src = videoUrl;
+    tempVideo.crossOrigin = 'anonymous';
+    tempVideo.muted = true;
+    tempVideo.currentTime = 1;
+
+    tempVideo.addEventListener('seeked', () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 70;
+        canvas.height = 70;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(tempVideo, 0, 0, 70, 70);
+        mediaElement.src = canvas.toDataURL('image/jpeg');
+        tempVideo.remove();
+    });
+
+    tempVideo.addEventListener('error', () => {
         mediaElement.style.background = '#222';
-        mediaElement.style.display = 'flex';
-    } else {
+        tempVideo.remove();
+    });
+
+    document.body.appendChild(tempVideo);
+    tempVideo.load();
+}
         // Cloudinary video - show thumbnail
         mediaElement.src = videoUrl
             .replace('/upload/', '/upload/so_0/')
