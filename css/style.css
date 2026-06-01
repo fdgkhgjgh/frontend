@@ -644,7 +644,7 @@ button[type="submit"]:disabled {
   cursor: pointer;
   z-index: 10;
   text-shadow: 0 0 8px rgba(0,0,0,0.8);
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 /* Multi-image container styles */
