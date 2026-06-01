@@ -434,7 +434,6 @@ const handleClick = () => {
 
     imgElement.addEventListener('click', (e) => { e.stopPropagation(); handleClick(); });
     playIcon.addEventListener('click', (e) => { e.stopPropagation(); handleClick(); });
-    videoThumbnailContainer.addEventListener('click', handleClick);
     mediaContainer.appendChild(videoThumbnailContainer);
 
 
