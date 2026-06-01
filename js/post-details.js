@@ -330,7 +330,6 @@ const thumbnailUrl = isR2Video
     videoThumbnailContainer.appendChild(playIcon);
 
 const handleClick = () => {
-    console.log('handleClick triggered, video URL:', firstVideoUrl);
     const inlineVideoContainer = document.createElement('div');
     inlineVideoContainer.style.cssText = `
         width: 120px;
