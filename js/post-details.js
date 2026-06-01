@@ -267,8 +267,11 @@ modalImageContainer.addEventListener('touchend', (e) => {
 if (post.videoUrls && post.videoUrls.length > 0) {
     const firstVideoUrl = post.videoUrls[0];
 
-    // ✅ Correct Cloudinary thumbnail URL
-    const thumbnailUrl = firstVideoUrl
+    // Check if video is from R2 or Cloudinary
+const isR2Video = firstVideoUrl.includes('r2.dev');
+const thumbnailUrl = isR2Video 
+    ? null  // R2 has no auto thumbnail
+    : firstVideoUrl
         .replace('/upload/', '/upload/so_0/')
         .replace(/\.(mp4|mov|avi|webm)$/i, '.jpg');
 
@@ -283,11 +286,21 @@ if (post.videoUrls && post.videoUrls.length > 0) {
     imgElement.style.height = '100%';
     imgElement.style.objectFit = 'cover';
 
-    // ✅ Fallback if thumbnail fails to load
+    if (!thumbnailUrl) {
+    // R2 video — show dark placeholder with play icon only
+    imgElement.style.display = 'none';
+    videoThumbnailContainer.style.background = '#222';
+    videoThumbnailContainer.style.display = 'flex';
+    videoThumbnailContainer.style.alignItems = 'center';
+    videoThumbnailContainer.style.justifyContent = 'center';
+} else {
+    // Cloudinary video — show thumbnail
+    imgElement.src = thumbnailUrl;
     imgElement.onerror = () => {
         imgElement.style.display = 'none';
         videoThumbnailContainer.style.background = '#333';
     };
+}
 
     // ✅ Play icon
     const playIcon = document.createElement('div');
