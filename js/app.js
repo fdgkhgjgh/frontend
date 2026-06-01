@@ -232,8 +232,8 @@ function createPostElement(post) {
     });
 
     document.body.appendChild(tempVideo);
-    tempVideo.load();
-}
+            tempVideo.load();
+        } else {
         // Cloudinary video - show thumbnail
         mediaElement.src = videoUrl
             .replace('/upload/', '/upload/so_0/')
