@@ -287,12 +287,31 @@ const thumbnailUrl = isR2Video
     imgElement.style.objectFit = 'cover';
 
     if (!thumbnailUrl) {
-    // R2 video — show dark placeholder with play icon only
-    imgElement.style.display = 'none';
-    videoThumbnailContainer.style.background = '#222';
-    videoThumbnailContainer.style.display = 'flex';
-    videoThumbnailContainer.style.alignItems = 'center';
-    videoThumbnailContainer.style.justifyContent = 'center';
+    // Generate thumbnail from video using canvas
+    const tempVideo = document.createElement('video');
+    tempVideo.src = firstVideoUrl;
+    tempVideo.crossOrigin = 'anonymous';
+    tempVideo.muted = true;
+    tempVideo.currentTime = 1;
+
+    tempVideo.addEventListener('seeked', () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 120;
+        canvas.height = 120;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(tempVideo, 0, 0, 120, 120);
+        imgElement.src = canvas.toDataURL('image/jpeg');
+        imgElement.style.display = 'block';
+        tempVideo.remove();
+    });
+
+    tempVideo.addEventListener('error', () => {
+        imgElement.style.display = 'none';
+        videoThumbnailContainer.style.background = '#222';
+    });
+
+    document.body.appendChild(tempVideo);
+    tempVideo.load();
 } else {
     // Cloudinary video — show thumbnail
     imgElement.src = thumbnailUrl;
@@ -413,8 +432,8 @@ const handleClick = () => {
     });
 }; // Closes handleClick
 
-    imgElement.addEventListener('click', handleClick);
-    playIcon.addEventListener('click', handleClick);
+    imgElement.addEventListener('click', (e) => { e.stopPropagation(); handleClick(); });
+    playIcon.addEventListener('click', (e) => { e.stopPropagation(); handleClick(); });
     videoThumbnailContainer.addEventListener('click', handleClick);
     mediaContainer.appendChild(videoThumbnailContainer);
 
