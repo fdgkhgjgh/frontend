@@ -202,13 +202,28 @@ function createPostElement(post) {
         mediaElement.alt = post.title;
         mediaElement.classList.add('post-list-image');
     } else if (post.videoUrls && post.videoUrls.length > 0) {
-        mediaElement = document.createElement('img');
-        mediaElement.src = post.videoUrls[0]
+    const videoUrl = post.videoUrls[0];
+    const isR2Video = videoUrl.includes('r2.dev');
+    
+    mediaElement = document.createElement('img');
+    mediaElement.alt = post.title;
+    mediaElement.classList.add('post-list-image');
+
+    if (isR2Video) {
+        // R2 video - show dark placeholder
+        mediaElement.style.background = '#222';
+        mediaElement.style.display = 'flex';
+    } else {
+        // Cloudinary video - show thumbnail
+        mediaElement.src = videoUrl
             .replace('/upload/', '/upload/so_0/')
             .replace(/\.(mp4|mov|avi|webm)$/i, '.jpg');
-        mediaElement.alt = post.title;
-        mediaElement.classList.add('post-list-image');
+        mediaElement.onerror = () => {
+            mediaElement.style.background = '#333';
+            mediaElement.src = '';
+        };
     }
+}
 
     postElement.appendChild(textInfoContainer);
     if (mediaElement) {
