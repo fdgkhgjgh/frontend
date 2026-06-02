@@ -331,7 +331,7 @@ async function appendDMMessage(msg) {
             word-break: break-word;
             text-align: left;
             white-space: pre-line;
-        ">${msg.message}</span>
+        ">${decryptedMessage}</span>
     `;
     messagesEl.appendChild(div);
 }
