@@ -156,6 +156,7 @@ async function openDMChat(userId, username) {
     document.getElementById('dm-user-list').style.display = 'none';
     const chatWindow = document.getElementById('dm-chat-window');
     const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    chatWindow.style.display = 'none';
     chatWindow.style.height = vh + 'px';
     chatWindow.style.display = 'flex';
     document.getElementById('dm-chat-username').textContent = username;
