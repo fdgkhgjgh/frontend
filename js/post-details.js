@@ -1026,6 +1026,9 @@ async function addReply(postId, commentId, replyText, replyToUser, repliesContai
             // ✅ 关键修改：提交成功后移除回复表单
             const replyForm = document.querySelector(`.reply-form[data-comment-id="${commentId}"]`);
             if (replyForm) {
+                // 清空输入框
+            const textarea = replyForm.querySelector('textarea');
+            if (textarea) textarea.value = '';
                 replyForm.remove();
             }
 
