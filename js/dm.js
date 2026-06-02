@@ -155,8 +155,9 @@ async function openDMChat(userId, username) {
 
     document.getElementById('dm-user-list').style.display = 'none';
 const chatWindow = document.getElementById('dm-chat-window');
+chatWindow.style.height = '';  // clear any inline height
 chatWindow.style.display = 'none';
-chatWindow.offsetHeight; // ✅ force reflow - must be between none and flex
+chatWindow.offsetHeight; // force reflow
 chatWindow.style.display = 'flex';
 document.getElementById('dm-chat-username').textContent = username;
 document.getElementById('dm-messages').innerHTML = '';
@@ -203,12 +204,12 @@ await updateUnreadBadge();
 function showDMUserList() {
     currentChatUserId = null;
     document.getElementById('dm-chat-window').style.display = 'none';
+    document.getElementById('dm-chat-window').style.height = ''; // ✅ reset height
     document.getElementById('dm-user-list').style.display = 'block';
     if (dmChannel) dmChannel.unsubscribe();
-    // Reset input bar position when going back to user list
-const inputBar = document.getElementById('dm-input-bar');
-if (inputBar) inputBar.style.bottom = '0px';
     if (window.dmPollInterval) clearInterval(window.dmPollInterval);
+    const inputBar = document.getElementById('dm-input-bar');
+    if (inputBar) inputBar.style.bottom = '0px';
     loadDMUserList();
 }
 
