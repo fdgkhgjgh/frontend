@@ -21,7 +21,7 @@ if (window.visualViewport) {
         const keyboardHeight = window.innerHeight - window.visualViewport.height;
         inputBar.style.bottom = keyboardHeight + 'px';
         
-        chatWindow.style.height = window.visualViewport.height + 'px';
+        chatWindow.style.height = window.visualViewport.height + 'px'; // ❌ DELETE THIS LINE
         
         setTimeout(() => {
             const messagesEl = document.getElementById('dm-messages');
