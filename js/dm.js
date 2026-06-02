@@ -267,7 +267,6 @@ async function loadDMMessages(isFirstLoad = false) {
     for (const msg of sortedData) {
     if (!document.querySelector(`[data-msg-id="${msg.id}"]`)) {
         await appendDMMessage(msg);
-        await new Promise(resolve => setTimeout(resolve, 10)); // ✅ small delay
     }
 }
     
