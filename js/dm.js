@@ -155,8 +155,6 @@ async function openDMChat(userId, username) {
 
     document.getElementById('dm-user-list').style.display = 'none';
 const chatWindow = document.getElementById('dm-chat-window');
-const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-chatWindow.style.height = vh + 'px';
 chatWindow.style.display = 'none';
 chatWindow.offsetHeight; // ✅ force reflow - must be between none and flex
 chatWindow.style.display = 'flex';
