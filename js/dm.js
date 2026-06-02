@@ -263,7 +263,7 @@ async function loadDMMessages(isFirstLoad = false) {
 
     if (error) { console.error('Load DM error:', error); return; }
     
-    data.forEach(msg => {
+    for (const msg of data) {
         if (!document.querySelector(`[data-msg-id="${msg.id}"]`)) {
             appendDMMessage(msg);
         }
@@ -289,6 +289,9 @@ function appendDMMessage(msg) {
 
     // ✅ Prevent duplicates
     if (msg.id && document.querySelector(`[data-msg-id="${msg.id}"]`)) return;
+    // ✅ Decrypt message
+    const otherUserId = isMe ? msg.receiver_id : msg.sender_id;
+    const decryptedMessage = await decryptMessage(msg.message, myId, otherUserId);
 
     const date = new Date(msg.created_at);
     const timeStr = date.toLocaleString('zh-CN', {
@@ -347,6 +350,9 @@ async function sendDM() {
 
     const { userId: myId, username: myUsername } = getDMUser();
     if (!myId) { alert('Please login to send messages'); return; }
+    // ✅ Encrypt message before sending
+    const encryptedMessage = await encryptMessage(message, myId, currentChatUserId);
+
 
     const { error } = await dmSupabase.from('direct_messages').insert({
         sender_id: myId,
@@ -427,6 +433,50 @@ window.addEventListener('resize', () => {
         panel.style.height = height + 'px';
     }
 });
+
+    // ✅ Simple AES encryption using Web Crypto API
+async function getEncryptionKey(userId1, userId2) {
+    // Create a consistent key from both user IDs
+    const keyMaterial = [userId1, userId2].sort().join('-') + '-miniless-secret';
+    const encoder = new TextEncoder();
+    const keyBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(keyMaterial));
+    return crypto.subtle.importKey(
+        'raw', keyBuffer, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']
+    );
+}
+
+async function encryptMessage(message, userId1, userId2) {
+    const key = await getEncryptionKey(userId1, userId2);
+    const encoder = new TextEncoder();
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const encrypted = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv },
+        key,
+        encoder.encode(message)
+    );
+    // Combine iv + encrypted data and convert to base64
+    const combined = new Uint8Array(iv.length + encrypted.byteLength);
+    combined.set(iv);
+    combined.set(new Uint8Array(encrypted), iv.length);
+    return btoa(String.fromCharCode(...combined));
+}
+
+async function decryptMessage(encryptedBase64, userId1, userId2) {
+    try {
+        const key = await getEncryptionKey(userId1, userId2);
+        const combined = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+        const iv = combined.slice(0, 12);
+        const encrypted = combined.slice(12);
+        const decrypted = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv },
+            key,
+            encrypted
+        );
+        return new TextDecoder().decode(decrypted);
+    } catch (err) {
+        return '🔒 [encrypted message]'; // fallback for old unencrypted messages
+    }
+}
 
 // Init unread badge on page load
 document.addEventListener('DOMContentLoaded', () => {
