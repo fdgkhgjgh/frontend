@@ -336,6 +336,7 @@ async function appendDMMessage(msg) {
         ">${decryptedMessage}</span>
     `;
     messagesEl.appendChild(div);
+    console.log('appended div, messagesEl children count:', messagesEl.children.length);
 }
 
 
@@ -369,6 +370,7 @@ async function sendDM() {
   input.value = '';
   input.style.height = '36px';
   await loadDMMessages(false);
+    console.log('messages count after load:', document.getElementById('dm-messages').children.length);
 }
 
 // Update unread badge on DM button
