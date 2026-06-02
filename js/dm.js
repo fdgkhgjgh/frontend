@@ -259,7 +259,7 @@ async function loadDMMessages(isFirstLoad = false) {
         .select('*')
         .or(`and(sender_id.eq.${myId},receiver_id.eq.${currentChatUserId}),and(sender_id.eq.${currentChatUserId},receiver_id.eq.${myId})`)
         .order('created_at', { ascending: true })
-        .limit(100);
+        .limit(200);
 
     if (error) { console.error('Load DM error:', error); return; }
     
