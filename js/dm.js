@@ -11,55 +11,7 @@ let dmPanelOpen = false;
 let previousUnreadCount = 0;
 let userScrollingUp = false;
 
-// ✅ iOS keyboard fix
-if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', () => {
-        const inputBar = document.getElementById('dm-input-bar');
-        const chatWindow = document.getElementById('dm-chat-window');
-        if (!inputBar || !chatWindow || chatWindow.style.display === 'none') return;
-        
-        const keyboardHeight = window.innerHeight - window.visualViewport.height;
-        inputBar.style.bottom = keyboardHeight + 'px';
-        
-        setTimeout(() => {
-            const messagesEl = document.getElementById('dm-messages');
-            if (messagesEl && !userScrollingUp) {
-                messagesEl.scrollTop = messagesEl.scrollHeight;
-            }
-        }, 100);
-    });
-}
 
-// ✅ Focus/blur for input bar keyboard handling
-document.addEventListener('DOMContentLoaded', () => {
-    const dmInput = document.getElementById('dm-input');
-    if (!dmInput) return;
-
-    dmInput.addEventListener('focus', () => {
-    setTimeout(() => {
-        const inputBar = document.getElementById('dm-input-bar');
-        if (!inputBar || !currentChatUserId) return;
-        
-        if (window.visualViewport) {
-            const keyboardHeight = window.innerHeight - window.visualViewport.height;
-            // ✅ Only adjust if keyboard is actually open (height > 100px)
-            if (keyboardHeight > 100) {
-                inputBar.style.bottom = keyboardHeight + 'px';
-            }
-        }
-        
-        const messagesEl = document.getElementById('dm-messages');
-        if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
-    }, 500);
-});
-
-    dmInput.addEventListener('blur', () => {
-        setTimeout(() => {
-            const inputBar = document.getElementById('dm-input-bar');
-            if (inputBar) inputBar.style.bottom = '0px';
-        }, 100);
-    });
-});
 
 //first function
 function getDMUser() {
@@ -208,10 +160,6 @@ async function openDMChat(userId, username) {
     chatWindow.style.display = 'flex';
     document.getElementById('dm-chat-username').textContent = username;
     document.getElementById('dm-messages').innerHTML = '';
-
-    // Reset input bar position
-    const inputBar = document.getElementById('dm-input-bar');
-    if (inputBar) inputBar.style.bottom = '0px';
 
     document.getElementById('dm-messages').style.paddingBottom = '65px';
 
