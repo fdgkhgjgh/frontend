@@ -267,7 +267,7 @@ async function loadDMMessages(isFirstLoad = false) {
         if (!document.querySelector(`[data-msg-id="${msg.id}"]`)) {
             appendDMMessage(msg);
         }
-    }
+    });
     
     // ✅ Always scroll on first load, otherwise only if near bottom
     if (isFirstLoad) {
