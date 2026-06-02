@@ -481,6 +481,7 @@ async function decryptMessage(encryptedBase64, userId1, userId2) {
     const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, encrypted);
     return new TextDecoder().decode(decrypted);
   } catch {
+      console.log('decrypt failed:', err.message, 'base64:', encryptedBase64.substring(0, 20));
     return '🔒'; // ✅ show lock icon instead of raw encrypted text
   }
 }
