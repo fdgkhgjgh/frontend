@@ -282,7 +282,7 @@ async function loadDMMessages(isFirstLoad = false) {
 
 // Append a single message
 // Append a single message (已完美修复多行文本从右向左扩张、隐形看不清的问题)
-function appendDMMessage(msg) {
+async function appendDMMessage(msg) {
     const { userId: myId } = getDMUser();
     const isMe = msg.sender_id === myId;
     const messagesEl = document.getElementById('dm-messages');
