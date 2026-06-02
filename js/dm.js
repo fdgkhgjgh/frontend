@@ -175,6 +175,15 @@ messagesEl.onscroll = () => {
 };
 
     await loadDMMessages(true);
+    // ✅ When input focused, scroll it into view
+const dmInput = document.getElementById('dm-input');
+dmInput.onfocus = () => {
+    setTimeout(() => {
+        dmInput.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        const messagesEl = document.getElementById('dm-messages');
+        if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+    }, 300);
+};
     subscribeDMChat();
 
 
@@ -210,6 +219,8 @@ function showDMUserList() {
     if (window.dmPollInterval) clearInterval(window.dmPollInterval);
     const inputBar = document.getElementById('dm-input-bar');
     if (inputBar) inputBar.style.bottom = '0px';
+    const dmInput = document.getElementById('dm-input');
+    if (dmInput) dmInput.onfocus = null
     loadDMUserList();
 }
 
