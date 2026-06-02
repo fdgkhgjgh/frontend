@@ -137,6 +137,8 @@ nav a:hover {
     padding: 16px;
     margin: 8px 0 16px 0;
     box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+    line-height: 1.5;
 }
 
 .post-body p {
