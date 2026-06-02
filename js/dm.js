@@ -42,18 +42,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputBar = document.getElementById('dm-input-bar');
         if (!inputBar || !currentChatUserId) return;
         
-        // ✅ Use visualViewport directly
         if (window.visualViewport) {
             const keyboardHeight = window.innerHeight - window.visualViewport.height;
-            inputBar.style.bottom = keyboardHeight + 'px';
+            // ✅ Only adjust if keyboard is actually open (height > 100px)
+            if (keyboardHeight > 100) {
+                inputBar.style.bottom = keyboardHeight + 'px';
+            }
         }
         
-        // ✅ Scroll to bottom
         const messagesEl = document.getElementById('dm-messages');
-        if (messagesEl) {
-            messagesEl.scrollTop = messagesEl.scrollHeight;
-        }
-    }, 500); // ✅ increase delay to 500ms for keyboard to fully open
+        if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+    }, 500);
 });
 
     dmInput.addEventListener('blur', () => {
