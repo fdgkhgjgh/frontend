@@ -12,6 +12,7 @@ let previousUnreadCount = 0;
 let userScrollingUp = false;
 
 if (window.visualViewport) {
+    let keyboardTimer = null;
     window.visualViewport.addEventListener('resize', () => {
         const messagesEl = document.getElementById('dm-messages');
         const inputBar = document.getElementById('dm-input-bar');
@@ -20,20 +21,20 @@ if (window.visualViewport) {
         const chatWindow = document.getElementById('dm-chat-window');
         if (!chatWindow || chatWindow.style.display === 'none') return;
 
-        const keyboardHeight = window.innerHeight - window.visualViewport.height;
-        
-        if (keyboardHeight > 100) {
-            // Keyboard open - add padding to messages and move input up
-            messagesEl.style.paddingBottom = (keyboardHeight + 65) + 'px';
-            inputBar.style.bottom = keyboardHeight + 'px';
-            setTimeout(() => {
+        // ✅ Debounce - wait for keyboard to finish opening
+        clearTimeout(keyboardTimer);
+        keyboardTimer = setTimeout(() => {
+            const keyboardHeight = window.innerHeight - window.visualViewport.height;
+            
+            if (keyboardHeight > 100) {
+                messagesEl.style.paddingBottom = (keyboardHeight + 65) + 'px';
+                inputBar.style.bottom = keyboardHeight + 'px';
                 messagesEl.scrollTop = messagesEl.scrollHeight;
-            }, 50);
-        } else {
-            // Keyboard closed - reset
-            messagesEl.style.paddingBottom = '65px';
-            inputBar.style.bottom = '0px';
-        }
+            } else {
+                messagesEl.style.paddingBottom = '65px';
+                inputBar.style.bottom = '0px';
+            }
+        }, 150); // ✅ wait 150ms for keyboard animation to finish
     });
 }
 
