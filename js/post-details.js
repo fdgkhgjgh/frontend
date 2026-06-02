@@ -1023,9 +1023,18 @@ async function addReply(postId, commentId, replyText, replyToUser, repliesContai
         if (response.ok) {
             commentMessage.textContent = "Reply added successfully!";
             commentMessage.style.color = 'green';
-            setTimeout(() => { commentMessage.textContent = ''; }, 2000);
+            // ✅ 关键修改：提交成功后移除回复表单
+            const replyForm = document.querySelector(`.reply-form[data-comment-id="${commentId}"]`);
+            if (replyForm) {
+                replyForm.remove();
+            }
 
-            loadReplies(commentId, repliesContainer);
+            // 刷新回复列表
+            await loadReplies(commentId, repliesContainer);
+
+            setTimeout(() => { 
+                commentMessage.textContent = ''; 
+            }, 2000);
         } else {
             commentMessage.textContent = `Error adding reply: ${data.message || 'Unknown error'}`;
             commentMessage.style.color = 'red';
