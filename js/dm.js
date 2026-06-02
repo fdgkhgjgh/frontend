@@ -435,11 +435,29 @@ window.addEventListener('resize', () => {
 });
 
     // ✅ Simple AES encryption using Web Crypto API
-async function getEncryptionKey(userId1, userId2) {
-  const keyMaterial = [userId1, userId2].sort().join('-') + '-miniless-secret';
-  const encoder = new TextEncoder();
-  const keyBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(keyMaterial));
-  return crypto.subtle.importKey('raw', keyBuffer, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+async function sendDM() {
+  const input = document.getElementById('dm-input');
+  const message = input.value.trim();
+  if (!message || !currentChatUserId) return;
+
+  const { userId: myId, username: myUsername } = getDMUser();
+  if (!myId) return alert('Please login to send messages');
+
+  const encryptedMessage = await encryptMessage(message, myId, currentChatUserId);
+
+  const { error } = await dmSupabase.from('direct_messages').insert({
+    sender_id: myId,
+    sender_username: myUsername,
+    receiver_id: currentChatUserId,
+    receiver_username: currentChatUsername,
+    message: encryptedMessage
+  });
+
+  if (error) return console.error('Send DM error:', error);
+
+  input.value = '';
+  input.style.height = '36px';
+  await loadDMMessages(false);
 }
 
 function bytesToBase64(bytes) {
