@@ -263,11 +263,12 @@ async function loadDMMessages(isFirstLoad = false) {
 
     if (error) { console.error('Load DM error:', error); return; }
     
-    for (const msg of data) {
-        if (!document.querySelector(`[data-msg-id="${msg.id}"]`)) {
-            await appendDMMessage(msg);
-        }
-    };
+    for (const msg of sortedData) {
+    if (!document.querySelector(`[data-msg-id="${msg.id}"]`)) {
+        await appendDMMessage(msg);
+        await new Promise(resolve => setTimeout(resolve, 10)); // ✅ small delay
+    }
+}
     
     // ✅ Always scroll on first load, otherwise only if near bottom
     if (isFirstLoad) {
@@ -480,7 +481,7 @@ async function decryptMessage(encryptedBase64, userId1, userId2) {
     const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, encrypted);
     return new TextDecoder().decode(decrypted);
   } catch {
-    return encryptedBase64;
+    return '🔒'; // ✅ show lock icon instead of raw encrypted text
   }
 }
 
