@@ -265,7 +265,7 @@ async function loadDMMessages(isFirstLoad = false) {
     
     for (const msg of data) {
         if (!document.querySelector(`[data-msg-id="${msg.id}"]`)) {
-            appendDMMessage(msg);
+            await appendDMMessage(msg);
         }
     };
     
