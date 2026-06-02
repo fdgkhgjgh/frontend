@@ -485,13 +485,19 @@ document.addEventListener('DOMContentLoaded', () => {
         initDMSupabase();
         setTimeout(() => {
             subscribeUnread();
+            
+            // 1. ⏱️ SLOW TIMER (30 seconds): Only runs in the background to update the red unread badge icon
             setInterval(async () => {
                 updateUnreadBadge();
+            }, 30000); 
 
+            // 2. ⚡ FAST TIMER (3 seconds): ONLY checks for new messages if you are actively in a chat room!
+            setInterval(async () => {
                 if (currentChatUserId) {
                     loadDMMessages();
                 }
 
+                // Only updates the user list badges if the panel is open
                 if (dmPanelOpen && !currentChatUserId) {
                     const { userId: myId } = getDMUser();
                     const { data: unreadData } = await dmSupabase
@@ -526,7 +532,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     });
                 }
-            }, 30000);
+            }, 3000); // This stays 3 seconds so active chatting is still instant!
         }, 1000); // ✅ closes setTimeout
     } // ✅ closes if (userId)
 }); // ✅ closes DOMContentLoaded
+
