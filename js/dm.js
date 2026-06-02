@@ -435,6 +435,13 @@ window.addEventListener('resize', () => {
 });
 
     // ✅ Simple AES encryption using Web Crypto API
+async function getEncryptionKey(userId1, userId2) {
+  const keyMaterial = [userId1, userId2].sort().join('-') + '-miniless-secret';
+  const encoder = new TextEncoder();
+  const keyBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(keyMaterial));
+  return crypto.subtle.importKey('raw', keyBuffer, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+}
+
 function bytesToBase64(bytes) {
   let binary = '';
   bytes.forEach(b => binary += String.fromCharCode(b));
@@ -452,17 +459,11 @@ async function encryptMessage(message, userId1, userId2) {
   const key = await getEncryptionKey(userId1, userId2);
   const encoder = new TextEncoder();
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  const encrypted = await crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv },
-    key,
-    encoder.encode(message)
-  );
-
+  const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, encoder.encode(message));
   const encryptedBytes = new Uint8Array(encrypted);
   const combined = new Uint8Array(iv.length + encryptedBytes.length);
   combined.set(iv, 0);
   combined.set(encryptedBytes, iv.length);
-
   return bytesToBase64(combined);
 }
 
@@ -472,13 +473,7 @@ async function decryptMessage(encryptedBase64, userId1, userId2) {
     const combined = base64ToBytes(encryptedBase64);
     const iv = combined.slice(0, 12);
     const encrypted = combined.slice(12);
-
-    const decrypted = await crypto.subtle.decrypt(
-      { name: 'AES-GCM', iv },
-      key,
-      encrypted
-    );
-
+    const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, encrypted);
     return new TextDecoder().decode(decrypted);
   } catch {
     return encryptedBase64;
