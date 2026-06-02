@@ -473,18 +473,24 @@ async function encryptMessage(message, userId1, userId2) {
 }
 
 async function decryptMessage(encryptedBase64, userId1, userId2) {
-    console.log('decrypting:', encryptedBase64, 'with', userId1, userId2);
-  try {
-    const key = await getEncryptionKey(userId1, userId2);
-    const combined = base64ToBytes(encryptedBase64);
-    const iv = combined.slice(0, 12);
-    const encrypted = combined.slice(12);
-    const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, encrypted);
-    return new TextDecoder().decode(decrypted);
-  } catch {
-      console.log('decrypt failed:', err.message, 'base64:', encryptedBase64.substring(0, 20));
-    return '🔒'; // ✅ show lock icon instead of raw encrypted text
-  }
+    // ✅ Check if message looks like base64 encrypted data
+    const isEncrypted = /^[A-Za-z0-9+/]+=*$/.test(encryptedBase64) && encryptedBase64.length > 20;
+    
+    if (!isEncrypted) {
+        return encryptedBase64; // ✅ return plain text as-is
+    }
+    
+    try {
+        const key = await getEncryptionKey(userId1, userId2);
+        const combined = base64ToBytes(encryptedBase64);
+        const iv = combined.slice(0, 12);
+        const encrypted = combined.slice(12);
+        const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, encrypted);
+        return new TextDecoder().decode(decrypted);
+    } catch(err) {
+        console.log('decrypt failed:', err.message);
+        return '🔒';
+    }
 }
 
 // Init unread badge on page load
