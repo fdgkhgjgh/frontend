@@ -11,18 +11,13 @@ let dmPanelOpen = false;
 let previousUnreadCount = 0;
 let userScrollingUp = false;
 
-// ✅ iOS keyboard fix using visualViewport
+// ✅ iOS keyboard fix
 if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
-        const inputBar = document.getElementById('dm-input-bar');
         const chatWindow = document.getElementById('dm-chat-window');
-        if (!inputBar || !chatWindow || chatWindow.style.display === 'none') return;
-
-        // Move input bar up by the keyboard height
-        const keyboardHeight = window.innerHeight - window.visualViewport.height;
-        inputBar.style.bottom = keyboardHeight + 'px';
-
-        // Scroll messages to bottom
+        if (!chatWindow || chatWindow.style.display === 'none') return;
+        if (!currentChatUserId) return;
+        chatWindow.style.height = window.visualViewport.height + 'px';
         setTimeout(() => {
             const messagesEl = document.getElementById('dm-messages');
             if (messagesEl && !userScrollingUp) {
@@ -32,7 +27,7 @@ if (window.visualViewport) {
     });
 }
 
-// ✅ Focus/blur to track keyboard on iOS
+// ✅ Focus/blur for input bar keyboard handling
 document.addEventListener('DOMContentLoaded', () => {
     const dmInput = document.getElementById('dm-input');
     if (!dmInput) return;
@@ -40,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
     dmInput.addEventListener('focus', () => {
         setTimeout(() => {
             const inputBar = document.getElementById('dm-input-bar');
-            if (!inputBar) return;
+            if (!inputBar || !currentChatUserId) return;
             const keyboardHeight = window.innerHeight - (window.visualViewport ? window.visualViewport.height : window.innerHeight);
-            inputBar.style.bottom = keyboardHeight + 'px';
+            inputBar.style.bottom = Math.max(0, keyboardHeight) + 'px';
             const messagesEl = document.getElementById('dm-messages');
             if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
         }, 400);
@@ -198,22 +193,30 @@ async function openDMChat(userId, username) {
 
     document.getElementById('dm-user-list').style.display = 'none';
     const chatWindow = document.getElementById('dm-chat-window');
-const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-chatWindow.style.height = vh + 'px';
-chatWindow.style.display = 'flex';
-    // Track if user scrolls up
-document.getElementById('dm-messages').addEventListener('scroll', () => {
-    const messagesEl = document.getElementById('dm-messages');
-    const distanceFromBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight;
-    userScrollingUp = distanceFromBottom > 100;
-});
+    const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    chatWindow.style.height = vh + 'px';
+    chatWindow.style.display = 'flex';
     document.getElementById('dm-chat-username').textContent = username;
     document.getElementById('dm-messages').innerHTML = '';
-    // Reset input bar position when opening chat
-const inputBar = document.getElementById('dm-input-bar');
-if (inputBar) inputBar.style.bottom = '0px';
-    
+
+    // Reset input bar position
+    const inputBar = document.getElementById('dm-input-bar');
+    if (inputBar) inputBar.style.bottom = '0px';
+
     document.getElementById('dm-messages').style.paddingBottom = '65px';
+
+    // ✅ Remove old scroll listener by cloning messages element
+    const oldMessages = document.getElementById('dm-messages');
+    const newMessages = oldMessages.cloneNode(false);
+    newMessages.style.paddingBottom = '65px';
+    oldMessages.parentNode.replaceChild(newMessages, oldMessages);
+
+    // ✅ Add scroll listener once on fresh element
+    newMessages.addEventListener('scroll', () => {
+        const distanceFromBottom = newMessages.scrollHeight - newMessages.scrollTop - newMessages.clientHeight;
+        userScrollingUp = distanceFromBottom > 100;
+    });
+
     await loadDMMessages(true);
     subscribeDMChat();
 
