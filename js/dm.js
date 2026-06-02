@@ -286,12 +286,14 @@ async function appendDMMessage(msg) {
     const { userId: myId } = getDMUser();
     const isMe = msg.sender_id === myId;
     const messagesEl = document.getElementById('dm-messages');
+    console.log('messagesEl:', messagesEl);
 
     // ✅ Prevent duplicates
     if (msg.id && document.querySelector(`[data-msg-id="${msg.id}"]`)) return;
     // ✅ Decrypt message
     const otherUserId = isMe ? msg.receiver_id : msg.sender_id;
     const decryptedMessage = await decryptMessage(msg.message, myId, otherUserId);
+    console.log('decrypted message:', decryptedMessage);
 
     const date = new Date(msg.created_at);
     const timeStr = date.toLocaleString('zh-CN', {
