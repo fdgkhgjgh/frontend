@@ -288,14 +288,12 @@ async function appendDMMessage(msg) {
     const { userId: myId } = getDMUser();
     const isMe = msg.sender_id === myId;
     const messagesEl = document.getElementById('dm-messages');
-    console.log('messagesEl:', messagesEl);
 
     // ✅ Prevent duplicates
     if (msg.id && document.querySelector(`[data-msg-id="${msg.id}"]`)) return;
     // ✅ Decrypt message
     const otherUserId = isMe ? msg.receiver_id : msg.sender_id;
     const decryptedMessage = await decryptMessage(msg.message, myId, otherUserId);
-    console.log('decrypted message:', decryptedMessage);
 
     const date = new Date(msg.created_at);
     const timeStr = date.toLocaleString('zh-CN', {
@@ -338,7 +336,6 @@ async function appendDMMessage(msg) {
         ">${decryptedMessage}</span>
     `;
     messagesEl.appendChild(div);
-    console.log('appended div, messagesEl children count:', messagesEl.children.length);
 }
 
 
@@ -357,7 +354,6 @@ async function sendDM() {
   if (!myId) return alert('Please login to send messages');
 
   const encryptedMessage = await encryptMessage(message, myId, currentChatUserId);
-    console.log('encrypted:', encryptedMessage);
 
   const { error } = await dmSupabase.from('direct_messages').insert({
     sender_id: myId,
@@ -372,7 +368,6 @@ async function sendDM() {
   input.value = '';
   input.style.height = '36px';
   await loadDMMessages(false);
-    console.log('messages count after load:', document.getElementById('dm-messages').children.length);
 }
 
 // Update unread badge on DM button
@@ -488,7 +483,6 @@ async function decryptMessage(encryptedBase64, userId1, userId2) {
         const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, encrypted);
         return new TextDecoder().decode(decrypted);
     } catch(err) {
-        console.log('decrypt failed:', err.message);
         return '🔒';
     }
 }
