@@ -205,17 +205,15 @@ async function openDMChat(userId, username) {
 
     document.getElementById('dm-messages').style.paddingBottom = '65px';
 
-    // ✅ Remove old scroll listener by cloning messages element
-    const oldMessages = document.getElementById('dm-messages');
-    const newMessages = oldMessages.cloneNode(false);
-    newMessages.style.paddingBottom = '65px';
-    oldMessages.parentNode.replaceChild(newMessages, oldMessages);
+    // ✅ Reset scroll flag when opening new chat
+userScrollingUp = false;
 
-    // ✅ Add scroll listener once on fresh element
-    newMessages.addEventListener('scroll', () => {
-        const distanceFromBottom = newMessages.scrollHeight - newMessages.scrollTop - newMessages.clientHeight;
-        userScrollingUp = distanceFromBottom > 100;
-    });
+// ✅ Add scroll listener with a guard flag
+const messagesEl = document.getElementById('dm-messages');
+messagesEl.onscroll = () => {
+    const distanceFromBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight;
+    userScrollingUp = distanceFromBottom > 100;
+};
 
     await loadDMMessages(true);
     subscribeDMChat();
