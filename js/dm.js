@@ -11,7 +11,31 @@ let dmPanelOpen = false;
 let previousUnreadCount = 0;
 let userScrollingUp = false;
 
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+        const messagesEl = document.getElementById('dm-messages');
+        const inputBar = document.getElementById('dm-input-bar');
+        if (!messagesEl || !inputBar) return;
+        
+        const chatWindow = document.getElementById('dm-chat-window');
+        if (!chatWindow || chatWindow.style.display === 'none') return;
 
+        const keyboardHeight = window.innerHeight - window.visualViewport.height;
+        
+        if (keyboardHeight > 100) {
+            // Keyboard open - add padding to messages and move input up
+            messagesEl.style.paddingBottom = (keyboardHeight + 65) + 'px';
+            inputBar.style.bottom = keyboardHeight + 'px';
+            setTimeout(() => {
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            }, 50);
+        } else {
+            // Keyboard closed - reset
+            messagesEl.style.paddingBottom = '65px';
+            inputBar.style.bottom = '0px';
+        }
+    });
+}
 
 //first function
 function getDMUser() {
