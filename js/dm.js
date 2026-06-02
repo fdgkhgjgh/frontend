@@ -262,7 +262,8 @@ async function loadDMMessages(isFirstLoad = false) {
         .limit(200);
 
     if (error) { console.error('Load DM error:', error); return; }
-    
+
+    const sortedData = data.reverse();
     for (const msg of sortedData) {
     if (!document.querySelector(`[data-msg-id="${msg.id}"]`)) {
         await appendDMMessage(msg);
