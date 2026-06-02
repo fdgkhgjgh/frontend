@@ -526,7 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     });
                 }
-            }, 3000);
+            }, 30000);
         }, 1000); // ✅ closes setTimeout
     } // ✅ closes if (userId)
 }); // ✅ closes DOMContentLoaded
