@@ -352,6 +352,7 @@ async function sendDM() {
   if (!myId) return alert('Please login to send messages');
 
   const encryptedMessage = await encryptMessage(message, myId, currentChatUserId);
+    console.log('encrypted:', encryptedMessage);
 
   const { error } = await dmSupabase.from('direct_messages').insert({
     sender_id: myId,
@@ -466,6 +467,7 @@ async function encryptMessage(message, userId1, userId2) {
 }
 
 async function decryptMessage(encryptedBase64, userId1, userId2) {
+    console.log('decrypting:', encryptedBase64, 'with', userId1, userId2);
   try {
     const key = await getEncryptionKey(userId1, userId2);
     const combined = base64ToBytes(encryptedBase64);
