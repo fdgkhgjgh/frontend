@@ -14,10 +14,15 @@ let userScrollingUp = false;
 // ✅ iOS keyboard fix
 if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
+        const inputBar = document.getElementById('dm-input-bar');
         const chatWindow = document.getElementById('dm-chat-window');
-        if (!chatWindow || chatWindow.style.display === 'none') return;
-        if (!currentChatUserId) return;
+        if (!inputBar || !chatWindow || chatWindow.style.display === 'none') return;
+        
+        const keyboardHeight = window.innerHeight - window.visualViewport.height;
+        inputBar.style.bottom = keyboardHeight + 'px';
+        
         chatWindow.style.height = window.visualViewport.height + 'px';
+        
         setTimeout(() => {
             const messagesEl = document.getElementById('dm-messages');
             if (messagesEl && !userScrollingUp) {
@@ -33,15 +38,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!dmInput) return;
 
     dmInput.addEventListener('focus', () => {
-        setTimeout(() => {
-            const inputBar = document.getElementById('dm-input-bar');
-            if (!inputBar || !currentChatUserId) return;
-            const keyboardHeight = window.innerHeight - (window.visualViewport ? window.visualViewport.height : window.innerHeight);
-            inputBar.style.bottom = Math.max(0, keyboardHeight) + 'px';
-            const messagesEl = document.getElementById('dm-messages');
-            if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
-        }, 400);
-    });
+    setTimeout(() => {
+        const inputBar = document.getElementById('dm-input-bar');
+        if (!inputBar || !currentChatUserId) return;
+        
+        // ✅ Use visualViewport directly
+        if (window.visualViewport) {
+            const keyboardHeight = window.innerHeight - window.visualViewport.height;
+            inputBar.style.bottom = keyboardHeight + 'px';
+        }
+        
+        // ✅ Scroll to bottom
+        const messagesEl = document.getElementById('dm-messages');
+        if (messagesEl) {
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+    }, 500); // ✅ increase delay to 500ms for keyboard to fully open
+});
 
     dmInput.addEventListener('blur', () => {
         setTimeout(() => {
