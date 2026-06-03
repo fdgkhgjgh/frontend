@@ -508,5 +508,6 @@ function toggleMapPanel() {
     } else {
         panel.style.display = 'none';
         btn.textContent = '🗺️家庭地图Family Map';
+        btn.style.background = '#1DA1F2';
     }
 }
