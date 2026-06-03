@@ -498,6 +498,7 @@ function toggleMapPanel() {
     if (isHidden) {
         panel.style.display = 'flex';
         btn.textContent = '🗺️收起地图Hide Map';
+        btn.style.background = '#e53e3e';
         // Init map only when first opened
         if (!map) {
             setTimeout(initMapPanel, 100);
