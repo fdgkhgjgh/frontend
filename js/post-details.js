@@ -113,77 +113,117 @@ if (post.imageUrls && post.imageUrls.length > 0) {
         imgElement.alt = "Post Image";
         imgElement.classList.add('post-image');
         imgElement.addEventListener('click', () => {
-            const modal = document.getElementById('image-modal');
-            const modalImageContainer = document.getElementById('modal-image-container');
+    const modal = document.getElementById('image-modal');
+    const modalImageContainer = document.getElementById('modal-image-container');
 
-            modalImageContainer.innerHTML = '';
+    modalImageContainer.innerHTML = '';
 
-const clickedIndex = post.imageUrls.indexOf(imageUrl);
+    const clickedIndex = post.imageUrls.indexOf(imageUrl);
 
-post.imageUrls.forEach(url => {
-    const modalImg = document.createElement('img');
-    modalImg.src = url;
-    modalImg.alt = "Full Size Image";
-    modalImageContainer.appendChild(modalImg);
-});
+    post.imageUrls.forEach(url => {
+        const modalImg = document.createElement('img');
+        modalImg.src = url;
+        modalImg.alt = "Full Size Image";
+        modalImageContainer.appendChild(modalImg);
+    });
 
-// ✅ Scroll to the clicked image after images are added
-setTimeout(() => {
-    modalImageContainer.scrollLeft = clickedIndex * modalImageContainer.offsetWidth;
-}, 50);
+    // Scroll to clicked image
+    setTimeout(() => {
+        modalImageContainer.scrollLeft = clickedIndex * modalImageContainer.offsetWidth;
+    }, 50);
 
-            // Force fullscreen via JS directly
-            modal.style.cssText = `
-                display: flex;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: #000;
-                z-index: 99999;
-                margin: 0;
-                padding: 0;
-            `;
+    // Force fullscreen styles
+    modal.style.cssText = `
+        display: flex;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: #000;
+        z-index: 99999;
+        margin: 0; padding: 0;
+    `;
 
-            const modalContent = modal.querySelector('.modal-content');
-            modalContent.style.cssText = `
-                width: 100vw;
-                height: 100vh;
-                max-width: 100vw;
-                max-height: 100vh;
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-            `;
+    const modalContent = modal.querySelector('.modal-content');
+    modalContent.style.cssText = `
+        width: 100vw; height: 100vh;
+        max-width: 100vw; max-height: 100vh;
+        margin: 0; padding: 0;
+        overflow: hidden;
+    `;
 
-            const carousel = document.getElementById('modal-image-carousel');
-            carousel.style.cssText = `
-                width: 100vw;
-                height: 100vh;
-            `;
+    const modalImageContainerStyle = `
+        display: flex;
+        width: 100vw; height: 100vh;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    `;
+    modalImageContainer.style.cssText = modalImageContainerStyle;
 
-            modalImageContainer.style.cssText = `
-                display: flex;
-                width: 100vw;
-                height: 100vh;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                scroll-behavior: smooth;
-            `;
+    // Set image styles
+    const allModalImgs = modalImageContainer.querySelectorAll('img');
+    allModalImgs.forEach(img => {
+        img.style.cssText = `
+            min-width: 100vw;
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            touch-action: pinch-zoom;   /* 关键：允许原生 pinch zoom */
+        `;
+    });
 
-            // Set each image to fullscreen size
-            const allModalImgs = modalImageContainer.querySelectorAll('img');
-            allModalImgs.forEach(img => {
-                img.style.cssText = `
-                    min-width: 100vw;
-                    width: 100vw;
-                    height: 100vh;
-                    object-fit: contain;
-                    flex-shrink: 0;
-                    scroll-snap-align: start;
-                `;
-            });
+    // ==================== 改进后的触摸处理 ====================
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isPinching = false;
+
+    // Touch Start
+    modalImageContainer.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            isPinching = true;
+            return;
+        }
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isPinching = false;
+    }, { passive: true });
+
+    // Touch End - 改进版：更智能判断
+    modalImageContainer.addEventListener('touchend', (e) => {
+        if (isPinching) {
+            isPinching = false;
+            return; // 正在 pinch zoom，不关闭
+        }
+
+        if (e.changedTouches.length !== 1) return;
+
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
+
+        // 如果是明显的滑动（左右或上下），则不关闭
+        if (Math.abs(diffX) > 30 || Math.abs(diffY) > 30) {
+            // 左右滑动切换图片
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    modalImageContainer.scrollLeft += modalImageContainer.offsetWidth;
+                } else {
+                    modalImageContainer.scrollLeft -= modalImageContainer.offsetWidth;
+                }
+            }
+            return;
+        }
+
+        // 短按 + 没有明显移动 → 关闭 modal
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 10);
+
+    }, { passive: false });
 
             // PC: ✕ close button
             let existingCloseBtn = modal.querySelector('.modal-close-pc');
