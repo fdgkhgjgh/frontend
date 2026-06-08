@@ -381,13 +381,11 @@ function wgs84ToGcj02(lat, lng) {
 }
 
 //load messages
-let lastLoadedTime = null;   // for pagination
-
 async function loadChatMessages(olderThan = null, limit = 50) {
     let query = supabaseClient
         .from('map_chat')
         .select('*')
-        .order('created_at', { ascending: false })   // newest first for easier pagination
+        .order('created_at', { ascending: true })   // ← Important: ascending (oldest first)
         .limit(limit);
 
     if (olderThan) {
@@ -404,21 +402,22 @@ async function loadChatMessages(olderThan = null, limit = 50) {
     const chatMessages = document.getElementById('chat-messages');
 
     if (!olderThan) {
-        // First load - clear and show newest
+        // First load: clear and show from oldest to newest
         chatMessages.innerHTML = '';
-        lastLoadedTime = data.length ? data[0].created_at : null;
-        data.reverse().forEach(msg => appendChatMessage(msg, false)); // false = not new
+        data.forEach(msg => appendChatMessage(msg, false));
+        oldestMessageTime = data.length ? data[0].created_at : null;
     } else {
-        // Load older messages
+        // Load older messages - prepend them
         const oldScrollHeight = chatMessages.scrollHeight;
-        data.reverse().forEach(msg => appendChatMessage(msg, false));
+        data.forEach(msg => appendChatMessage(msg, false));
         chatMessages.scrollTop = chatMessages.scrollHeight - oldScrollHeight;
+        oldestMessageTime = data.length ? data[0].created_at : oldestMessageTime;
     }
 
-    // Hide load more button if no more data
+    // Update Load More button visibility
     const loadMoreBtn = document.getElementById('load-more-chat');
     if (loadMoreBtn) {
-        loadMoreBtn.style.display = data.length < limit ? 'none' : 'block';
+        loadMoreBtn.style.display = (data.length < limit) ? 'none' : 'block';
     }
 }
 
@@ -442,14 +441,21 @@ function setupLoadMore() {
     if (!loadMoreBtn) return;
 
     loadMoreBtn.addEventListener('click', async () => {
-        if (!lastLoadedTime) return;
-        loadMoreBtn.textContent = '加载中... Loading...';
-        await loadChatMessages(lastLoadedTime);
+        if (!oldestMessageTime) return;
+        
+        loadMoreBtn.textContent = '加载中...';
+        loadMoreBtn.disabled = true;
+
+        await loadChatMessages(oldestMessageTime);
+        
         loadMoreBtn.textContent = '加载更多历史消息 Load More';
+        loadMoreBtn.disabled = false;
     });
 }
 
-// Append a chat message to the UI - Improved for Dark Mode
+let oldestMessageTime = null;   // For loading older messages
+
+// Append message (new messages go to bottom, old ones to top)
 function appendChatMessage(msg, isNew = true) {
     const { username: currentUsername } = getCurrentUser();
     const chatMessages = document.getElementById('chat-messages');
@@ -461,7 +467,6 @@ function appendChatMessage(msg, isNew = true) {
         hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
     });
 
-    // Consistent user color
     function getUserColor(username) {
         const colors = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#3182ce', '#805ad5', '#d53f8c', '#2c7a7b'];
         let hash = 0;
@@ -491,15 +496,14 @@ function appendChatMessage(msg, isNew = true) {
             font-size: 0.9rem;
             max-width: 78%;
             word-break: break-word;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         ">${msg.message}</span>
     `;
 
     if (isNew) {
-        chatMessages.appendChild(div);
+        chatMessages.appendChild(div);           // New message → bottom
         chatMessages.scrollTop = chatMessages.scrollHeight;
     } else {
-        chatMessages.prepend(div);   // prepend for older messages
+        chatMessages.prepend(div);               // Older message → top
     }
 }
 
@@ -544,9 +548,9 @@ async function initMapPanel() {
     await loadLocations();
     subscribeLocations();
     
-    await loadChatMessages();     // ← updated
+    await loadChatMessages();     // Initial load
     subscribeChat();
-    setupLoadMore();              // ← new
+    setupLoadMore();
     
     await loadTracks();
 }
