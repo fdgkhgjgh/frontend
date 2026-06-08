@@ -380,29 +380,88 @@ function wgs84ToGcj02(lat, lng) {
     };
 }
 
-// Load chat messages
-async function loadChatMessages() {
-    const { data, error } = await supabaseClient
+//load messages
+let lastLoadedTime = null;   // for pagination
+
+async function loadChatMessages(olderThan = null, limit = 50) {
+    let query = supabaseClient
         .from('map_chat')
         .select('*')
-        .order('created_at', { ascending: true })
-        .limit(50);
+        .order('created_at', { ascending: false })   // newest first for easier pagination
+        .limit(limit);
 
-    if (error) { console.error('Load chat error:', error); return; }
+    if (olderThan) {
+        query = query.lt('created_at', olderThan);
+    }
+
+    const { data, error } = await query;
+
+    if (error) { 
+        console.error('Load chat error:', error); 
+        return; 
+    }
 
     const chatMessages = document.getElementById('chat-messages');
-    chatMessages.innerHTML = '';
-    data.forEach(msg => appendChatMessage(msg));
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    if (!olderThan) {
+        // First load - clear and show newest
+        chatMessages.innerHTML = '';
+        lastLoadedTime = data.length ? data[0].created_at : null;
+        data.reverse().forEach(msg => appendChatMessage(msg, false)); // false = not new
+    } else {
+        // Load older messages
+        const oldScrollHeight = chatMessages.scrollHeight;
+        data.reverse().forEach(msg => appendChatMessage(msg, false));
+        chatMessages.scrollTop = chatMessages.scrollHeight - oldScrollHeight;
+    }
+
+    // Hide load more button if no more data
+    const loadMoreBtn = document.getElementById('load-more-chat');
+    if (loadMoreBtn) {
+        loadMoreBtn.style.display = data.length < limit ? 'none' : 'block';
+    }
 }
 
-// Append a chat message to the UI
-function appendChatMessage(msg) {
+// Subscribe to realtime chat (only new messages)
+function subscribeChat() {
+    chatChannel = supabaseClient
+        .channel('chat-channel')
+        .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'map_chat'
+        }, payload => {
+            appendChatMessage(payload.new);
+        })
+        .subscribe();
+}
+
+// Load more handler
+function setupLoadMore() {
+    const loadMoreBtn = document.getElementById('load-more-chat');
+    if (!loadMoreBtn) return;
+
+    loadMoreBtn.addEventListener('click', async () => {
+        if (!lastLoadedTime) return;
+        loadMoreBtn.textContent = '加载中... Loading...';
+        await loadChatMessages(lastLoadedTime);
+        loadMoreBtn.textContent = '加载更多历史消息 Load More';
+    });
+}
+
+// Append a chat message to the UI - Improved for Dark Mode
+function appendChatMessage(msg, isNew = true) {
     const { username: currentUsername } = getCurrentUser();
     const chatMessages = document.getElementById('chat-messages');
     const isMe = msg.username === currentUsername;
 
-    // Generate consistent random color for username
+    const date = new Date(msg.created_at);
+    const formattedTime = date.toLocaleString('zh-CN', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    });
+
+    // Consistent user color
     function getUserColor(username) {
         const colors = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#3182ce', '#805ad5', '#d53f8c', '#2c7a7b'];
         let hash = 0;
@@ -412,40 +471,36 @@ function appendChatMessage(msg) {
         return colors[Math.abs(hash) % colors.length];
     }
 
-    // Format date to detailed time
-    const date = new Date(msg.created_at);
-    const formattedTime = date.toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-    });
-
     const userColor = getUserColor(msg.username);
 
     const div = document.createElement('div');
     div.style.cssText = `
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         text-align: ${isMe ? 'right' : 'left'};
     `;
+
     div.innerHTML = `
         <span style="font-size:0.75rem; color:${userColor}; font-weight:bold;">${msg.username}</span>
         <span style="font-size:0.75rem; color:#888; margin-left:6px;">${formattedTime}</span><br>
         <span style="
             display: inline-block;
-            background: ${isMe ? '#4f46e5' : '#e2e8f0'};
-            color: ${isMe ? '#fff' : '#333'};
-            padding: 6px 10px;
+            background: ${isMe ? '#4f46e5' : (document.documentElement.classList.contains('dark') ? '#374151' : '#e2e8f0')};
+            color: ${isMe ? '#fff' : (document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#333')};
+            padding: 8px 12px;
             border-radius: 12px;
-            font-size: 0.85rem;
-            max-width: 80%;
+            font-size: 0.9rem;
+            max-width: 78%;
             word-break: break-word;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         ">${msg.message}</span>
     `;
-    chatMessages.appendChild(div);
+
+    if (isNew) {
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    } else {
+        chatMessages.prepend(div);   // prepend for older messages
+    }
 }
 
 // Subscribe to realtime chat
@@ -488,8 +543,11 @@ async function initMapPanel() {
     initMap();
     await loadLocations();
     subscribeLocations();
-    await loadChatMessages();
+    
+    await loadChatMessages();     // ← updated
     subscribeChat();
+    setupLoadMore();              // ← new
+    
     await loadTracks();
 }
 
