@@ -139,17 +139,21 @@ function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
 }
 
 //track line
-async function loadTracks() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+async function loadTracks(days = 15) {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    startDate.setHours(0, 0, 0, 0);
 
     const { data, error } = await supabaseClient
         .from('location_tracks')
         .select('*')
-        .gte('recorded_at', today.toISOString())
+        .gte('recorded_at', startDate.toISOString())
         .order('recorded_at', { ascending: true });
 
-    if (error) { console.error('Load tracks error:', error); return; }
+    if (error) {
+        console.error('Load tracks error:', error);
+        return;
+    }
 
     // Group by user_id
     const grouped = {};
