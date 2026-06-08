@@ -396,7 +396,7 @@ async function loadChatMessages() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Append a chat message to the UI
+// Append a chat message to the UI (Dark-Mode Friendly & Accessible)
 function appendChatMessage(msg) {
     const { username: currentUsername } = getCurrentUser();
     const chatMessages = document.getElementById('chat-messages');
@@ -404,7 +404,7 @@ function appendChatMessage(msg) {
 
     // Generate consistent random color for username
     function getUserColor(username) {
-        const colors = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#3182ce', '#805ad5', '#d53f8c', '#2c7a7b'];
+        const colors = ['#f87171', '#fb923c', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa', '#f472b6', '#2cc7c7'];
         let hash = 0;
         for (let i = 0; i < username.length; i++) {
             hash = username.charCodeAt(i) + ((hash << 5) - hash);
@@ -431,22 +431,31 @@ function appendChatMessage(msg) {
         margin-bottom: 8px;
         text-align: ${isMe ? 'right' : 'left'};
     `;
+
+    // 🆕 Dark mode friendly styling variables
+    const otherBubbleBg = 'var(--chat-bubble-other, rgba(255, 255, 255, 0.15))'; 
+    const otherBubbleText = 'var(--text-primary, #eaeaea)';
+    const timeColor = 'var(--text-muted, #a1a1aa)';
+
     div.innerHTML = `
         <span style="font-size:0.75rem; color:${userColor}; font-weight:bold;">${msg.username}</span>
-        <span style="font-size:0.75rem; color:#888; margin-left:6px;">${formattedTime}</span><br>
+        <span style="font-size:0.75rem; color:${timeColor}; margin-left:6px;">${formattedTime}</span><br>
         <span style="
             display: inline-block;
-            background: ${isMe ? '#4f46e5' : '#e2e8f0'};
-            color: ${isMe ? '#fff' : '#333'};
+            background: ${isMe ? '#4f46e5' : otherBubbleBg};
+            color: ${isMe ? '#ffffff' : otherBubbleText};
             padding: 6px 10px;
             border-radius: 12px;
             font-size: 0.85rem;
             max-width: 80%;
             word-break: break-word;
+            border: ${isMe ? 'none' : '1px solid rgba(255, 255, 255, 0.1)'};
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         ">${msg.message}</span>
     `;
     chatMessages.appendChild(div);
 }
+
 
 // Subscribe to realtime chat
 function subscribeChat() {
@@ -514,4 +523,3 @@ function toggleMapPanel() {
         btn.textContent = '🗺️家庭地图Family Map';
         btn.style.background = '#1DA1F2';
     }
-}
