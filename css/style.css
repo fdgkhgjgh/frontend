@@ -1246,7 +1246,14 @@ img {
 
 .leaflet-popup-content-wrapper {
     padding: 4px 8px !important;
+    border-radius: 8px !important;
 }
+
+.leaflet-popup-content {
+    margin: 4px 8px !important;
+    font-size: 0.85rem !important;
+}
+
 
 
 
