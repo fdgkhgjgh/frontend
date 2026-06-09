@@ -482,7 +482,7 @@ body[class*="dark"] .show-more-btn,
 
 /* Smaller username popup */
 .dark-mode .leaflet-popup-content-wrapper {
-    background: rgba(44, 44, 62, 0.3) !important;
+    background: rgba(44, 44, 62, 0.1) !important;
     backdrop-filter: blur(4px) !important;
     color: #eee !important;
     padding: 2px 4px !important;
@@ -490,7 +490,7 @@ body[class*="dark"] .show-more-btn,
 }
 
 .dark-mode .leaflet-popup-tip {
-    background: rgba(44, 44, 62, 0.3) !important;
+    background: rgba(44, 44, 62, 0.1) !important;
 }
 
 
