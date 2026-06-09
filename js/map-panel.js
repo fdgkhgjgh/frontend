@@ -430,19 +430,19 @@ function appendChatMessage(msg) {
         text-align: ${isMe ? 'right' : 'left'};
     `;
     div.innerHTML = `
-        <span style="font-size:0.75rem; color:${userColor}; font-weight:bold;">${msg.username}</span>
-        <span style="font-size:0.75rem; color:#888; margin-left:6px;">${formattedTime}</span><br>
-        <span style="
-            display: inline-block;
-            background: ${isMe ? '#4f46e5' : '#e2e8f0'};
-            color: ${isMe ? '#fff' : '#333'};
-            padding: 6px 10px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            max-width: 80%;
-            word-break: break-word;
-        ">${msg.message}</span>
-    `;
+    <span style="font-size:0.75rem; color:${userColor}; font-weight:bold;">${msg.username}</span>
+    <span style="font-size:0.75rem; color:#888; margin-left:6px;">${formattedTime}</span><br>
+    <span style="
+        display: inline-block;
+        background: ${isMe ? '#4f46e5' : '#e2e8f0'};
+        color: ${isMe ? '#fff' : '#333'};
+        padding: 6px 10px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        max-width: 80%;
+        word-break: break-word;
+    ">${msg.message}</span>
+`;
     chatMessages.appendChild(div);
 }
 
