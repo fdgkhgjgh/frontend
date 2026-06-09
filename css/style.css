@@ -971,6 +971,19 @@ button[type="submit"]:disabled {
     color: #eee;
 }
 
+/* Make the Chat Title text clearly visible in Dark Mode */
+.dark-mode #map-panel h3, 
+.dark-mode #map-panel div,
+.dark-mode #map-panel p {
+    color: #eee !important;
+}
+
+/* Specifically target the header if it's plain text inside the panel */
+.dark-mode [id="map-panel"] {
+    color: #eee !important;
+}
+
+
 .dark-mode #chat-input {
     background: #2c2c3e;
     color: #eee;
