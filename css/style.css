@@ -1245,8 +1245,8 @@ img {
 }
 
 .leaflet-popup-content-wrapper {
-    padding: 4px 8px !important;
-    border-radius: 8px !important;
+    padding: 2px 4px !important;
+    border-radius: 4px !important;
 }
 
 .leaflet-popup-content {
