@@ -492,6 +492,29 @@ async function initMapPanel() {
     subscribeChat();
     await loadTracks();
 }
+// chat extension 
+let mapChatExpanded = false;
+
+function toggleMapChat() {
+    const chatBody = document.getElementById('map-chat-body');
+    const btn = document.getElementById('map-chat-toggle');
+    mapChatExpanded = !mapChatExpanded;
+    
+    if (mapChatExpanded) {
+        chatBody.style.height = '400px';
+        btn.textContent = '收起';
+    } else {
+        chatBody.style.height = '220px';
+        btn.textContent = '展开';
+    }
+
+    // Scroll to bottom
+    const chatMessages = document.getElementById('chat-messages');
+    if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+window.toggleMapChat = toggleMapChat;
+
 
 // Toggle map panel visibility
 function toggleMapPanel() {
