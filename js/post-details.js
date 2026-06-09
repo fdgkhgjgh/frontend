@@ -590,7 +590,7 @@ if (currentUserId && post.author && post.author._id && currentUserId === post.au
                     <button id="save-edit-btn" style="
                         background:#4f46e5; color:white; border:none;
                         padding:8px 16px; border-radius:6px; cursor:pointer;
-                    ">Save</button>
+                    ">修改并保存Save</button>
                     <button id="cancel-edit-btn" style="
                         background:#aaa; color:white; border:none;
                         padding:8px 16px; border-radius:6px; cursor:pointer;
