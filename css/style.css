@@ -1206,6 +1206,37 @@ img {
     transition: bottom 0.15s ease;
 }
 
+.leaflet-control-zoom a {
+    font-size: 18px !important;
+    line-height: 26px !important;
+    width: 26px !important;
+    height: 26px !important;
+    font-weight: bold !important;
+}
+
+.leaflet-control-zoom {
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+}
+
+.leaflet-control-layers {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+}
+
+.leaflet-control-layers-toggle {
+    width: 36px !important;
+    height: 36px !important;
+}
+
+.leaflet-control-layers-expanded {
+    padding: 8px !important;
+    font-size: 0.85rem !important;
+    line-height: 1.8 !important;
+    white-space: nowrap !important;
+}
+
+
 
 
 
