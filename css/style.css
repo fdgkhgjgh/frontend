@@ -964,7 +964,15 @@ button[type="submit"]:disabled {
 
 .dark-mode #map-panel {
     background: #1a1a2e;
+    color: #eeeeee; /* Adds light text color for '群聊天' and other labels */
 }
+
+/* If '群聊天' is inside a specific container with a white background, add this safeguard: */
+.dark-mode #map-panel div, 
+.dark-mode #map-panel span {
+    color: #eeeeee !important; 
+}
+
 
 .dark-mode #chat-messages {
     background: #1a1a2e;
