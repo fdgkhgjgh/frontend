@@ -445,8 +445,23 @@ body[class*="dark"] .show-more-btn,
 
 .dark-mode #chat-messages {
     background: #1a1a2e !important;
+}
+
+.dark-mode #chat-messages > div {
+    color: #333 !important;
+}
+
+/* Received messages */
+.dark-mode #chat-messages span[style*="e2e8f0"] {
+    background: #2c2c3e !important;
     color: #eee !important;
 }
+
+/* Sent messages */
+.dark-mode #chat-messages span[style*="4f46e5"] {
+    color: #fff !important;
+}
+
 
 .dark-mode #map-panel {
     background: #1a1a2e !important;
