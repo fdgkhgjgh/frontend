@@ -437,6 +437,28 @@ body[class*="dark"] .show-more-btn,
     border-color: #444 !important;
 }
 
+.dark-mode #map-panel .chat-header,
+.dark-mode #map-panel > div:nth-child(2) > div:first-child {
+    background: #2c2c3e !important;
+    color: #eee !important;
+}
+
+.dark-mode #chat-messages {
+    background: #1a1a2e !important;
+    color: #eee !important;
+}
+
+.dark-mode #map-panel {
+    background: #1a1a2e !important;
+}
+
+.dark-mode #map-chat-header {
+    background: #2c2c3e !important;
+    color: #eee !important;
+    border-bottom-color: #444 !important;
+}
+
+
 
 
 
