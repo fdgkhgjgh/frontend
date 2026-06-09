@@ -80,7 +80,6 @@ function initMap() {
 // Create custom marker icon
 function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
     const color = isCurrentUser ? '#4f46e5' : '#e53e3e';
-    const initial = username ? username.charAt(0).toUpperCase() : '?';
 
     const innerContent = profilePicUrl
         ? `<img src="${profilePicUrl}" style="
@@ -88,6 +87,7 @@ function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
                 height: 36px;
                 border-radius: 50%;
                 object-fit: cover;
+                display: block;
             "/>`
         : `<div style="
                 background: ${color};
@@ -100,13 +100,13 @@ function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
                 justify-content: center;
                 font-weight: bold;
                 font-size: 14px;
-            ">${initial}</div>`;
+                line-height: 1;
+            ">${username.charAt(0).toUpperCase()}</div>`;
 
     return L.divIcon({
         className: '',
         html: `
             <div style="position: relative; width: 36px; height: 44px;">
-                <!-- Pulsing ring -->
                 <div style="
                     position: absolute;
                     top: -6px;
@@ -118,7 +118,6 @@ function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
                     opacity: 0.3;
                     animation: pulse 1.5s infinite;
                 "></div>
-                <!-- Profile pic or initial -->
                 <div style="
                     position: relative;
                     border: 3px solid ${color};
@@ -127,9 +126,7 @@ function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
                     width: 36px;
                     height: 36px;
                     overflow: hidden;
-                ">
-                    ${innerContent}
-                </div>
+                ">${innerContent}</div>
             </div>
         `,
         iconSize: [36, 44],
@@ -137,6 +134,7 @@ function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
         popupAnchor: [0, -44]
     });
 }
+
 
 //track line
 async function loadTracks(days = 15) {
