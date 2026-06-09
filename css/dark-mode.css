@@ -482,11 +482,17 @@ body[class*="dark"] .show-more-btn,
 
 /* Smaller username popup */
 .dark-mode .leaflet-popup-content-wrapper {
-    background: rgba(44,44,62,0.9) !important;
+    background: rgba(44, 44, 62, 0.6) !important;
+    backdrop-filter: blur(4px) !important;
     color: #eee !important;
     padding: 4px 8px !important;
     border-radius: 8px !important;
 }
+
+.dark-mode .leaflet-popup-tip {
+    background: rgba(44, 44, 62, 0.6) !important;
+}
+
 
 .dark-mode .leaflet-popup-content {
     margin: 4px 8px !important;
@@ -494,9 +500,6 @@ body[class*="dark"] .show-more-btn,
     color: #eee !important;
 }
 
-.dark-mode .leaflet-popup-tip {
-    background: rgba(44,44,62,0.9) !important;
-}
 
 
 
