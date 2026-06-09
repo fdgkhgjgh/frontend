@@ -458,12 +458,6 @@ body[class*="dark"] .show-more-btn,
     border-bottom-color: #444 !important;
 }
 
-/* Leaflet controls in dark mode */
-.dark-mode .leaflet-control-zoom a {
-    background: #2c2c3e !important;
-    color: #eee !important;
-    border-color: #444 !important;
-}
 
 .dark-mode .leaflet-control-layers {
     background: #2c2c3e !important;
@@ -476,19 +470,34 @@ body[class*="dark"] .show-more-btn,
     color: #eee !important;
 }
 
-.dark-mode .leaflet-popup-content-wrapper {
-    background: #2c2c3e !important;
+
+
+/* Transparent zoom buttons in dark mode */
+.dark-mode .leaflet-control-zoom a {
+    background: rgba(0,0,0,0.3) !important;
+    backdrop-filter: blur(4px) !important;
     color: #eee !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
+    border-color: rgba(255,255,255,0.2) !important;
 }
 
-.dark-mode .leaflet-popup-tip {
-    background: #2c2c3e !important;
+/* Smaller username popup */
+.dark-mode .leaflet-popup-content-wrapper {
+    background: rgba(44,44,62,0.9) !important;
+    color: #eee !important;
+    padding: 4px 8px !important;
+    border-radius: 8px !important;
 }
 
 .dark-mode .leaflet-popup-content {
+    margin: 4px 8px !important;
+    font-size: 0.85rem !important;
     color: #eee !important;
 }
+
+.dark-mode .leaflet-popup-tip {
+    background: rgba(44,44,62,0.9) !important;
+}
+
 
 
 
