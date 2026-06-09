@@ -490,12 +490,12 @@ body[class*="dark"] .show-more-btn,
 }
 
 .dark-mode .leaflet-popup-tip {
-    background: rgba(44, 44, 62, 0.6) !important;
+    background: rgba(44, 44, 62, 0.3) !important;
 }
 
 
 .dark-mode .leaflet-popup-content {
-    margin: 4px 8px !important;
+    margin: 2px 4px !important;
     font-size: 0.85rem !important;
     color: #eee !important;
 }
