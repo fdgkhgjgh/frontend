@@ -515,6 +515,18 @@ body[class*="dark"] .show-more-btn,
     color: #eee !important;
 }
 
+.dark-mode #map-chat-body > div:last-child {
+    background: #2c2c3e !important;
+    border-top-color: #444 !important;
+}
+
+.dark-mode #chat-input {
+    background: #1a1a2e !important;
+    color: #eee !important;
+    border-color: #555 !important;
+}
+
+
 
 
 
