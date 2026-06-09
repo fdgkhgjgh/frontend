@@ -953,6 +953,18 @@ button[type="submit"]:disabled {
     margin-bottom: 50px !important;
 }
 
+#chat-messages {
+    resize: vertical;        /* Adds the drag handle to resize up and down */
+    overflow-y: auto;        /* Ensures the scrollbar appears when needed */
+    min-height: 150px;       /* Sets a reasonable starting height */
+    max-height: 70vh;        /* Prevents the user from accidentally dragging it taller than the screen */
+    
+    /* Optional: Adds a subtle border so users can clearly see the draggable corner */
+    border-bottom: 1px solid #ccc; 
+}
+
+
+
 #chat-messages::-webkit-scrollbar {
     width: 4px;
 }
@@ -977,6 +989,7 @@ button[type="submit"]:disabled {
 .dark-mode #chat-messages {
     background: #1a1a2e;
     color: #eee;
+    border-bottom:1px solid #444;
 }
 
 .dark-mode #chat-input {
