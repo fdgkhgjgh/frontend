@@ -458,6 +458,25 @@ body[class*="dark"] .show-more-btn,
     border-bottom-color: #444 !important;
 }
 
+/* Leaflet controls in dark mode */
+.dark-mode .leaflet-control-zoom a {
+    background: #2c2c3e !important;
+    color: #eee !important;
+    border-color: #444 !important;
+}
+
+.dark-mode .leaflet-control-layers {
+    background: #2c2c3e !important;
+    color: #eee !important;
+    border-color: #444 !important;
+}
+
+.dark-mode .leaflet-control-layers-expanded {
+    background: #2c2c3e !important;
+    color: #eee !important;
+}
+
+
 
 
 
