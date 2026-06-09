@@ -1212,6 +1212,14 @@ img {
     width: 26px !important;
     height: 26px !important;
     font-weight: bold !important;
+    background: rgba(255,255,255,0.3) !important;
+    backdrop-filter: blur(4px) !important;
+}
+
+.dark-mode .leaflet-control-zoom a {
+    background: rgba(0,0,0,0.3) !important;
+    color: #eee !important;
+    border-color: rgba(255,255,255,0.2) !important;
 }
 
 .leaflet-control-zoom {
