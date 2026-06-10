@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h3>JS 调试器（可执行 fetch）</h3>
+
+<input id="cmd" style="width:100%;font-size:16px;" placeholder="输入 JS 指令">
+<button onclick="run()" style="margin-top:10px;">Run</button>
+
+<pre id="out" style="white-space:pre-wrap;margin-top:20px;"></pre>
+
+<script>
+async function run() {
+  const code = document.getElementById('cmd').value
+  try {
+    const result = await eval(code)
+    document.getElementById('out').textContent =
+      typeof result === 'object'
+        ? JSON.stringify(result, null, 2)
+        : String(result)
+  } catch(e) {
+    document.getElementById('out').textContent = "Error: " + e
+  }
+}
+</script>
+
+</body>
+</html>
