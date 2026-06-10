@@ -158,7 +158,7 @@ function showVisaDetail(country) {
     const detail = document.getElementById('visa-detail');
     detail.style.display = 'block';
 
-    const passportIndexUrl = `https://www.passportindex.org/passport/${country.slug}/`;
+    const passportIndexUrl = `https://cn.passportindex.org/passport/${country.slug}/`;
     const henleyUrl = `https://www.henleypassportindex.com/passport/${country.slug}`;
 
     detail.innerHTML = `
