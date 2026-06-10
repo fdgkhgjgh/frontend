@@ -91,6 +91,22 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     ">+</button>
     
+    <button onclick="toggleFlightPanel()" id="flight-btn" style="
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #0ea5e9;
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+">✈</button>
+
+    
     <button onclick="toggleVisaPanel()" id="visa-btn" style="
     display: inline-flex;
     align-items: center;
@@ -567,6 +583,8 @@
      <!-- 5. theme-toggle.js (can be anywhere, but usually best after main logic) -->
     <script src="js/theme-toggle.js" type="module"></script>
     <script src="js/visa.js"></script>
+    <script src="js/flight.js"></script>
+
 
     <!-- Currency Converter -->
 <div id="currency-converter" style="
@@ -643,6 +661,83 @@
     })();
     </script>
     <!--End of Tawk.to Script-->
+    
+    <!-- Flight Panel -->
+<div id="flight-panel" style="
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 320px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -4px 0 16px rgba(0,0,0,0.2);
+    z-index: 99996;
+    flex-direction: column;
+">
+    <!-- Header -->
+    <div style="
+        padding: 12px 16px;
+        background: #0ea5e9;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+    ">
+        <span style="font-weight:bold;">✈️ 航班追踪</span>
+        <button onclick="toggleFlightPanel()" style="background:none;border:none;color:white;font-size:1.2rem;cursor:pointer;">✕</button>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;border-bottom:1px solid #eee;flex-shrink:0;">
+        <button id="flight-map-tab" onclick="switchFlightTab('map')" style="
+            flex:1;padding:8px;border:none;cursor:pointer;font-size:0.85rem;
+            background:#4f46e5;color:white;border-radius:0;
+        ">🗺️ 实时地图</button>
+        <button id="flight-search-tab" onclick="switchFlightTab('search')" style="
+            flex:1;padding:8px;border:none;cursor:pointer;font-size:0.85rem;
+            background:transparent;color:#4f46e5;border-radius:0;
+        ">🔍 航班查询</button>
+    </div>
+
+    <!-- Map content -->
+    <div id="flight-map-content" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+        <div id="flight-map-status" style="padding:4px 12px;font-size:0.75rem;color:#888;flex-shrink:0;"></div>
+        <div id="flight-map-container" style="flex:1;"></div>
+    </div>
+
+    <!-- Search content -->
+    <div id="flight-search-content" style="display:none;flex:1;overflow-y:auto;padding:12px;">
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+            <input id="flight-search-input" type="text" placeholder="航班号，如 CA123"
+                onkeydown="if(event.key==='Enter') searchFlight()"
+                style="
+                    flex:1;padding:8px 12px;
+                    border:1px solid #ddd;border-radius:20px;
+                    font-size:0.85rem;outline:none;
+                "/>
+            <button onclick="searchFlight()" style="
+                background:#0ea5e9;color:white;border:none;
+                padding:8px 14px;border-radius:20px;
+                cursor:pointer;font-size:0.85rem;white-space:nowrap;
+            ">查询</button>
+        </div>
+        <div id="flight-search-result">
+            <p style="color:#888;font-size:0.85rem;">请输入航班号，例如：CA123、MU5735</p>
+        </div>
+    </div>
+</div>
+
+<!-- Flight overlay -->
+<div id="flight-overlay" onclick="toggleFlightPanel()" style="
+    display:none;
+    position:fixed;top:0;left:0;
+    width:100vw;height:100vh;
+    background:rgba(0,0,0,0.3);
+    z-index:99995;
+"></div>
+
     
     <!-- Visa Panel -->
 <div id="visa-panel" style="
