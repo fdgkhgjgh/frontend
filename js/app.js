@@ -70,25 +70,10 @@ async function loadPosts(page = 1) {
             `${API_BASE_URL}/posts?page=${page}&limit=${limit}`
         );
 
-        ...
-
-        hideRenderLoading();
-
-    } catch(error) {
-
-        hideRenderLoading();
-
-        console.error(error);
-    }
-}
-    try {
-        // Page 1 fetches 20 but shows 5 initially, other pages fetch 20
-        const limit = page === 1 ? 20 : 20;
-        const response = await fetch(`${API_BASE_URL}/posts?page=${page}&limit=${limit}`);
-
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
         }
+
         const data = await response.json();
         const posts = data.posts;
         const totalPages = data.totalPages;
@@ -98,11 +83,20 @@ async function loadPosts(page = 1) {
         } else {
             displayPosts(posts);
         }
+
         displayPagination(totalPages, page);
 
     } catch (error) {
+
         console.error('Error loading posts:', error);
-        postList.innerHTML = '<p>Error loading posts. Please try again later.</p>';
+
+        postList.innerHTML =
+            '<p>Error loading posts. Please try again later.</p>';
+
+    } finally {
+
+        hideRenderLoading();
+
     }
 }
 
