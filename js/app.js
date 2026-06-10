@@ -59,6 +59,28 @@ function clearSearch() {
 }
 
 async function loadPosts(page = 1) {
+
+    showRenderLoading();
+
+    try {
+
+        const limit = page === 1 ? 20 : 20;
+
+        const response = await fetch(
+            `${API_BASE_URL}/posts?page=${page}&limit=${limit}`
+        );
+
+        ...
+
+        hideRenderLoading();
+
+    } catch(error) {
+
+        hideRenderLoading();
+
+        console.error(error);
+    }
+}
     try {
         // Page 1 fetches 20 but shows 5 initially, other pages fetch 20
         const limit = page === 1 ? 20 : 20;
@@ -135,6 +157,48 @@ showMoreBtn.style.cssText = `
 
     postList.appendChild(showMoreBtn);
 }
+// skeleton 
+function showRenderLoading() {
+    const loader = document.getElementById('render-loading-screen');
+
+    if (loader) {
+        loader.style.display = 'block';
+    }
+
+    const messages = [
+        "☕ Waking up Render server...",
+        "💀 Summoning posts from the dead...",
+        "🚀 Starting backend...",
+        "📦 Loading forum posts...",
+        "🦥 Free plan detected...",
+        "💀 Server is stretching...",
+        "🔋 Charging hamster wheel...",
+        "🎉 Almost there..."
+    ];
+
+    let index = 0;
+
+    window.renderLoadingInterval = setInterval(() => {
+        const text = document.getElementById('loading-message');
+
+        if (text) {
+            text.textContent = messages[index % messages.length];
+        }
+
+        index++;
+    }, 5000);
+}
+
+function hideRenderLoading() {
+    clearInterval(window.renderLoadingInterval);
+
+    const loader = document.getElementById('render-loading-screen');
+
+    if (loader) {
+        loader.style.display = 'none';
+    }
+}
+
 // function displayPosts.
 function createPostElement(post) {
     const postElement = document.createElement('div');
