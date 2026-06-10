@@ -1271,12 +1271,9 @@ img {
 /* 发光眼睛 */
 
 .eye {
-    fill:#4fc3ff;
-
-    filter:
-      drop-shadow(0 0 4px #4fc3ff)
-      drop-shadow(0 0 10px #4fc3ff);
-
+    fill: #4fc3ff !important;
+    stroke: none !important; /* 覆盖掉外层 g 的全局 stroke */
+    filter: drop-shadow(0 0 4px #4fc3ff) drop-shadow(0 0 10px #4fc3ff);
     animation: eyeGlow 1.5s infinite;
 }
 
@@ -1395,10 +1392,16 @@ img {
 }
 
 #loading-message {
-    margin-top:15px;
-    color:#8fbfff;
-    font-size:15px;
-    text-shadow:0 0 8px rgba(79,195,255,.5);
+    margin-top: 15px;
+    color: #8fbfff;
+    font-size: 15px;
+    text-shadow: 0 0 8px rgba(79, 195, 255, 0.6);
+    animation: textPulse 2s infinite ease-in-out;
+}
+
+@keyframes textPulse {
+    0%, 100% { opacity: 0.6; text-shadow: 0 0 4px rgba(79,195,255,.3); }
+    50% { opacity: 1; text-shadow: 0 0 14px rgba(79,195,255,.8); }
 }
 
 
