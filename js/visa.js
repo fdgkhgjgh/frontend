@@ -159,7 +159,6 @@ function showVisaDetail(country) {
     detail.style.display = 'block';
 
     const passportIndexUrl = `https://www.passportindex.org/cn/passport/${country.slug}/`;
-    const henleyUrl = `https://www.henleypassportindex.com/passport/${country.slug}`;
 
     detail.innerHTML = `
         <div style="padding:12px 14px; border-bottom:1px solid #eee; display:flex; align-items:center; gap:8px; flex-shrink:0;">
@@ -186,24 +185,6 @@ function showVisaDetail(country) {
                 <div>
                     <div>Passport Index</div>
                     <div style="font-size:0.75rem;opacity:0.85;">免签/落地签/电子签/需签证 详细列表</div>
-                </div>
-            </a>
-            <a href="${henleyUrl}" target="_blank" style="
-                display:flex;
-                align-items:center;
-                gap:10px;
-                background:#2d7a2d;
-                color:white;
-                padding:12px 16px;
-                border-radius:10px;
-                text-decoration:none;
-                font-size:0.85rem;
-                font-weight:bold;
-            ">
-                <span style="font-size:1.2rem;">📊</span>
-                <div>
-                    <div>Henley Passport Index</div>
-                    <div style="font-size:0.75rem;opacity:0.85;">全球护照排名及免签数量</div>
                 </div>
             </a>
             <div style="margin-top:6px;padding:10px;background:#fff3e0;border-radius:8px;font-size:0.75rem;color:#666;line-height:1.5;">
