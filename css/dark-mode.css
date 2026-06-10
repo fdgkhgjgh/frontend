@@ -526,6 +526,32 @@ body[class*="dark"] .show-more-btn,
     border-color: #555 !important;
 }
 
+.dark-mode #visa-panel {
+    background: #1a1a2e !important;
+    color: #eee !important;
+}
+
+.dark-mode #visa-list > div {
+    color: #eee !important;
+    border-bottom-color: #333 !important;
+}
+
+.dark-mode #visa-list > div:hover {
+    background: #2c2c3e !important;
+}
+
+.dark-mode #visa-detail {
+    color: #eee !important;
+    background: #1a1a2e !important;
+}
+
+.dark-mode #visa-search {
+    background: #2c2c3e !important;
+    color: #eee !important;
+    border-color: #444 !important;
+}
+
+
 
 
 
