@@ -9,61 +9,54 @@ function showSkeleton() {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 16px 0 8px;
+            padding: 12px 0 8px;
             gap: 4px;
+            overflow: hidden;
         ">
-            <svg width="120" height="180" viewBox="0 0 120 180" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
-
-                <!-- 💀 Head as emoji -->
-                <text class="dancer-head" x="50%" y="38" 
-                    text-anchor="middle" 
-                    font-size="38"
+            <svg width="100" height="150" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg" style="overflow:hidden;">
+                <!-- 💀 Head -->
+                <text x="50" y="36" text-anchor="middle" font-size="32"
                     style="animation: headBob 0.4s ease-in-out infinite alternate;">💀</text>
 
-                <!-- Body/torso -->
-                <g class="dancer-body" style="animation: bodyTwist 0.4s ease-in-out infinite alternate; transform-origin: 60px 80px;">
-                    <rect x="48" y="52" width="24" height="32" rx="5" fill="rgba(255,255,255,0.8)"/>
-                    <!-- Tie -->
-                    <polygon points="60,54 57,66 60,70 63,66" fill="rgba(220,40,40,0.9)"/>
+                <!-- Body -->
+                <g style="animation: bodyTwist 0.4s ease-in-out infinite alternate; transform-origin: 50px 68px;">
+                    <rect x="40" y="44" width="20" height="28" rx="4" fill="rgba(255,255,255,0.8)"/>
+                    <polygon points="50,46 47,56 50,60 53,56" fill="rgba(220,40,40,0.9)"/>
                 </g>
 
-                <!-- Left arm - raise the roof move -->
-                <g style="animation: leftArmRaise 0.4s ease-in-out infinite alternate; transform-origin: 48px 58px;">
-                    <line x1="48" y1="58" x2="26" y2="42" stroke="rgba(255,255,255,0.85)" stroke-width="6" stroke-linecap="round"/>
-                    <circle cx="26" cy="42" r="5" fill="rgba(255,255,255,0.85)"/>
-                    <!-- Pointing finger up -->
-                    <line x1="26" y1="42" x2="22" y2="30" stroke="rgba(255,255,255,0.85)" stroke-width="3" stroke-linecap="round"/>
+                <!-- Left arm -->
+                <g style="animation: leftArmRaise 0.4s ease-in-out infinite alternate; transform-origin: 40px 52px;">
+                    <line x1="40" y1="52" x2="22" y2="38" stroke="rgba(255,255,255,0.85)" stroke-width="5" stroke-linecap="round"/>
+                    <line x1="22" y1="38" x2="18" y2="28" stroke="rgba(255,255,255,0.85)" stroke-width="3" stroke-linecap="round"/>
                 </g>
 
-                <!-- Right arm - wave move -->
-                <g style="animation: rightArmWave 0.4s ease-in-out infinite alternate; transform-origin: 72px 58px;">
-                    <line x1="72" y1="58" x2="94" y2="42" stroke="rgba(255,255,255,0.85)" stroke-width="6" stroke-linecap="round"/>
-                    <circle cx="94" cy="42" r="5" fill="rgba(255,255,255,0.85)"/>
-                    <line x1="94" y1="42" x2="98" y2="30" stroke="rgba(255,255,255,0.85)" stroke-width="3" stroke-linecap="round"/>
+                <!-- Right arm -->
+                <g style="animation: rightArmWave 0.4s ease-in-out infinite alternate; transform-origin: 60px 52px;">
+                    <line x1="60" y1="52" x2="78" y2="38" stroke="rgba(255,255,255,0.85)" stroke-width="5" stroke-linecap="round"/>
+                    <line x1="78" y1="38" x2="82" y2="28" stroke="rgba(255,255,255,0.85)" stroke-width="3" stroke-linecap="round"/>
                 </g>
 
                 <!-- Hips -->
-                <g style="animation: hipShake 0.3s ease-in-out infinite alternate; transform-origin: 60px 88px;">
-                    <rect x="46" y="82" width="28" height="12" rx="5" fill="rgba(255,255,255,0.75)"/>
+                <g style="animation: hipShake 0.3s ease-in-out infinite alternate; transform-origin: 50px 76px;">
+                    <rect x="38" y="72" width="24" height="10" rx="4" fill="rgba(255,255,255,0.7)"/>
                 </g>
 
-                <!-- Left leg - kick -->
-                <g style="animation: leftLegKick 0.4s ease-in-out infinite alternate; transform-origin: 52px 94px;">
-                    <line x1="52" y1="94" x2="38" y2="130" stroke="rgba(255,255,255,0.85)" stroke-width="6" stroke-linecap="round"/>
-                    <!-- Knee bend -->
-                    <line x1="38" y1="130" x2="28" y2="118" stroke="rgba(255,255,255,0.85)" stroke-width="6" stroke-linecap="round"/>
-                    <ellipse cx="26" cy="116" rx="9" ry="5" fill="rgba(255,255,255,0.85)"/>
+                <!-- Left leg -->
+                <g style="animation: leftLegKick 0.4s ease-in-out infinite alternate; transform-origin: 44px 82px;">
+                    <line x1="44" y1="82" x2="34" y2="112" stroke="rgba(255,255,255,0.85)" stroke-width="5" stroke-linecap="round"/>
+                    <line x1="34" y1="112" x2="26" y2="102" stroke="rgba(255,255,255,0.85)" stroke-width="5" stroke-linecap="round"/>
+                    <ellipse cx="24" cy="100" rx="7" ry="4" fill="rgba(255,255,255,0.85)"/>
                 </g>
 
-                <!-- Right leg - step -->
-                <g style="animation: rightLegStep 0.4s ease-in-out infinite alternate; transform-origin: 68px 94px;">
-                    <line x1="68" y1="94" x2="82" y2="130" stroke="rgba(255,255,255,0.85)" stroke-width="6" stroke-linecap="round"/>
-                    <line x1="82" y1="130" x2="92" y2="118" stroke="rgba(255,255,255,0.85)" stroke-width="6" stroke-linecap="round"/>
-                    <ellipse cx="94" cy="116" rx="9" ry="5" fill="rgba(255,255,255,0.85)"/>
+                <!-- Right leg -->
+                <g style="animation: rightLegStep 0.4s ease-in-out infinite alternate; transform-origin: 56px 82px;">
+                    <line x1="56" y1="82" x2="66" y2="112" stroke="rgba(255,255,255,0.85)" stroke-width="5" stroke-linecap="round"/>
+                    <line x1="66" y1="112" x2="74" y2="102" stroke="rgba(255,255,255,0.85)" stroke-width="5" stroke-linecap="round"/>
+                    <ellipse cx="76" cy="100" rx="7" ry="4" fill="rgba(255,255,255,0.85)"/>
                 </g>
 
                 <!-- Shadow -->
-                <ellipse cx="60" cy="148" rx="25" ry="5" fill="rgba(0,0,0,0.2)" 
+                <ellipse cx="50" cy="130" rx="20" ry="4" fill="rgba(0,0,0,0.2)"
                     style="animation: shadowPulse 0.4s ease-in-out infinite alternate;"/>
             </svg>
 
@@ -87,11 +80,29 @@ function showSkeleton() {
             overflow: hidden;
             position: relative;
         ">
+            <div style="
+                position: absolute;
+                top: 0; left: -100%;
+                width: 60%; height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                animation: shimmer 1.5s infinite;
+            "></div>
             <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
-                <div style="background:rgba(255,255,255,0.18);border-radius:4px;height:14px;width:70%;"></div>
-                <div style="background:rgba(255,255,255,0.12);border-radius:4px;height:11px;width:45%;"></div>
+                <div style="
+                    background:rgba(255,255,255,0.2);
+                    border-radius:4px;height:14px;width:70%;
+                "></div>
+                <div style="
+                    background:rgba(255,255,255,0.13);
+                    border-radius:4px;height:11px;width:45%;
+                "></div>
             </div>
-            <div style="width:70px;height:70px;border-radius:4px;background:rgba(255,255,255,0.12);flex-shrink:0;"></div>
+            <div style="
+                width:70px;height:70px;
+                border-radius:4px;
+                background:rgba(255,255,255,0.13);
+                flex-shrink:0;
+            "></div>
         </div>
         `).join('')}
     `;
