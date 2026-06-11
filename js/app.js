@@ -59,21 +59,15 @@ function clearSearch() {
 }
 
 async function loadPosts(page = 1) {
-
-    showRenderLoading();
-
+showSkeleton();
     try {
-
+        // Page 1 fetches 20 but shows 5 initially, other pages fetch 20
         const limit = page === 1 ? 20 : 20;
-
-        const response = await fetch(
-            `${API_BASE_URL}/posts?page=${page}&limit=${limit}`
-        );
+        const response = await fetch(`${API_BASE_URL}/posts?page=${page}&limit=${limit}`);
 
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
         }
-
         const data = await response.json();
         const posts = data.posts;
         const totalPages = data.totalPages;
@@ -83,20 +77,11 @@ async function loadPosts(page = 1) {
         } else {
             displayPosts(posts);
         }
-
         displayPagination(totalPages, page);
 
     } catch (error) {
-
         console.error('Error loading posts:', error);
-
-        postList.innerHTML =
-            '<p>Error loading posts. Please try again later.</p>';
-
-    } finally {
-
-        hideRenderLoading();
-
+        postList.innerHTML = '<p>Error loading posts. Please try again later.</p>';
     }
 }
 
@@ -150,47 +135,6 @@ showMoreBtn.style.cssText = `
     });
 
     postList.appendChild(showMoreBtn);
-}
-// skeleton 
-function showRenderLoading() {
-    const loader = document.getElementById('render-loading-screen');
-
-    if (loader) {
-        loader.style.display = 'block';
-    }
-
-    const messages = [
-        "☕ Waking up Render server...",
-        "💀 Summoning posts from the dead...",
-        "🚀 Starting backend...",
-        "📦 Loading forum posts...",
-        "🦥 Free plan detected...",
-        "💀 Server is stretching...",
-        "🔋 Charging hamster wheel...",
-        "🎉 Almost there..."
-    ];
-
-    let index = 0;
-
-    window.renderLoadingInterval = setInterval(() => {
-        const text = document.getElementById('loading-message');
-
-        if (text) {
-            text.textContent = messages[index % messages.length];
-        }
-
-        index++;
-    }, 5000);
-}
-
-function hideRenderLoading() {
-    clearInterval(window.renderLoadingInterval);
-
-    const loader = document.getElementById('render-loading-screen');
-
-    if (loader) {
-        loader.style.display = 'none';
-    }
 }
 
 // function displayPosts.
