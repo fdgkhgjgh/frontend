@@ -1,0 +1,51 @@
+/* skeleton.css */
+
+@keyframes shimmer {
+    0%   { left: -100%; }
+    100% { left: 150%; }
+}
+
+@keyframes fadeText {
+    from { opacity: 0.4; }
+    to   { opacity: 1; }
+}
+
+@keyframes headBob {
+    from { transform: rotate(-8deg) translateY(0px); }
+    to   { transform: rotate(8deg) translateY(-4px); }
+}
+
+@keyframes bodyTwist {
+    from { transform: rotate(-10deg); }
+    to   { transform: rotate(10deg); }
+}
+
+@keyframes leftArmRaise {
+    from { transform: rotate(-40deg); }
+    to   { transform: rotate(50deg); }
+}
+
+@keyframes rightArmWave {
+    from { transform: rotate(50deg); }
+    to   { transform: rotate(-40deg); }
+}
+
+@keyframes hipShake {
+    from { transform: translateX(-6px) rotate(-10deg); }
+    to   { transform: translateX(6px) rotate(10deg); }
+}
+
+@keyframes leftLegKick {
+    from { transform: rotate(-40deg); }
+    to   { transform: rotate(30deg); }
+}
+
+@keyframes rightLegStep {
+    from { transform: rotate(30deg); }
+    to   { transform: rotate(-40deg); }
+}
+
+@keyframes shadowPulse {
+    from { transform: scaleX(0.7); opacity: 0.1; }
+    to   { transform: scaleX(1.3); opacity: 0.3; }
+}
