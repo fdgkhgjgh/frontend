@@ -129,3 +129,49 @@
     from { transform: rotate(-30deg); }
     to   { transform: rotate(20deg); }
 }
+
+@keyframes leftArmRaise {
+    from { transform: rotate(-30deg); }
+    to   { transform: rotate(40deg); }
+}
+
+@keyframes rightArmWave {
+    from { transform: rotate(40deg); }
+    to   { transform: rotate(-30deg); }
+}
+
+@keyframes hipShake {
+    from { transform: translateX(-6px) rotate(-8deg); }
+    to   { transform: translateX(6px) rotate(8deg); }
+}
+
+@keyframes leftLegKick {
+    from { transform: rotate(-35deg); }
+    to   { transform: rotate(25deg); }
+}
+
+@keyframes rightLegStep {
+    from { transform: rotate(25deg); }
+    to   { transform: rotate(-35deg); }
+}
+
+@keyframes shadowPulse {
+    from { transform: scaleX(0.8); opacity: 0.15; }
+    to   { transform: scaleX(1.2); opacity: 0.3; }
+}
+
+@keyframes fadeText {
+    from { opacity: 0.4; }
+    to   { opacity: 1; }
+}
+
+@keyframes headBob {
+    from { transform: rotate(-8deg) translateY(0px); }
+    to   { transform: rotate(8deg) translateY(-4px); }
+}
+
+@keyframes bodyTwist {
+    from { transform: rotate(-10deg); }
+    to   { transform: rotate(10deg); }
+}
+
