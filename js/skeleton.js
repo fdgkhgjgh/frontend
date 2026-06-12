@@ -7,7 +7,7 @@ function showSkeleton() {
     postList.innerHTML = `
         <div style="
             position:relative;
-            min-height:350px;
+            min-height:350px; /* 🌟 核心修改：从600px缩小到350px，防止空列表时过度撑大整个页面 */
             width:100%;
             box-sizing:border-box;
         ">
@@ -21,9 +21,9 @@ function showSkeleton() {
                 justify-content:center;
                 align-items:center;
 
-                background:#8BC48B;
+                background:#8BC48B; /* 🌟 核心修改：改为主页同款绿色背景（也可以用 rgba(139, 196, 139, 0.95) 略带透明） */
                 backdrop-filter:blur(4px);
-                border-radius:4px;
+                border-radius:4px;   /* 顺便加上圆角，贴合你的 .post 样式 */
 
                 z-index:999;
             ">
@@ -44,6 +44,13 @@ function showSkeleton() {
                         animation: bodyTwist .4s ease-in-out infinite alternate;
                         transform-origin:50px 68px;
                     ">
+                        
+                        <line x1="50" y1="36"
+                            x2="50" y2="44"
+                            stroke="white"
+                            stroke-width="5"
+                            stroke-linecap="round"/>
+
                         <rect x="40" y="44"
                             width="20"
                             height="28"
@@ -152,8 +159,9 @@ function showSkeleton() {
                 <div id="loading-text"
                     style="
                         margin-top:10px;
-                        color:#ddd;
+                        color:#2d5a1b; /* 🌟 核心修改：文字改成深绿色，确保在浅绿背景下清晰可见 */
                         font-size:.9rem;
+                        font-weight:bold;
                     ">
                     💀 Waking up Render server...
                 </div>
@@ -185,7 +193,6 @@ function showSkeleton() {
         }
     }, 3000);
 }
-
 
 function hideSkeleton() {
     // Skeleton is replaced when posts load — no action needed
