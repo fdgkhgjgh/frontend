@@ -60,6 +60,7 @@ function clearSearch() {
 
 async function loadPosts(page = 1) {
 showSkeleton();
+postList.style.display = 'block';
     try {
         // Page 1 fetches 20 but shows 5 initially, other pages fetch 20
         const limit = page === 1 ? 20 : 20;
