@@ -28,6 +28,8 @@
     padding: 20px;
     border-radius: 8px;
 }
+
+/* 扫光的那一束白光线 */
 .shimmer-wrapper::after {
     content: '';
     position: absolute;
@@ -35,12 +37,28 @@
     left: -100%;
     width: 60%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.45), /* 🌟 稍微调亮，让光泽在白色指骨上更显眼 */
+        transparent
+    );
     transform: skewX(-20deg);
     animation: shimmer 2s infinite linear;
+    
+    /* 🌟 核心修复点 🌟 */
+    z-index: 9;                 /* 强制把白光提到最上层，覆盖在 SVG 和文字正上方 */
+    pointer-events: none;       /* 确保这层光不影响任何点击或 hover 事件 */
 }
+
+/* 夜间模式下的扫光线 */
 .dark-mode .shimmer-wrapper::after {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.25),
+        transparent
+    );
 }
 
 /* ==========================================
