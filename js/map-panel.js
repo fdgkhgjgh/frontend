@@ -12,7 +12,7 @@ let chatChannel = null;
 let watchId = null;
 let isSharingLocation = false;
 let polylines = {}; // store track lines per user
-let currentMapLayer = 'yandex';
+let currentMapLayer = 'amap';
 
 // Get logged in user info
 function getCurrentUser() {
@@ -61,7 +61,7 @@ function initMap() {
     );
 
     // ✅ Yandex as default
-    yandexLayer.addTo(map);
+    amapLayer.addTo(map);
 
     L.control.layers({
         'World Map (Yandex)': yandexLayer,
