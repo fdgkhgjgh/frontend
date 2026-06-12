@@ -176,12 +176,12 @@ function showSkeleton() {
     `;
 
     const messages = [
-        "💀 Waking up Render server...",
+        "💀 唤醒服务器中...",
         "☕ Backend is making coffee...",
         "🦥 Free plan detected...",
-        "📦 Loading posts...",
+        "📦 正在加载帖子...",
         "⚡ Summoning data...",
-        "🎉 Almost there..."
+        "🎉 就快到达了..."
     ];
 
     let i = 0;
