@@ -1,60 +1,6 @@
-/* skeleton.css */
-
-@keyframes shimmer {
-    0%   { left: -100%; }
-    100% { left: 150%; }
-}
-
-@keyframes fadeText {
-    from { opacity: 0.4; }
-    to   { opacity: 1; }
-}
-
-@keyframes headBob {
-    from { transform: rotate(-8deg) translateY(0px); }
-    to   { transform: rotate(8deg) translateY(-4px); }
-}
-
-@keyframes bodyTwist {
-    from { transform: rotate(-10deg); }
-    to   { transform: rotate(10deg); }
-}
-
-@keyframes leftArmRaise {
-    from { transform: rotate(-40deg); }
-    to   { transform: rotate(50deg); }
-}
-
-@keyframes rightArmWave {
-    from { transform: rotate(50deg); }
-    to   { transform: rotate(-40deg); }
-}
-
-@keyframes hipShake {
-    from { transform: translateX(-6px) rotate(-10deg); }
-    to   { transform: translateX(6px) rotate(10deg); }
-}
-
-@keyframes leftLegKick {
-    from { transform: rotate(-40deg); }
-    to   { transform: rotate(30deg); }
-}
-
-@keyframes rightLegStep {
-    from { transform: rotate(30deg); }
-    to   { transform: rotate(-40deg); }
-}
-
-@keyframes shadowPulse {
-    from { transform: scaleX(0.7); opacity: 0.1; }
-    to   { transform: scaleX(1.3); opacity: 0.3; }
-}
-
 /* ==========================================
    骨架屏夜间模式（Dark Mode）适配
    ========================================== */
-
-/* 1. 默认日间模式样式（绿色背景 + 深绿文字） */
 .skeleton-theme-overlay {
     background: #8BC48B;
     transition: background-color 0.3s ease;
@@ -63,20 +9,16 @@
     color: #2d5a1b;
     transition: color 0.3s ease;
 }
-
-/* 2. 当检测到网站开启夜间模式时（带 .dark-mode 类）自动变成灰色主题 */
 .dark-mode .skeleton-theme-overlay {
-    background: #2a2a2a; /* 经典的夜间深灰色 */
+    background: #2a2a2a;
 }
 .dark-mode .skeleton-theme-text {
-    color: #dddddd; /* 浅灰色文字，确保黑底上清晰 */
+    color: #dddddd;
 }
 
 /* ==========================================
-   骨架屏扫光（Shimmer）动画激活
+   骨架屏扫光（Shimmer）动画
    ========================================== */
-
-/* 扫光外壳容器 */
 .shimmer-wrapper {
     position: relative;
     overflow: hidden;
@@ -86,32 +28,92 @@
     padding: 20px;
     border-radius: 8px;
 }
-
-/* 扫光的那一束白光线 */
 .shimmer-wrapper::after {
     content: '';
     position: absolute;
     top: 0;
-    left: -100%; /* 配合你原本的 keyframes 起始点 */
+    left: -100%;
     width: 60%;
     height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.25), /* 日间绿底下的白光 */
-        transparent
-    );
-    transform: skewX(-20deg); /* 倾斜光束，更有质感 */
-    animation: shimmer 2s infinite linear; /* 挂载你现有的 shimmer 动画 */
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transform: skewX(-20deg);
+    animation: shimmer 2s infinite linear;
 }
-
-/* 夜间模式下让光束稍微柔和暗一点点，免得晃眼 */
 .dark-mode .shimmer-wrapper::after {
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.15),
-        transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
 }
 
+/* ==========================================
+   🕺 核心改变：全套疯狂扭胯舞步规则 🕺
+   ========================================== */
+
+/* 1. 身体和脑袋：带有一点点左右平移的扭动，让动作更舒展 */
+.dance-body {
+    animation: bodyTwist 0.58s ease-in-out infinite alternate;
+}
+.dance-head {
+    animation: headBob 0.58s ease-in-out infinite alternate;
+    animation-delay: -0.08s; /* 脑袋稍微慢半拍，做出自然的物理甩头感 */
+}
+
+/* 2. 手臂：关键点！右手加了延迟，这样左手上去时，右手刚好下来，告别大雁展翅 */
+.dance-left-arm {
+    animation: leftArmRaise 0.45s ease-in-out infinite alternate;
+}
+.dance-right-arm {
+    animation: rightArmWave 0.45s ease-in-out infinite alternate;
+    animation-delay: -0.22s; /* 完美错开双臂，形成交叉摇摆的律动 */
+}
+
+/* 3. 胯骨与下肢：缩短周期让扭胯更鬼畜，双腿 staggered 错位，形成交替踏步 */
+.dance-hip {
+    animation: hipShake 0.28s ease-in-out infinite alternate;
+}
+.dance-left-leg {
+    animation: leftLegKick 0.38s ease-in-out infinite alternate;
+}
+.dance-right-leg {
+    animation: rightLegStep 0.38s ease-in-out infinite alternate;
+    animation-delay: -0.19s; /* 左右脚交替踩点，跳出 Twist 舞步 */
+}
+
+
+/* ==========================================
+   🔥 重新优化的舞姿关键帧 🔥
+   ========================================== */
+@keyframes headBob {
+    from { transform: rotate(-6deg) translateY(0px); }
+    to   { transform: rotate(12deg) translateY(-3px); }
+}
+
+@keyframes bodyTwist {
+    from { transform: rotate(-8deg) translateX(-1px); }
+    to   { transform: rotate(8deg) translateX(1px); }
+}
+
+@keyframes leftArmRaise {
+    from { transform: rotate(-55deg) scaleY(0.9); }
+    to   { transform: rotate(25deg) scaleY(1.05); }
+}
+
+@keyframes rightArmWave {
+    from { transform: rotate(45deg) scaleY(1.05); }
+    to   { transform: rotate(-35deg) scaleY(0.9); }
+}
+
+/* 扭胯的同时稍微往下蹲一点点（translateY），更具动感 */
+@keyframes hipShake {
+    from { transform: translateX(-4px) translateY(0px) rotate(-6deg); }
+    to   { transform: translateX(4px) translateY(2px) rotate(6deg); }
+}
+
+/* 让腿部在旋转时伴随轻微缩放，模拟膝盖弯曲和伸直的动作 */
+@keyframes leftLegKick {
+    from { transform: rotate(-30deg) scaleY(1); }
+    to   { transform: rotate(15deg) scaleY(0.85); }
+}
+
+@keyframes rightLegStep {
+    from { transform: rotate(15deg) scaleY(0.85); }
+    to   { transform: rotate(-30deg) scaleY(1); }
+}
