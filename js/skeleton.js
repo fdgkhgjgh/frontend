@@ -7,7 +7,7 @@ function showSkeleton() {
     postList.innerHTML = `
         <div style="
             position:relative;
-            min-height:100%;
+            min-height:350px;
             width:100%;
             box-sizing:border-box;
         ">
