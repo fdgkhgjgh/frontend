@@ -14,7 +14,7 @@ function showSkeleton() {
             overflow: hidden;
         ">
             <svg width="100" height="150" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg" style="overflow:hidden;">
-                <!-- 💀 Head -->
+                <!-- 🤣 Head -->
                 <text x="50" y="36" text-anchor="middle" font-size="32"
                     style="animation: headBob 0.4s ease-in-out infinite alternate;">💀</text>
 
