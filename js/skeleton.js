@@ -34,15 +34,9 @@ function showSkeleton() {
                          xmlns="http://www.w3.org/2000/svg"
                          style="overflow:visible;">
 
-                        <g style="
-                            animation: bodyTwist .4s ease-in-out infinite alternate;
-                            transform-origin:50px 68px;
-                        ">
+                        <g class="dance-body" style="transform-origin:50px 68px;">
                             
-                            <g style="
-                                animation: headBob .4s ease-in-out infinite alternate;
-                                transform-origin: 50px 44px;
-                            ">
+                            <g class="dance-head" style="transform-origin: 50px 44px;">
                                 <line x1="50" y1="32"
                                     x2="50" y2="48"
                                     stroke="rgba(255,255,255,.85)"
@@ -67,10 +61,7 @@ function showSkeleton() {
                                 fill="rgba(220,40,40,.9)"/>
                         </g>
 
-                        <g style="
-                            animation:leftArmRaise .4s ease-in-out infinite alternate;
-                            transform-origin:40px 52px;
-                        ">
+                        <g class="dance-left-arm" style="transform-origin:40px 52px;">
                             <line x1="40" y1="52"
                                 x2="22" y2="38"
                                 stroke="white"
@@ -84,10 +75,7 @@ function showSkeleton() {
                                 stroke-linecap="round"/>
                         </g>
 
-                        <g style="
-                            animation:rightArmWave .4s ease-in-out infinite alternate;
-                            transform-origin:60px 52px;
-                        ">
+                        <g class="dance-right-arm" style="transform-origin:60px 52px;">
                             <line x1="60" y1="52"
                                 x2="78" y2="38"
                                 stroke="white"
@@ -101,10 +89,7 @@ function showSkeleton() {
                                 stroke-linecap="round"/>
                         </g>
 
-                        <g style="
-                            animation:hipShake .3s ease-in-out infinite alternate;
-                            transform-origin:50px 76px;
-                        ">
+                        <g class="dance-hip" style="transform-origin:50px 76px;">
                             <rect x="38"
                                 y="72"
                                 width="24"
@@ -113,10 +98,7 @@ function showSkeleton() {
                                 fill="rgba(255,255,255,.7)"/>
                         </g>
 
-                        <g style="
-                            animation:leftLegKick .4s ease-in-out infinite alternate;
-                            transform-origin:44px 82px;
-                        ">
+                        <g class="dance-left-leg" style="transform-origin:44px 82px;">
                             <line x1="44" y1="82"
                                 x2="34" y2="112"
                                 stroke="white"
@@ -136,47 +118,46 @@ function showSkeleton() {
                                 fill="white"/>
                         </g>
 
-                        <g style="
-                            animation:rightLegStep .4s ease-in-out infinite alternate;
-                            transform-origin:56px 82px;
-                        ">
+                        <g class="dance-right-leg" style="transform-origin:56px 82px;">
                             <line x1="56" y1="82"
                                 x2="66" y2="112"
                                 stroke="white"
                                 stroke-width="5"
                                 stroke-linecap="round"/>
 
-                            <line x1="66" y1="112"
-                                x2="74" y2="102"
-                                stroke="white"
-                                stroke-width="5"
-                                stroke-linecap="round"/>
+                        <line x1="66" y1="112"
+                            x2="74" y2="102"
+                            stroke="white"
+                            stroke-width="5"
+                            stroke-linecap="round"/>
 
-                            <ellipse cx="76"
-                                cy="100"
-                                rx="7"
-                                ry="4"
-                                fill="white"/>
-                        </g>
+                        <ellipse cx="76"
+                            cy="100"
+                            rx="7"
+                            ry="4"
+                            fill="white"/>
+                    </g>
 
-                    </svg>
+                </svg>
 
-                    <div id="loading-text" class="skeleton-theme-text"
-                        style="
-                            margin-top:10px;
-                            font-size:.9rem;
-                            font-weight:bold;
-                        ">
-                        💀 Waking up Render server...
-                    </div>
+                <div id="loading-text" class="skeleton-theme-text"
+                    style="
+                        margin-top:10px;
+                        font-size:.9rem;
+                        font-weight:bold;
+                    ">
+                    💀 Waking up Render server...
+                </div>
 
-                </div> </div>
+            </div>
 
         </div>
+
+    </div>
     `;
 
     const messages = [
-        "💀 唤醒服务器中...",
+        "💀 正在唤醒服务器...",
         "☕ Backend is making coffee...",
         "🦥 Free plan detected...",
         "📦 正在加载帖子...",
