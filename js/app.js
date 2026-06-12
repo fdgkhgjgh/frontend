@@ -59,30 +59,55 @@ function clearSearch() {
 }
 
 async function loadPosts(page = 1) {
-showSkeleton();
-postList.style.display = 'block';
+
+    const postList = document.getElementById('post-list');
+
+    showSkeleton();
+
     try {
-        // Page 1 fetches 20 but shows 5 initially, other pages fetch 20
+
         const limit = page === 1 ? 20 : 20;
-        const response = await fetch(`${API_BASE_URL}/posts?page=${page}&limit=${limit}`);
+
+        const response = await fetch(
+            `${API_BASE_URL}/posts?page=${page}&limit=${limit}`
+        );
 
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
         }
+
         const data = await response.json();
+
         const posts = data.posts;
         const totalPages = data.totalPages;
+
+        // 停止加载文字轮播
+        clearInterval(window.loadingMsgInterval);
 
         if (page === 1) {
             displayPostsWithShowMore(posts);
         } else {
             displayPosts(posts);
         }
+
         displayPagination(totalPages, page);
 
     } catch (error) {
+
+        clearInterval(window.loadingMsgInterval);
+
         console.error('Error loading posts:', error);
-        postList.innerHTML = '<p>Error loading posts. Please try again later.</p>';
+
+        postList.innerHTML = `
+            <div style="
+                text-align:center;
+                padding:40px;
+                color:#ccc;
+            ">
+                ❌ Error loading posts<br>
+                Please try again later.
+            </div>
+        `;
     }
 }
 
