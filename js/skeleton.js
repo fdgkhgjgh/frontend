@@ -7,7 +7,9 @@ function showSkeleton() {
     postList.innerHTML = `
         <div style="
             position:relative;
-            min-height:600px;
+            min-height:100%;
+            width:100%;
+            box-sizing:border-box;
         ">
 
             <div style="
@@ -19,8 +21,9 @@ function showSkeleton() {
                 justify-content:center;
                 align-items:center;
 
-                background:rgba(15,15,15,0.92);
+                background:#8BC48B;
                 backdrop-filter:blur(4px);
+                border-radius:4px;
 
                 z-index:999;
             ">
