@@ -1259,21 +1259,44 @@ img {
 }
 
 /* ==========================================================================
-   Fix for Leaflet Layer Switcher text overlap in Day/Dark Mode
+   🛠️ 修正：地图切换控制面板——回归上下排列、极致紧凑化
    ========================================================================== */
 
-/* 1. Day Mode: Force the text inside Leaflet controls to be dark and visible */
-.leaflet-control-layers label,
-.leaflet-control-layers label span {
-    color: #333333 !important;   /* Clear dark grey text on Leaflet's white background */
-    display: inline-block !important; 
+/* 1. 强制选项上下垂直堆叠排列 */
+.leaflet-control-layers-base, 
+.leaflet-control-layers-overlays {
+    display: flex !important;
+    flex-direction: column !important; /* 👈 核心：确保上下垂直排列 */
+    gap: 3px !important;               /* 两个选项之间的上下间距（非常紧凑） */
 }
 
-/* 2. Dark Mode Safeguard: Ensure text flips to light grey when dark mode is enabled */
+/* 2. 调小每个选项的字体和内边距，使其不再臃肿 */
+.leaflet-control-layers label {
+    margin: 0 !important;
+    padding: 1px 2px !important;       /* 👈 极小的内边距，消除多余留白 */
+    font-size: 11px !important;        /* 👈 调小字体大小 */
+    display: flex !important;
+    align-items: center !important;    /* 让单选框圆点和文字垂直居中对齐 */
+    gap: 4px !important;               /* 圆点和文字之间的左右间距 */
+    cursor: pointer;
+}
+
+/* 3. 缩小整个展开后的控制面板（外壳）的四周留白 */
+.leaflet-control-layers-expanded {
+    padding: 4px 6px !important;       /* 让整个悬浮框包裹得更紧、更小巧 */
+    min-width: unset !important;       /* 取消默认的最小宽度限制 */
+}
+
+/* 4. 保持白天/夜间模式的文本颜色清晰可见 */
+.leaflet-control-layers label,
+.leaflet-control-layers label span {
+    color: #333333 !important;         /* 白天模式：深灰字 */
+}
 .dark-mode .leaflet-control-layers label,
 .dark-mode .leaflet-control-layers label span {
-    color: #eeeeee !important;   /* Light text for dark containers */
+    color: #eeeeee !important;         /* 暗黑模式：亮灰字 */
 }
+
 
 
 
