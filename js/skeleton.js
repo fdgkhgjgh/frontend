@@ -67,12 +67,15 @@ function showSkeleton() {
                                 stroke="white"
                                 stroke-width="5"
                                 stroke-linecap="round"/>
-
                             <line x1="22" y1="38"
                                 x2="18" y2="28"
                                 stroke="white"
                                 stroke-width="3"
                                 stroke-linecap="round"/>
+                            
+                            <line x1="18" y1="28" x2="11" y2="22" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                            <line x1="18" y1="28" x2="15" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                            <line x1="18" y1="28" x2="21" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                         </g>
 
                         <g class="dance-right-arm" style="transform-origin:60px 52px;">
@@ -81,12 +84,15 @@ function showSkeleton() {
                                 stroke="white"
                                 stroke-width="5"
                                 stroke-linecap="round"/>
-
                             <line x1="78" y1="38"
                                 x2="82" y2="28"
                                 stroke="white"
                                 stroke-width="3"
                                 stroke-linecap="round"/>
+
+                            <line x1="82" y1="28" x2="89" y2="22" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                            <line x1="82" y1="28" x2="85" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                            <line x1="82" y1="28" x2="79" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                         </g>
 
                         <g class="dance-hip" style="transform-origin:50px 76px;">
@@ -104,18 +110,15 @@ function showSkeleton() {
                                 stroke="white"
                                 stroke-width="5"
                                 stroke-linecap="round"/>
-
                             <line x1="34" y1="112"
                                 x2="26" y2="102"
                                 stroke="white"
                                 stroke-width="5"
                                 stroke-linecap="round"/>
 
-                            <ellipse cx="24"
-                                cy="100"
-                                rx="7"
-                                ry="4"
-                                fill="white"/>
+                            <line x1="26" y1="102" x2="12" y2="104" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="12" y1="104" x2="7" y2="106" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="14" y1="103" x2="9" y2="108" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                         </g>
 
                         <g class="dance-right-leg" style="transform-origin:56px 82px;">
@@ -124,36 +127,33 @@ function showSkeleton() {
                                 stroke="white"
                                 stroke-width="5"
                                 stroke-linecap="round"/>
+                            <line x1="66" y1="112"
+                                x2="74" y2="102"
+                                stroke="white"
+                                stroke-width="5"
+                                stroke-linecap="round"/>
 
-                        <line x1="66" y1="112"
-                            x2="74" y2="102"
-                            stroke="white"
-                            stroke-width="5"
-                            stroke-linecap="round"/>
+                            <line x1="74" y1="102" x2="88" y2="104" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="88" y1="104" x2="93" y2="106" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="86" y1="103" x2="91" y2="108" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        </g>
 
-                        <ellipse cx="76"
-                            cy="100"
-                            rx="7"
-                            ry="4"
-                            fill="white"/>
-                    </g>
+                    </svg>
 
-                </svg>
+                    <div id="loading-text" class="skeleton-theme-text"
+                        style="
+                            margin-top:10px;
+                            font-size:.9rem;
+                            font-weight:bold;
+                        ">
+                        💀 Waking up Render server...
+                    </div>
 
-                <div id="loading-text" class="skeleton-theme-text"
-                    style="
-                        margin-top:10px;
-                        font-size:.9rem;
-                        font-weight:bold;
-                    ">
-                    💀 Waking up Render server...
                 </div>
 
             </div>
 
         </div>
-
-    </div>
     `;
 
     const messages = [
