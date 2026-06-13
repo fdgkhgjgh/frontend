@@ -142,20 +142,27 @@ async function loadTracks(days = 15) {
     startDate.setDate(startDate.getDate() - days);
     startDate.setHours(0, 0, 0, 0);
 
+    // 1. Change sorting to descending (false) to prioritize your LATEST positions
     const { data, error } = await supabaseClient
         .from('location_tracks')
         .select('*')
         .gte('recorded_at', startDate.toISOString())
-        .order('recorded_at', { ascending: true });
+        .order('recorded_at', { ascending: false }) 
+        .limit(2000); // Raise the roof on max points fetched if needed
 
     if (error) {
         console.error('Load tracks error:', error);
         return;
     }
 
+    if (!data || data.length === 0) return;
+
+    // 2. Flip the array back around so Leaflet draws the lines chronologically
+    const chronologicalData = [...data].reverse();
+
     // Group by user_id
     const grouped = {};
-    data.forEach(point => {
+    chronologicalData.forEach(point => {
         if (!grouped[point.user_id]) grouped[point.user_id] = [];
         grouped[point.user_id].push([point.latitude, point.longitude]);
     });
@@ -267,11 +274,12 @@ async function startSharingLocation() {
 
     let firstUpdate = true;
 
-    watchId = navigator.geolocation.watchPosition(async (pos) => {
-    const raw = pos.coords;
-const latitude = raw.latitude;
-const longitude = raw.longitude;
+        watchId = navigator.geolocation.watchPosition(async (pos) => {
+        const raw = pos.coords;
+        const latitude = raw.latitude;
+        const longitude = raw.longitude;
 
+        // Always upsert current live location marker
         await supabaseClient.from('locations').upsert({
             user_id: userId,
             username: username || 'Anonymous',
@@ -281,14 +289,24 @@ const longitude = raw.longitude;
             updated_at: new Date().toISOString()
         }, { onConflict: 'user_id' });
 
-        await supabaseClient.from('location_tracks').insert({
-            user_id: userId,
-            username: username || 'Anonymous',
-            latitude,
-            longitude
-        });
+        // 🧠 Optimization: Only save a history track line point if moved significantly
+        const hasMoved = lastSavedLat === null || 
+                         Math.abs(latitude - lastSavedLat) > 0.0002 || 
+                         Math.abs(longitude - lastSavedLng) > 0.0002;
+
+        if (hasMoved) {
+            await supabaseClient.from('location_tracks').insert({
+                user_id: userId,
+                username: username || 'Anonymous',
+                latitude,
+                longitude
+            });
+            lastSavedLat = latitude;
+            lastSavedLng = longitude;
+        }
 
         await loadTracks();
+
 
         // ✅ Only center map on first update, not every update
         if (firstUpdate) {
