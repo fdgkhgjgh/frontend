@@ -13,6 +13,9 @@ let watchId = null;
 let isSharingLocation = false;
 let polylines = {}; // store track lines per user
 let currentMapLayer = 'amap';
+let lastSavedLat = null;
+let lastSavedLng = null;
+
 
 // Get logged in user info
 function getCurrentUser() {
