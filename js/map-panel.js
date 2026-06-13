@@ -300,7 +300,7 @@ const longitude = raw.longitude;
         console.error('Geolocation error:', err);
     }, {
         enableHighAccuracy: false,
-        maximumAge: 30000,
+        maximumAge: 5000,
         timeout: 10000
     });
 }
