@@ -589,7 +589,7 @@ async function searchMapLocation() {
                     background: #e53e3e;
                     color: white;
                     padding: 1px 2px;
-                    border-radius: 5px;
+                    border-radius: 2px;
                     font-size: 0.75rem;
                     white-space: nowrap;
                     box-shadow: 0 2px 3px rgba(0,0,0,0.3);
