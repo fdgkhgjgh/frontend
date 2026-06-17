@@ -191,7 +191,7 @@
     z-index: 1000;
     display: flex;
     gap: 6px;
-    width: 60%;
+    width: 30%;
 ">
     <input id="map-search-input" type="text" placeholder="搜索地点..."
         onkeydown="if(event.key==='Enter') searchMapLocation()"
@@ -206,15 +206,15 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         "/>
     <button onclick="searchMapLocation()" style="
-        background: rgba(79,70,229,0.85);
+        background: rgba(79,70,229,0.25);
         color: white;
         border: none;
-        padding: 2px 3px;
-        border-radius: 5px;
+        padding: 1px 2px;
+        border-radius: 2px;
         cursor: pointer;
         font-size: 0.75rem;
         white-space: nowrap;
-        box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     ">搜索</button>
 </div>
 
