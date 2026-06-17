@@ -592,7 +592,7 @@ async function searchMapLocation() {
                     border-radius: 5px;
                     font-size: 0.75rem;
                     white-space: nowrap;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    box-shadow: 0 2px 3px rgba(0,0,0,0.3);
                 ">📍 ${input}</div>`,
                 iconAnchor: [0, 20]
             })
