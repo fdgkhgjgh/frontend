@@ -557,3 +557,55 @@ function toggleMapPanel() {
         btn.style.background = '#1DA1F2';
     }
 }
+
+let searchMarker = null;
+
+async function searchMapLocation() {
+    const input = document.getElementById('map-search-input').value.trim();
+    if (!input) return;
+
+    try {
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(input)}&format=json&limit=1`,
+            { headers: { 'Accept-Language': 'zh-CN,zh' } }
+        );
+        const data = await response.json();
+
+        if (!data || data.length === 0) {
+            alert('未找到该地点');
+            return;
+        }
+
+        const { lat, lon, display_name } = data[0];
+
+        // Remove old search marker
+        if (searchMarker) map.removeLayer(searchMarker);
+
+        // Add new marker
+        searchMarker = L.marker([parseFloat(lat), parseFloat(lon)], {
+            icon: L.divIcon({
+                className: '',
+                html: `<div style="
+                    background: #e53e3e;
+                    color: white;
+                    padding: 4px 8px;
+                    border-radius: 12px;
+                    font-size: 0.75rem;
+                    white-space: nowrap;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                ">📍 ${input}</div>`,
+                iconAnchor: [0, 20]
+            })
+        }).addTo(map);
+
+        searchMarker.bindPopup(display_name).openPopup();
+        map.setView([parseFloat(lat), parseFloat(lon)], 12);
+
+    } catch (err) {
+        alert('搜索失败，请稍后重试');
+        console.error('Search error:', err);
+    }
+}
+
+window.searchMapLocation = searchMapLocation;
+
