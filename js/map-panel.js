@@ -588,8 +588,8 @@ async function searchMapLocation() {
                 html: `<div style="
                     background: #e53e3e;
                     color: white;
-                    padding: 4px 8px;
-                    border-radius: 12px;
+                    padding: 1px 2px;
+                    border-radius: 5px;
                     font-size: 0.75rem;
                     white-space: nowrap;
                     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
