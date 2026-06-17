@@ -174,7 +174,7 @@ async function searchFlight() {
 
     try {
         const response = await fetch(
-            `http://api.aviationstack.com/v1/flights?access_key=${AVIATION_KEY}&flight_iata=${input}&limit=3`
+            `https://api.aviationstack.com/v1/flights?access_key=${AVIATION_KEY}&flight_iata=${input}&limit=3`
         );
         const data = await response.json();
 
