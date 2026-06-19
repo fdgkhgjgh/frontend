@@ -588,11 +588,11 @@ async function searchMapLocation() {
                 html: `<div style="
                     background: #e53e3e;
                     color: white;
-                    padding: 1px 2px;
-                    border-radius: 2px;
-                    font-size: 0.75rem;
+                    padding: 0.5px 1px;
+                    border-radius: 1px;
+                    font-size: 0.65rem;
                     white-space: nowrap;
-                    box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
                 ">📍 ${input}</div>`,
                 iconAnchor: [0, 20]
             })
