@@ -219,8 +219,10 @@
     ">搜索</button>
 </div>
 
-    <div style="position: relative;">
-        <div id="map-container" style="width: 100%; height: 350px;"></div>
+    <div style="position: relative; flex: 1; display: flex; flex-direction: column; min-height: 0;">
+
+        <div id="map-container" style="width: 100%; flex: 1; min-height: 0;"></div>
+
         <button id="share-location-btn" onclick="toggleLocationSharing()" style="
             position: absolute;
             bottom: 12px;
