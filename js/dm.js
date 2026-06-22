@@ -331,17 +331,32 @@ async function appendDMMessage(msg) {
         max-width:80%;
         word-break:break-word;
     ">${decryptedMessage}</span>
-    <button onclick="translateMessage('${decryptedMessage.replace(/'/g, "\\'")}', this)" style="
-        display:block;
-        margin-top:3px;
-        background:none;
-        border:1px solid #ddd;
-        border-radius:10px;
-        padding:1px 8px;
-        font-size:0.72rem;
-        color:#888;
-        cursor:pointer;
-    ">译</button>
+    <div style="margin-top:3px; display:flex; gap:4px; flex-wrap:wrap;">
+    <button onclick="translateMessage('${decryptedMessage.replace(/'/g, "\\'")}', this, 'zh-CN')" style="
+        background:none; border:1px solid #ddd; border-radius:10px;
+        padding:1px 7px; font-size:0.7rem; color:#888; cursor:pointer;
+    ">中文</button>
+    <button onclick="translateMessage('${decryptedMessage.replace(/'/g, "\\'")}', this, 'en')" style="
+        background:none; border:1px solid #ddd; border-radius:10px;
+        padding:1px 7px; font-size:0.7rem; color:#888; cursor:pointer;
+    ">EN</button>
+    <button onclick="translateMessage('${decryptedMessage.replace(/'/g, "\\'")}', this, 'ja')" style="
+        background:none; border:1px solid #ddd; border-radius:10px;
+        padding:1px 7px; font-size:0.7rem; color:#888; cursor:pointer;
+    ">日本語</button>
+    <button onclick="translateMessage('${decryptedMessage.replace(/'/g, "\\'")}', this, 'vi')" style="
+        background:none; border:1px solid #ddd; border-radius:10px;
+        padding:1px 7px; font-size:0.7rem; color:#888; cursor:pointer;
+    ">Tiếng Việt</button>
+    <button onclick="translateMessage('${decryptedMessage.replace(/'/g, "\\'")}', this, 'ko')" style="
+        background:none; border:1px solid #ddd; border-radius:10px;
+        padding:1px 7px; font-size:0.7rem; color:#888; cursor:pointer;
+    ">한국어</button>
+    <button onclick="translateMessage('${decryptedMessage.replace(/'/g, "\\'")}', this, 'fr')" style="
+        background:none; border:1px solid #ddd; border-radius:10px;
+        padding:1px 7px; font-size:0.7rem; color:#888; cursor:pointer;
+    ">FR</button>
+</div>
 `;
 
     messagesEl.appendChild(div);
@@ -557,20 +572,39 @@ document.addEventListener('DOMContentLoaded', () => {
     } // closes if (userId)
 }); // closes DOMContentLoaded
 
-async function translateMessage(text, btnEl) {
+async function translateMessage(text, btnEl, targetLang) {
+    const originalText = btnEl.textContent;
     btnEl.textContent = '...';
     btnEl.disabled = true;
 
     try {
+        // Detect source language
+        const hasChinese = /[\u4e00-\u9fff]/.test(text);
+        const hasJapanese = /[\u3040-\u30ff]/.test(text);
+        const hasKorean = /[\uac00-\ud7af]/.test(text);
+        const hasVietnamese = /[àáâãèéêìíòóôõùúýăđơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/i.test(text);
+
+        let sourceLang = 'en';
+        if (hasChinese) sourceLang = 'zh-CN';
+        else if (hasJapanese) sourceLang = 'ja';
+        else if (hasKorean) sourceLang = 'ko';
+        else if (hasVietnamese) sourceLang = 'vi';
+
+        if (sourceLang === targetLang) {
+            btnEl.textContent = originalText;
+            btnEl.disabled = false;
+            return;
+        }
+
         const response = await fetch(
-            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=auto|zh`
+            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`
         );
         const data = await response.json();
         const translated = data.responseData.translatedText;
 
-        // Show translation below button
-        const container = btnEl.parentElement;
-        let transEl = container.querySelector('.translation-text');
+        // Find or create translation result div
+        const msgContainer = btnEl.closest('div[style*="margin-bottom"]');
+        let transEl = msgContainer.querySelector('.translation-text');
         if (!transEl) {
             transEl = document.createElement('div');
             transEl.classList.add('translation-text');
@@ -581,25 +615,21 @@ async function translateMessage(text, btnEl) {
                 padding: 4px 8px;
                 background: rgba(0,0,0,0.05);
                 border-radius: 8px;
-                max-width: 80%;
             `;
-            container.appendChild(transEl);
+            msgContainer.appendChild(transEl);
         }
 
-        if (transEl.style.display === 'block') {
-            transEl.style.display = 'none';
-            btnEl.textContent = '译';
-        } else {
-            transEl.textContent = translated;
-            transEl.style.display = 'block';
-            btnEl.textContent = '译';
-        }
+        transEl.textContent = `🌐 ${translated}`;
+        transEl.style.display = 'block';
+
     } catch (err) {
-        btnEl.textContent = '译';
         console.error('Translation error:', err);
     }
+
+    btnEl.textContent = originalText;
     btnEl.disabled = false;
 }
+
 
 window.translateMessage = translateMessage;
 
