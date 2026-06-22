@@ -320,20 +320,30 @@ async function appendDMMessage(msg) {
     // 🌟 核心修改 2：气泡内部使用 text-align: left 强行锁死从左往右的书写流！
     // 🌟 核心修改 3：添加 white-space: pre-line，顺便完美支持用户敲回车发送换行！
     div.innerHTML = `
-        <div style="font-size:0.7rem; color:#aaa; margin-bottom:4px; text-align:${isMe ? 'right' : 'left'};">${timeStr}</div>
-        <span style="
-            display: inline-block;
-            background: ${isMe ? '#4f46e5' : '#e2e8f0'};
-            color: ${isMe ? '#fff' : '#333'};
-            padding: 8px 14px;
-            border-radius: ${isMe ? '16px 16px 2px 16px' : '16px 16px 16px 2px'};
-            font-size: 1.1rem;
-            max-width: 75%;
-            word-break: break-word;
-            text-align: left;
-            white-space: pre-line;
-        ">${decryptedMessage}</span>
-    `;
+    <div style="font-size:0.7rem; color:#aaa; margin-bottom:2px;">${timeStr}</div>
+    <span style="
+        display:inline-block;
+        background:${isMe ? '#4f46e5' : '#e2e8f0'};
+        color:${isMe ? '#fff' : '#333'};
+        padding:6px 10px;
+        border-radius:12px;
+        font-size:0.85rem;
+        max-width:80%;
+        word-break:break-word;
+    ">${decryptedMessage}</span>
+    <button onclick="translateMessage('${decryptedMessage.replace(/'/g, "\\'")}', this)" style="
+        display:block;
+        margin-top:3px;
+        background:none;
+        border:1px solid #ddd;
+        border-radius:10px;
+        padding:1px 8px;
+        font-size:0.72rem;
+        color:#888;
+        cursor:pointer;
+    ">译</button>
+`;
+
     messagesEl.appendChild(div);
 }
 
@@ -546,4 +556,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000); // closes setTimeout
     } // closes if (userId)
 }); // closes DOMContentLoaded
+
+async function translateMessage(text, btnEl) {
+    btnEl.textContent = '...';
+    btnEl.disabled = true;
+
+    try {
+        const response = await fetch(
+            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=auto|zh`
+        );
+        const data = await response.json();
+        const translated = data.responseData.translatedText;
+
+        // Show translation below button
+        const container = btnEl.parentElement;
+        let transEl = container.querySelector('.translation-text');
+        if (!transEl) {
+            transEl = document.createElement('div');
+            transEl.classList.add('translation-text');
+            transEl.style.cssText = `
+                font-size: 0.78rem;
+                color: #888;
+                margin-top: 4px;
+                padding: 4px 8px;
+                background: rgba(0,0,0,0.05);
+                border-radius: 8px;
+                max-width: 80%;
+            `;
+            container.appendChild(transEl);
+        }
+
+        if (transEl.style.display === 'block') {
+            transEl.style.display = 'none';
+            btnEl.textContent = '译';
+        } else {
+            transEl.textContent = translated;
+            transEl.style.display = 'block';
+            btnEl.textContent = '译';
+        }
+    } catch (err) {
+        btnEl.textContent = '译';
+        console.error('Translation error:', err);
+    }
+    btnEl.disabled = false;
+}
+
+window.translateMessage = translateMessage;
+
 
