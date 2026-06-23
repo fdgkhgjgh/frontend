@@ -81,7 +81,7 @@ function initFlightMap() {
     loadLivePlanes();
 
     // Refresh every 15 seconds
-    flightUpdateInterval = setInterval(loadLivePlanes, 15000);
+    flightUpdateInterval = setInterval(loadLivePlanes, 60000);
 }
 
 // ✅ Create plane icon
@@ -107,8 +107,14 @@ async function loadLivePlanes() {
     try {
         // Get planes over China and surrounding area
         const response = await fetch(
-            'https://opensky-network.org/api/states/all?lamin=15&lomin=70&lamax=55&lomax=140'
-        );
+    'https://opensky-network.org/api/states/all?lamin=15&lomin=70&lamax=55&lomax=140',
+    {
+        headers: {
+            'Authorization': 'Basic ' + btoa('wsmymm123@outlook.com:sipHat-kabhuf-4fivhy')
+        }
+    }
+);
+
 
         if (!response.ok) throw new Error('API error');
         const data = await response.json();
