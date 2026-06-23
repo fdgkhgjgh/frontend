@@ -12,7 +12,7 @@ let chatChannel = null;
 let watchId = null;
 let isSharingLocation = false;
 let polylines = {}; // store track lines per user
-let currentMapLayer = 'amap';
+let currentMapLayer = 'yandex';
 let lastSavedLat = null;
 let lastSavedLng = null;
 
@@ -63,15 +63,17 @@ function initMap() {
         }
     );
 
-    // ✅ Yandex as default
-    amapLayer.addTo(map);
+    // Default map
+yandexLayer.addTo(map);
 
-    L.control.layers({
-        'World Map (Yandex)': yandexLayer,
-        'China Map (Amap)': amapLayer
-    }).addTo(map);
+let currentMapLayer = 'yandex';
 
-    map.on('baselayerchange', (e) => {
+L.control.layers({
+    'World Map (Yandex)': yandexLayer,
+    'China Map (Amap)': amapLayer
+}).addTo(map);
+
+map.on('baselayerchange', (e) => {
     if (e.name.includes('Amap') || e.name.includes('China')) {
         currentMapLayer = 'amap';
     } else {
