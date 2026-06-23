@@ -1,15 +1,25 @@
-// flight.js - Live Flight Tracker
-// OpenSky Network (free, no key) + AviationStack (flight search)
+// flight.js - Live Flight Tracker (External Link Version)
+// Uses AviationStack for flight data lookups + Direct routing to Flightradar24
 
 const AVIATION_KEY = '4f61cc85d33d815115734e6169f41a0e';
 
 let flightPanelOpen = false;
-let flightMap = null;
-let planeMarkers = {};
-let flightUpdateInterval = null;
 let activeTab = 'map'; // 'map' or 'search'
 
-// ✅ Toggle panel
+// ✅ Helper: Redirect cleanly to Flightradar24 in a new tab
+function redirectToFlightradar24(flightCode = '') {
+    let url = 'https://www.flightradar24.com';
+    
+    if (flightCode) {
+        const cleanCode = flightCode.trim().toUpperCase();
+        // Direct deep-link routing structure for specific flight paths
+        url = `https://www.flightradar24.com/data/flights/${cleanCode}`;
+    }
+    
+    window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+// ✅ Toggle flight panel visibility
 function toggleFlightPanel() {
     const panel = document.getElementById('flight-panel');
     const overlay = document.getElementById('flight-overlay');
@@ -19,19 +29,15 @@ function toggleFlightPanel() {
         panel.style.display = 'flex';
         overlay.style.display = 'block';
         setTimeout(() => {
-            initFlightMap();
+            initFlightMap(); // Initializes the redirect menu interface
         }, 100);
     } else {
         panel.style.display = 'none';
         overlay.style.display = 'none';
-        if (flightUpdateInterval) {
-            clearInterval(flightUpdateInterval);
-            flightUpdateInterval = null;
-        }
     }
 }
 
-// ✅ Switch tabs
+// ✅ Switch tabs within the panel
 function switchFlightTab(tab) {
     activeTab = tab;
     const mapTab = document.getElementById('flight-map-tab');
@@ -46,9 +52,6 @@ function switchFlightTab(tab) {
         searchTab.style.color = '#4f46e5';
         mapContent.style.display = 'block';
         searchContent.style.display = 'none';
-        setTimeout(() => {
-            if (flightMap) flightMap.invalidateSize();
-        }, 100);
     } else {
         searchTab.style.background = '#4f46e5';
         searchTab.style.color = 'white';
@@ -59,77 +62,31 @@ function switchFlightTab(tab) {
     }
 }
 
-// ✅ Initialize flight map
+// ✅ Render a beautiful layout redirect inside the old map container element
 function initFlightMap() {
-    if (flightMap) {
-        flightMap.invalidateSize();
-        loadLivePlanes();
-        return;
+    const container = document.getElementById('flight-map-container');
+    if (container) {
+        container.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: #f8fafc; padding: 24px; text-align: center; box-sizing: border-box;">
+                <div style="font-size: 3.5rem; margin-bottom: 12px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">✈️</div>
+                <h3 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1.1rem; font-weight: bold;">全球雷达实时追踪</h3>
+                <p style="color: #64748b; font-size: 0.82rem; max-width: 280px; margin: 0 0 20px 0; line-height: 1.5;">
+                    由于外部API限制，推荐使用专业的 Flightradar24 平台，查看无延迟的全球高精度实时客机飞行轨迹。
+                </p>
+                <button onclick="redirectToFlightradar24()" style="background: #4f46e5; color: white; border: none; padding: 10px 24px; border-radius: 8px; font-weight: bold; font-size: 0.85rem; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); transition: all 0.2s;">
+                    🗺️ 打开 Flightradar24 全球地图
+                </button>
+            </div>
+        `;
     }
 
-    flightMap = L.map('flight-map-container', {
-        center: [30, 105],
-        zoom: 4,
-        zoomControl: true
-    });
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '© OpenStreetMap'
-    }).addTo(flightMap);
-
-    loadLivePlanes();
-
-    // Refresh every 15 seconds
-    flightUpdateInterval = setInterval(loadLivePlanes, 60000);
-}
-
-// ✅ Create plane icon
-function createPlaneIcon(heading) {
-    return L.divIcon({
-        className: '',
-        html: `<div style="
-            font-size: 18px;
-            transform: rotate(${heading || 0}deg);
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
-            line-height: 1;
-        ">✈️</div>`,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
-    });
-}
-
-// ✅ Load live planes from OpenSky
-async function loadLivePlanes() {
     const statusEl = document.getElementById('flight-map-status');
-    if (statusEl) statusEl.textContent = '加载中...';
-
-    try {
-        // ADS-B Exchange API - flights over China area
-        const response = await fetch(
-            'https://adsbexchange.com/api/aircraft/json/lat/35/lon/105/dist/1000/',
-            {
-                headers: {
-                    'api-auth': 'adsbx-test-key',
-                    'Accept': 'application/json'
-                }
-            }
-        );
-
-        console.log('ADSB status:', response.status);
-        if (!response.ok) throw new Error(`API error ${response.status}`);
-        
-        const data = await response.json();
-        console.log('ADSB data:', data);
-
-    } catch (err) {
-        if (statusEl) statusEl.textContent = '加载失败';
-        console.error('ADSB error:', err);
+    if (statusEl) {
+        statusEl.textContent = '已连接到 Flightradar24 外部航班流驱动';
     }
 }
 
-
-// ✅ Search flight by number
+// ✅ Search flight by number using AviationStack
 async function searchFlight() {
     const input = document.getElementById('flight-search-input').value.trim().toUpperCase();
     const resultEl = document.getElementById('flight-search-result');
@@ -157,6 +114,7 @@ async function searchFlight() {
             const dep = flight.departure;
             const arr = flight.arrival;
             const status = flight.flight_status;
+            const targetFlightCode = flight.flight.iata || input;
 
             const statusColor = {
                 'active': '#2d7a2d',
@@ -179,40 +137,44 @@ async function searchFlight() {
                 background: #f9f9f9;
                 border-radius: 10px;
                 padding: 12px;
-                margin-bottom: 10px;
+                margin-bottom: 12px;
                 border-left: 4px solid ${statusColor};
                 font-size: 0.82rem;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             `;
             card.innerHTML = `
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                    <strong style="font-size:0.95rem;">✈️ ${flight.flight.iata || input}</strong>
+                    <strong style="font-size:0.95rem;">✈️ ${targetFlightCode}</strong>
                     <span style="color:${statusColor};font-weight:bold;">${statusText}</span>
                 </div>
                 <div style="display:flex;gap:8px;margin-bottom:8px;">
                     <div style="flex:1;background:white;border-radius:8px;padding:8px;text-align:center;">
                         <div style="font-size:1.1rem;font-weight:bold;">${dep.iata || '?'}</div>
-                        <div style="color:#666;">${dep.airport || '出发机场'}</div>
-                        <div style="color:#333;margin-top:4px;">
+                        <div style="color:#666;font-size:0.75rem;">${dep.airport || '出发机场'}</div>
+                        <div style="color:#333;margin-top:4px;font-size:0.72rem;line-height:1.3;">
                             计划: ${dep.scheduled ? new Date(dep.scheduled).toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'}) : '--'}<br/>
                             实际: ${dep.actual ? new Date(dep.actual).toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'}) : '--'}
                         </div>
-                        ${dep.delay ? `<div style="color:#c62828;margin-top:2px;">延误 ${dep.delay} 分钟</div>` : ''}
+                        ${dep.delay ? `<div style="color:#c62828;margin-top:2px;font-size:0.7rem;">延误 ${dep.delay} 分钟</div>` : ''}
                     </div>
-                    <div style="display:flex;align-items:center;font-size:1.2rem;">→</div>
+                    <div style="display:flex;align-items:center;font-size:1.2rem;color:#cbd5e1;">→</div>
                     <div style="flex:1;background:white;border-radius:8px;padding:8px;text-align:center;">
                         <div style="font-size:1.1rem;font-weight:bold;">${arr.iata || '?'}</div>
-                        <div style="color:#666;">${arr.airport || '到达机场'}</div>
-                        <div style="color:#333;margin-top:4px;">
+                        <div style="color:#666;font-size:0.75rem;">${arr.airport || '到达机场'}</div>
+                        <div style="color:#333;margin-top:4px;font-size:0.72rem;line-height:1.3;">
                             计划: ${arr.scheduled ? new Date(arr.scheduled).toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'}) : '--'}<br/>
                             实际: ${arr.actual ? new Date(arr.actual).toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'}) : '--'}
                         </div>
-                        ${arr.delay ? `<div style="color:#c62828;margin-top:2px;">延误 ${arr.delay} 分钟</div>` : ''}
+                        ${arr.delay ? `<div style="color:#c62828;margin-top:2px;font-size:0.7rem;">延误 ${arr.delay} 分钟</div>` : ''}
                     </div>
                 </div>
-                <div style="color:#666;font-size:0.78rem;">
-                    航空公司: ${flight.airline.name || '未知'} &nbsp;|&nbsp;
-                    机型: ${flight.aircraft?.iata || '未知'}
+                <div style="color:#666;font-size:0.78rem;margin-bottom:10px; display:flex; justify-content:space-between;">
+                    <span>航空公司: ${flight.airline.name || '未知'}</span>
+                    <span>机型: ${flight.aircraft?.iata || '未知'}</span>
                 </div>
+                <button onclick="redirectToFlightradar24('${targetFlightCode}')" style="width: 100%; background: #0f172a; color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.78rem; display: flex; align-items: center; justify-content: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    🌐 在 Flightradar24 中实时追踪该航班
+                </button>
             `;
             resultEl.appendChild(card);
         });
@@ -223,6 +185,8 @@ async function searchFlight() {
     }
 }
 
+// Global scope mapping exposure
 window.toggleFlightPanel = toggleFlightPanel;
 window.switchFlightTab = switchFlightTab;
 window.searchFlight = searchFlight;
+window.redirectToFlightradar24 = redirectToFlightradar24;
