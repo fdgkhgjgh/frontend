@@ -105,66 +105,29 @@ async function loadLivePlanes() {
     if (statusEl) statusEl.textContent = '加载中...';
 
     try {
-        // Get planes over China and surrounding area
+        // ADS-B Exchange API - flights over China area
         const response = await fetch(
-    'https://opensky-network.org/api/states/all?lamin=15&lomin=70&lamax=55&lomax=140',
-    {
-        headers: {
-            'Authorization': 'Basic ' + btoa('wsmymm123@outlook.com:sipHat-kabhuf-4fivhy')
-        }
-    }
-);
+            'https://adsbexchange.com/api/aircraft/json/lat/35/lon/105/dist/1000/',
+            {
+                headers: {
+                    'api-auth': 'adsbx-test-key',
+                    'Accept': 'application/json'
+                }
+            }
+        );
 
-
-        if (!response.ok) throw new Error('API error');
+        console.log('ADSB status:', response.status);
+        if (!response.ok) throw new Error(`API error ${response.status}`);
+        
         const data = await response.json();
-
-        if (!data.states || data.states.length === 0) {
-            if (statusEl) statusEl.textContent = '暂无航班数据';
-            return;
-        }
-
-        // Clear old markers
-        Object.values(planeMarkers).forEach(m => flightMap.removeLayer(m));
-        planeMarkers = {};
-
-        let count = 0;
-        data.states.forEach(state => {
-            const icao = state[0];
-            const callsign = (state[1] || '').trim();
-            const lon = state[5];
-            const lat = state[6];
-            const altitude = state[7];
-            const velocity = state[9];
-            const heading = state[10];
-            const onGround = state[8];
-
-            if (!lat || !lon || onGround) return;
-
-            const marker = L.marker([lat, lon], {
-                icon: createPlaneIcon(heading)
-            }).addTo(flightMap);
-
-            marker.bindPopup(`
-                <div style="font-size:0.8rem;min-width:140px;">
-                    <strong>✈️ ${callsign || icao}</strong><br/>
-                    <span>高度: ${altitude ? Math.round(altitude) + ' 米' : '未知'}</span><br/>
-                    <span>速度: ${velocity ? Math.round(velocity * 3.6) + ' km/h' : '未知'}</span><br/>
-                    <span>航向: ${heading ? Math.round(heading) + '°' : '未知'}</span>
-                </div>
-            `);
-
-            planeMarkers[icao] = marker;
-            count++;
-        });
-
-        if (statusEl) statusEl.textContent = `显示 ${count} 架航班 · 15秒自动刷新`;
+        console.log('ADSB data:', data);
 
     } catch (err) {
-        if (statusEl) statusEl.textContent = '加载失败，请稍后重试';
-        console.error('OpenSky error:', err);
+        if (statusEl) statusEl.textContent = '加载失败';
+        console.error('ADSB error:', err);
     }
 }
+
 
 // ✅ Search flight by number
 async function searchFlight() {
