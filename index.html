@@ -870,5 +870,13 @@ window.addEventListener('appinstalled', () => {
     document.getElementById('pwa-banner').style.display = 'none';
 });
 </script>
+<script>
+if (location.search.includes('debug=true')) {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+    script.onload = () => eruda.init();
+    document.body.appendChild(script);
+}
+</script>
 </body>
 </html>
