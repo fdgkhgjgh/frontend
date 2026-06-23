@@ -71,7 +71,7 @@ function initFlightMap() {
                 <div style="font-size: 3.5rem; margin-bottom: 12px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">✈️</div>
                 <h3 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1.1rem; font-weight: bold;">全球雷达实时追踪</h3>
                 <p style="color: #64748b; font-size: 0.82rem; max-width: 280px; margin: 0 0 20px 0; line-height: 1.5;">
-                    由于外部API限制，推荐使用专业的 Flightradar24 平台，查看无延迟的全球高精度实时客机飞行轨迹。
+                    由于外部API限制，推荐使用专业的 Flightradar24 平台，查看无延迟的全球高精度实时客机飞行轨迹(可能已不支持网页浏览追踪地图，需下载其手机app)。
                 </p>
                 <button onclick="redirectToFlightradar24()" style="background: #4f46e5; color: white; border: none; padding: 10px 24px; border-radius: 8px; font-weight: bold; font-size: 0.85rem; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); transition: all 0.2s;">
                     🗺️ 打开 Flightradar24 全球地图
