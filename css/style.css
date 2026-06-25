@@ -593,7 +593,7 @@ button[type="submit"]:disabled {
 }
 
 #post-details-container h2 {
-    color: #fff;
+    color: #333;
 }
 
 @media (max-width: 768px) {
