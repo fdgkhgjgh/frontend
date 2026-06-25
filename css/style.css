@@ -1155,7 +1155,7 @@ label {
     background-color: #ffffff !important;
     color: #000000 !important; /* 白天输入的文字是黑色 */
     border: 1px solid #cccccc !important; /* 浅灰色边框 */
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 /* 右上角关闭按钮在白天恢复正常的深色 */
