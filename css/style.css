@@ -592,10 +592,6 @@ button[type="submit"]:disabled {
   height: 60px;
 }
 
-#post-details-container h2 {
-    color: #333 !important;
-}
-
 @media (max-width: 768px) {
   #post-details-container .profile-picture {
     width: 60px;  /* Smaller on smaller screens */
