@@ -1150,7 +1150,9 @@ label {
 }
 
 /* 顺便规范白天模式下的输入框边框和文字颜色 */
-#create-post-form-main input[type="text"],
+#create-post-form-main input[type="text"] {
+    font-size: 1.2rem !important;   /* 🌟 Title 字体变大 */
+}
 #create-post-form-main textarea {
     background-color: #ffffff !important;
     color: #000000 !important; /* 白天输入的文字是黑色 */
