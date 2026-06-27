@@ -1008,7 +1008,9 @@ button[type="submit"]:disabled {
 }
 
 #post-details-container .post-body {
-    background: #ffffff !important;
+    background-color: #f5f5f0 !important; /* Changed from background to background-color */
+    background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0) !important;
+    background-size: 20px 20px !important;
     color: #222 !important;
 }
 
@@ -1328,7 +1330,7 @@ img {
     background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0) !important;
     background-size: 20px 20px !important;
     
-    /* 🌟 核心修复：强制让评论区内的日期、常规文本（如"No replies yet."）在白天模式下显示为清晰的深灰色 */
+    /* Keeps the comments text and date crisp dark grey in daylight mode */
     color: #333333 !important; 
 }
 
