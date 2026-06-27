@@ -1007,10 +1007,6 @@ button[type="submit"]:disabled {
     color: #fff;
 }
 
-#post-details-container .post-body {
-    color: #222 !important;
-}
-
 #post-details-container .post-body p {
     color: #222 !important;
 }
@@ -1322,6 +1318,22 @@ img {
         radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
     background-size: 20px 20px;
 }
+
+#post-details-container .comment-item p {
+    color: #333 !important;
+}
+
+#post-details-container .comment-item .comment-date {
+    color: #555 !important;
+}
+
+#post-details-container .post-body {
+    background-color: #f5f5f0 !important;
+    background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0) !important;
+    background-size: 20px 20px !important;
+    color: #222 !important;
+}
+
 
 
 
