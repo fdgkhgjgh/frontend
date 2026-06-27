@@ -556,6 +556,32 @@ body[class*="dark"] .show-more-btn,
     border-color: #444 !important;
 }
 
+.dark-mode .comment-item,
+[class*="dark"] .comment-item {
+    /* 1. 强行把背景色改回暗灰色，阻止白天的白色泄露进来 */
+    background-color: rgba(35, 35, 45, 0.95) !important;
+    
+    /* 2. 将白天的黑点纹理替换为适合夜间的微弱暗白点纹理 */
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0) !important;
+    background-size: 20px 20px !important;
+
+    /* 3. 确保评论框内部直接包裹的文本（如日期、"No replies yet."）显示为清晰的浅灰色 */
+    color: #dddddd !important; 
+}
+
+/* 4. 确保内部的所有通用子元素也保持高亮的浅色 */
+.dark-mode .comment-item *,
+[class*="dark"] .comment-item * {
+    color: #eeeeee !important;
+}
+
+/* 5. 保护好你原本设置的亮黄色/橙色用户名，防止它们被上面的白字规则冲掉 */
+.dark-mode .comment-item a,
+.dark-mode .comment-item strong,
+.dark-mode .comment-item a[href*="profile"] {
+    color: #f0a500 !important; 
+}
+
 
 
 
