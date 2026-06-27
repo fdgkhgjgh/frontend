@@ -1,0 +1,1345 @@
+/* frontend/css/style.css */
+
+body {
+  font-family: sans-serif;
+ background-color: #8BC48B;
+    background-image: 
+        radial-gradient(ellipse at 20% 30%, rgba(80,130,65,0.5) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(60,110,50,0.5) 0%, transparent 50%);
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #66AA66;
+  padding: 0.1px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.2rem;
+  color: #fff;
+  text-shadow: 
+    -2px -2px 0 #2d5a1b,
+     2px -2px 0 #2d5a1b,
+    -2px  2px 0 #2d5a1b,
+     2px  2px 0 #2d5a1b;
+  letter-spacing: 3px;
+  margin: 0;
+}
+
+nav {
+  margin-bottom: 1px;
+}
+
+nav a, nav button {
+  margin: 0 5px;
+  text-decoration: none;
+  color: #333;
+  padding: 2px 4px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  background-color: #CCBBFF;
+  margin-bottom: 5px;   /* 你原本保留的边距 */
+  display: flex;        /* 开启 Flex 布局，强制让里面的子元素横向排列 */
+  justify-content: center; /* 让所有按钮在中间居中对齐 */
+  gap: 6px;             /* 按钮和按钮之间的横向间距，你可以根据喜好微调 */
+}
+
+nav button:hover,
+nav a:hover {
+  background-color: #ddd;
+}
+
+/* --- Post Styles --- */
+.post {
+  border: 1px solid #ddd;
+  margin-bottom: 4px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.post h2 a {
+    color: #b45309;
+    text-decoration: none;
+}
+
+.post h2 a:hover {
+    text-decoration: underline;
+}
+
+/* Bigger title on post list */
+.post h2 {
+    font-size: 1.4rem;
+    margin: 0 0 4px 0;
+    white-space: normal;
+    overflow: visible;
+    line-height: 1.3;
+}
+
+.show-more-btn {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ddd !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Shorter pin button */
+.pin-button {
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    width: auto;
+    align-self: flex-start;
+    display: inline-block;
+}
+
+#post-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.post p {
+    color: #e0e0e0;
+}
+
+
+/* Image Container */
+.image-container {
+  width: 150px;   /* Fixed width for the image container */
+  display: flex; /* Use flexbox to center image */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
+
+.image-container img {
+  max-width: 100%; /* Don't overflow container */
+  max-height: 150px; /* Limit height */
+  height: auto;
+  display: block;
+  border-radius: 4px; /* Optional: Rounded corners */
+}
+
+/* content backgroud */
+.post-body {
+    color: #222 !important;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px 0 16px 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.post-body p {
+    color: #222 !important;
+}
+
+.post-body * {
+    color: #222 !important;
+}
+
+/* --- Vote Container and Buttons --- */
+.vote-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.vote-button {
+  background-color: #f0f0f0; /* Light gray background */
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  margin-right: 5px; /* Spacing between button and count */
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 16px;
+  line-height: 1;
+  color: #333; /* Default text color (change as needed) */
+  /* Remove default button styles that can interfere */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0; /* Remove default margin */
+}
+
+.vote-button:hover {
+  background-color: #ddd;
+}
+
+.vote-count {
+  margin-right: 10px; /*Keep space*/
+}
+
+/* Specific button styles (optional, but good for visual distinction) */
+.like-button {
+  /* Example: Green for like */
+  color: #4CAF50; /* Keep, adjust, or remove */
+}
+
+.dislike-button {
+  /* Example: Red for dislike */
+  color: #f44336; /* Keep, adjust, or remove */
+}
+
+
+/* --- Form Styles (General) --- */
+form {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 1px;
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+
+.comment-item {
+  position: relative;   
+  padding: 10px !important; /* 🌟 加上 !important，强行覆盖浏览器自带的所有默认边距 */
+  margin-bottom: 5px;    
+  border: 1px solid #ddd; 
+  border-radius: 4px;    
+  background: rgba(255, 255, 255, 0.9); 
+  
+  /* 👇 再加两行保险锁，彻底清除由于列表标签（li/ul）带来的左侧隐形空白 */
+  padding-left: 12px !important; 
+  list-style: none !important; 
+}
+
+
+/* --- 移动到右上角的评论楼数 --- */
+.comment-number {
+  position: absolute;
+  /* 👇 核心修改：从左上角挪到右上角 */
+  right: 12px;          /* 距离右边框 12 像素 */
+  top: 10px;            /* 距离顶边框 10 像素 */
+  left: auto;           /* 🌟 必须加这行！强行清除之前设置的 left: 0，否则位置会错乱 */
+  
+  padding: 0;          
+  font-size: 1.15rem;   /* 保持你之前要的放大字号 */
+  font-weight: bold;    /* 保持加粗 */
+  
+  /* 👇 核心修改：白天模式下的深色字体 */
+  color: #333333 !important; 
+}
+
+/* ==========================================================================
+   终极修复：彻底清除白天模式下评论列表左侧的顽固空白
+   ========================================================================== */
+
+/* 1. 抓取包裹评论的列表容器，强行清空浏览器默认自带的左侧 40px 内边距 */
+#comments-section ul,
+.comment-list, 
+ul#comments-list {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    list-style: none !important;
+}
+
+/* 2. 规范每一条评论的内部边距，确保白天黑夜完全一致且对称 */
+.comment-item {
+    padding: 12px 15px !important; /* 上下 12px，左右 15px 完美对称 */
+}
+
+
+
+#comments-section h2 {
+    color: #fff;
+}
+
+
+/* Bigger font size in comment and reply textareas */
+#comment-text,
+.reply-textarea {
+    font-size: 1rem;
+}
+
+/* Style for reply button */
+.reply-button {
+  background-color: #2d7a2d;
+  color: white;
+  border: 1px solid #ccc;
+  padding: 1px 2px;     /* 统一的大小 */
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 9px;       /* 统一的字号 */
+  margin-top: 5px;
+}
+
+/* Style for delete button */
+.delete-button {
+  margin-top: auto; 
+  align-self: flex-start; 
+  background-color: #f44336;
+  color: white;
+  border: 1px solid #ccc; /* 建议加上和回复按钮一样的边框，否则肉眼看大小会差 1 像素 */
+  
+  /* 👇 以下两行已修改为 reply-button 的数值 */
+  padding: 1px 2px;       
+  font-size: 9px;         
+  
+  border-radius: 3px;     /* 圆角也统一改为 3px 看起来更一致 */
+  cursor: pointer;
+}
+
+
+.reply-button:hover {
+    background-color: #246024;
+}
+
+/* Style for reply-container */
+.replies-container {
+  margin-left: 20px;   /* Indent replies */
+  margin-top: 5px;
+  border-left: 1px solid #ccc; /* Vertical line to connect replies */
+  padding-left: 10px;
+  position: relative; /* Very important for positioning the button */
+}
+
+.reply {
+  margin-bottom: 5px;
+  padding: 5px;
+  background-color: #f9f9f9;
+  border-radius: 3px;
+}
+
+.overlapped-replies {
+  max-height: 100px;  /* Adjust as needed */
+  overflow: hidden;
+  position: relative; /* Required for absolute positioning of the button */
+}
+
+
+/* Style the "View More" button */
+.view-more-replies-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0; /* Position at the bottom of the container */
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 10; /* Make sure it's above the content */
+  background: white; /* Or a subtle gradient */
+  /* Optional: Add a very subtle gradient to make it stand out */
+  /* background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,1)); */
+
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+
+  .post {
+      flex-direction: column; /* Stack content on small screens */
+      padding: 0.5px; /* Reduce padding */
+  }
+
+.image-container {
+    width: 70px;
+    flex-shrink: 0;
+}
+
+.image-container img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+
+
+  nav a,
+  nav button {
+      display: inline-block;    /* 允许横向排列并设置宽高 */
+      box-sizing: border-box;   /* 防止边框撑大按钮 */
+      flex: 1;                  /* 🌟 核心：让三个按钮自动、平均地平分这一行的宽度 */
+      max-width: 110px;         /* 限制最大宽度，防止在稍大一点的手机屏幕上被拉得太长变形 */
+      padding: 6px 2px;         /* 稍微缩减左右内边距，确保手机窄屏下文字不会挤出边界 */
+      font-size: 13px;          /* 稍微调小一点字号，保证“注册账号(Register)”等长文字能在一行放下 */
+      text-align: center;       /* 文字和 Emoji 严格居中 */
+      margin: 0;                /* 清除之前的纵向 margin，防止高低不平 */
+  }
+}
+
+
+@media (max-width: 600px) {
+  .modal-content {
+      max-width: 95%; /* Adjust for smaller screens */
+      max-height: 95%; /* Adjust for smaller screens */
+  }
+}
+
+/* Add these new styles to your style.css */
+.title-image-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.title-image-container h2 {
+  margin: 0;
+  flex: 1;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.title-image-container .image-container {
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+.title-image-container .image-container img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+
+.post h2 a {
+  display: inline-block; /* or inline-flex */
+}
+
+/* Styles for the pagination container */
+#pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Basic button styles */
+#pagination-container button {
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  color: #555;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+/* Hover state for buttons */
+#pagination-container button:hover {
+  background-color: #ddd;
+}
+
+/* Style for the active (current) page button */
+#pagination-container button.active {
+  background-color: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+/* Style for disabled buttons (e.g., previous on first page) */
+#pagination-container button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#pagination-container button:disabled:hover {
+  background-color: #f8f8f8; /* keep the original background */
+}
+
+/* Style for the button in its default state */
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: blue; /* <----- HERE */
+  padding: 7px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative; /* Make the button a positioning context */
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Style for the spinner */
+#button-spinner {
+  display: none; /* Hidden by default */
+  /*position: absolute;  // Overlay the text -->  Try removing this first
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  font-size: 1em; /* Adjust as needed */
+}
+
+/* Style for the success icon */
+#button-success-icon {
+  display: none; /* Hidden by default */
+  /*position: absolute;  // Overlay the text  --> Try removing this first
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  color: green;
+  font-size: 1.2em; /* Adjust as needed */
+}
+
+/* Add a class to disable the button */
+button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Keyframes for the spinning animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Apply the animation to the spinner */
+#button-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Style for the comment button in its default state */
+#add-comment-button {
+  background-color: #4CAF50; /* Or your preferred color */
+  color: blue;
+  font-size: 1.4rem;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative; /* Make the button a positioning context */
+}
+
+#add-comment-button:hover {
+  background-color: #45a049; /* Darker shade on hover */
+}
+
+/* Style for the spinner */
+#comment-button-spinner {
+  display: none; /* Hidden by default */
+  /* position: absolute; Remove for now
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  font-size: 1em; /* Adjust as needed */
+}
+
+/* Style for the success icon */
+#comment-button-success-icon {
+  display: none; /* Hidden by default */
+  /*position: absolute; Remove for now
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  color: green;
+  font-size: 1.2em; /* Adjust as needed */
+}
+
+/* Disable the button while sending */
+#add-comment-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Keyframes for the spinning animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Apply the animation to the spinner */
+#comment-button-spinner {
+  animation: spin 1s linear infinite;
+}
+
+.profile-picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 5px;
+}
+
+/* Specific style for profile pictures on the post details page */
+#post-details-container .profile-picture {
+  background: transparent;
+  width: 60px;
+  height: 60px;
+}
+
+@media (max-width: 768px) {
+  #post-details-container .profile-picture {
+    width: 60px;  /* Smaller on smaller screens */
+    height: 60px;
+  }
+}
+
+#profile-info img#profile-picture {
+  max-width: 150px; /* Adjust this value to your desired maximum width */
+  max-height: 150px; /* Adjust this value to your desired maximum height */
+  width: auto; /* Maintain aspect ratio */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 50%; /* Make it circular */
+  object-fit: cover; /* Important: Ensures the image fills the circle */
+}
+
+/* Common container for media (images and videos) */
+.media-container {
+  display: flex;          /* Use flexbox */
+  flex-wrap: wrap;       /* Wrap if needed */
+  align-items: flex-start; /* Align items at the top */
+}
+
+.media-container .multi-image-container {
+  flex: 1; /* Take up available space */
+}
+
+/* AFTER */
+.video-thumbnail-container {
+    width: 120px;
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 5px;
+    flex: none;
+    background: #222;
+    cursor: pointer;
+}
+
+.video-play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4em;
+  color: white;
+  opacity: 0.9;
+  cursor: pointer;
+  z-index: 10;
+  text-shadow: 0 0 8px rgba(0,0,0,0.8);
+  pointer-events: auto;
+}
+
+/* Multi-image container styles */
+.multi-image-container {
+  display: flex;            /* Arrange images in a row */
+  flex-wrap: wrap;          /* Allow images to wrap to the next line if needed */
+  justify-content: flex-start; /* Align images to the left */
+  align-items: flex-start;
+  gap: 10px;                /* Space between images */
+}
+
+/* Individual image styles */
+.multi-image-container .post-image {
+  max-width: 30%;
+  max-height: 200px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
+  display: block;        /* ✅ add this */
+  margin-right: 8px;     /* ✅ add this */
+  margin-bottom: 8px;    /* ✅ add this */
+}
+
+/* Multi-video container styles (similar to image container) */
+.multi-video-container {
+  display: flex; /*Arrange videos in a row*/
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Individual video styles */
+.multi-video-container .post-video {
+  max-width: 20%; /* Adjust as needed */
+  max-height: 160px;
+  width: 150px;
+  border-radius: 5px;
+}
+
+/* Style for the modal image carousel */
+#modal-image-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#modal-image-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  width: 100%;
+  height: 100%;
+}
+
+#modal-image-container img {
+  min-width: 100%;
+  flex-shrink: 0;
+  max-height: 90vh;
+  object-fit: contain;
+  scroll-snap-align: start;
+}
+
+#modal-image-container {
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'><path fill='white' d='M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z'/></svg>") 16 16, e-resize;
+}
+
+.cursor-left {
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'><path fill='white' d='M12 20l1.41-1.41L7.83 13H20v-2H7.83l5.58-5.59L12 4l-8 8z'/></svg>") 16 16, w-resize !important;
+}
+
+/*Style the link*/
+.comment-item a {
+  color: blue; /* Or your preferred link color */
+  text-decoration: none; /* Remove underline */
+}
+/*Style on hover*/
+.comment-item a:hover {
+  text-decoration: underline; /* Add underline on hover */
+}
+
+.reply a {
+  color: blue; /* Or your preferred link color */
+  text-decoration: none; /* Remove underline */
+}
+/*Style on hover*/
+.reply a:hover {
+  text-decoration: underline; /* Add underline on hover */
+}
+
+/* Change the color of post titles on the main page */
+.post-content h2 a {  /* <--- More specific selector */
+  color: #b56407; /* Or your desired color (e.g., black) */
+  text-decoration: none; /* Remove underline if desired */
+}
+
+.post-content h2 a:hover {
+  color: #555;  /* A darker shade on hover, for example */
+  text-decoration: underline;  /* Add underline on hover */
+}
+
+/* Style usernames in post detail page */
+#post-details-container .post .post-content p a {
+  color: rgb(255, 244, 79); /* Or your desired color for day mode */
+}
+
+/* Style usernames in comments (day mode) */
+.comment-item a {
+  color: rgb(255, 146, 63); /* Set to your desired color for day mode */
+  text-decoration: none; /* Remove underline */
+}
+
+.comment-item a:hover {
+  color: rgb(212, 124, 29); /* Lighter blue on hover for better visibility */
+  text-decoration: underline; /* Keep the underline on hover */
+}
+
+/* Style usernames in replies (day mode) */
+.reply a {
+  color: rgb(255, 146, 63); /* Set to your desired color for day mode */
+  text-decoration: none; /* Remove underline */
+}
+
+.reply a:hover {
+  color: rgb(224, 106, 9); /* Lighter blue on hover for better visibility */
+  text-decoration: underline; /* Keep the underline on hover */
+}
+
+/* New container for Title and Author/Date  */
+.main-post-list .text-info-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.main-post-list .text-info-container h2 {
+  /* Two-line title */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  display: -moz-box; /* For Firefox */
+  display: -ms-flexbox; /* For IE 10 */
+  display: -webkit-flex; /* For Safari */
+  display: flex;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2; /* Standard property for line-clamp */
+  box-orient: vertical;
+  max-width: 100%;
+  line-height: 1.2em;
+  height: 2.4em;
+}
+
+.post-list-image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+/* Restrict title line length to 27 characters (adjust if needed) */
+.main-post-list .text-info-container h2 a {
+  word-break: break-word;
+}
+
+/* Author/Date styling */
+.main-post-list .text-info-container p {
+  font-size: 0.8em;
+  color: #777;
+}
+
+/* Styles for the image on the post 
+.post-list-image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+/* Styles for the video on the post list */
+.main-post-list .post-list-video {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+/* Main Page Post Content */
+.main-post-list .post-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  padding: 0.5px;
+}
+
+.main-post-list {
+    position: relative;
+}
+
+/* title file container */
+.title-file-container {
+  display: flex; /* Enable flexbox */
+  align-items: center; /* Vertically align items */
+}
+
+/* --- Modal styles --- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Dark semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of everything */
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: hidden;
+  width: 90%;
+}
+
+/* --- Modal fullscreen on mobile --- */
+@media (max-width: 768px) {
+  .modal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 99999 !important;
+    background-color: #000 !important;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .modal-content {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+  }
+
+  #modal-image-carousel {
+    width: 100vw !important;
+    height: 100vh !important;
+  }
+
+  #modal-image-container {
+    width: 100vw !important;
+    height: 100vh !important;
+  }
+
+  #modal-image-container img {
+    width: 100vw !important;
+    height: 100vh !important;
+    min-width: 100vw !important;
+    max-height: 100vh !important;
+    object-fit: contain !important;
+  }
+}
+
+.modal-close-pc {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    z-index: 999999;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    border: none;
+    font-size: 22px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none; /* hidden on mobile */
+}
+
+@media (min-width: 769px) {
+    .modal-close-pc {
+        display: block; /* only show on PC */
+    }
+
+}
+
+#map-container {
+    z-index: 1;
+}
+
+.leaflet-control-zoom {
+    margin-bottom: 50px !important;
+}
+
+
+#chat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.dark-mode #map-panel {
+    background: #1a1a2e;
+    color: #eeeeee; /* Adds light text color for '群聊天' and other labels */
+}
+
+/* If '群聊天' is inside a specific container with a white background, add this safeguard: */
+.dark-mode #map-panel div, 
+.dark-mode #map-panel span {
+    color: #eeeeee !important; 
+}
+
+
+.dark-mode #chat-messages {
+    background: #1a1a2e;
+    color: #eee;
+}
+
+.dark-mode #chat-input {
+    background: #2c2c3e;
+    color: #eee;
+    border-color: #444;
+}
+
+@keyframes pulse {
+    0%   { transform: scale(1); opacity: 0.3; }
+    50%  { transform: scale(1.5); opacity: 0.1; }
+    100% { transform: scale(1); opacity: 0.3; }
+}
+
+#create-post-btn {
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    0%   { box-shadow: 0 0 6px rgba(79, 70, 229, 0.6); }
+    50%  { box-shadow: 0 0 16px rgba(79, 70, 229, 1), 0 0 30px rgba(79, 70, 229, 0.4); }
+    100% { box-shadow: 0 0 6px rgba(79, 70, 229, 0.6); }
+}
+
+/* Post detail page text visibility */
+
+#post-details-container {
+    color: #fff;
+}
+
+#post-details-container .post-body {
+    background: #ffffff !important;
+    color: #222 !important;
+}
+
+#post-details-container .post-body p {
+    color: #222 !important;
+}
+
+#post-details-container h2 {
+    color: #333;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+#post-details-container > p {
+    color: #f0f0f0;
+}
+
+
+#comments-section {
+    color: #fff;
+}
+
+#comments-section h2 {
+    color: #fff;
+}
+
+/* Post list username/date */
+.post p {
+    color: #333333 !important;
+}
+
+.post {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Add Comment label */
+label {
+    color: #fff;
+}
+
+/* Comment and reply username color in day mode */
+.comment-item p a,
+.reply p a {
+    color: #FF923F;
+}
+
+.comment-item p a:hover,
+.reply p a:hover {
+    color: #FF923F;
+}
+
+/* ==========================================================================
+   帖子详情页（Post Detail）：用户名在白天和夜间模式下统一改为橙色
+   ========================================================================== */
+
+/* 1. 强行锁定白天和夜间模式下的颜色为深橙色 */
+#post-details-container .post .post-content p a,
+.dark-mode #post-details-container .post .post-content p a,
+[class*="dark"] #post-details-container .post .post-content p a {
+    color: #d97706 !important;   /* 使用与主页标题一致的饱满深橙色 */
+    font-weight: bold;           /* 适当加粗，让用户名更明显 */
+    text-decoration: none;       /* 默认去掉下划线 */
+}
+
+/* 2. 鼠标悬停时的效果（稍微变深并加上下划线） */
+#post-details-container .post .post-content p a:hover,
+.dark-mode #post-details-container .post .post-content p a:hover,
+[class*="dark"] #post-details-container .post .post-content p a:hover {
+    color: #b45309 !important;   /* 悬停时变为更深的琥珀橙 */
+    text-decoration: underline;  /* 悬停时显示下划线 */
+}
+
+/* 同时放大注册按钮和登录按钮的字体 */
+#register-form button[type="submit"],
+#login-form button[type="submit"] {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    padding: 8px 16px !important;
+}
+
+/* ==========================================================================
+   强制纠正：确保视频播放三角形图标在任何模式下都是白色
+   ========================================================================== */
+
+/* 1. 强行锁定白天模式和夜间模式下的播放图标为白色 */
+.video-thumbnail-container .video-play-icon,
+.dark-mode .video-thumbnail-container .video-play-icon,
+[class*="dark"] .video-thumbnail-container .video-play-icon {
+    color: #ffffff !important;        /* 🌟 核心：强制改为纯白色 */
+    opacity: 0.95 !important;         /* 略微调高一点不透明度，让它更亮 */
+    
+    /* 强力黑色文字阴影：即便在很亮的白色视频背景上，有了这层黑阴影，白色三角形也绝对能看清 */
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 4px rgba(0, 0, 0, 1) !important; 
+}
+
+/* 2. 鼠标悬停在视频上时，让三角形稍微放大或变得100%纯白，增加动态交互感 */
+.video-thumbnail-container:hover .video-play-icon {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) scale(1.1) !important; /* 保持居中的同时放大 1.1 倍 */
+    transition: all 0.2s ease;
+}
+
+/* ==========================================================================
+   白天模式特供：美化视频下载按钮的字体颜色
+   ========================================================================== */
+
+/* 1. 静态状态：白天模式下，把下载按钮改成高级的深蓝色或绿色 */
+.download-btn {
+    color: #e65100 !important;        /* 🌟 白天用深蓝色，看起来像一个标准的、权威的下载链接 */
+    text-decoration: none !important;  /* 去掉下划线 */
+    font-size: 14px !important;       
+    display: inline-block !important;
+    margin-left: 8px !important;      
+    font-weight: 500 !important;      /* 稍微加粗一点点，更好看 */
+    transition: color 0.2s ease !important; 
+}
+
+/* 2. 交互状态：鼠标悬停或手指按住时，变成更亮眼的蓝色，并加上下划线 */
+.download-btn:hover {
+    color: #004499 !important;        /* 🌟 悬停时变成更深的科技蓝 */
+    text-decoration: underline !important; 
+}
+
+/* ==========================================================================
+   白天模式特供：修复“创建新帖子”弹窗文字隐形问题
+   ========================================================================== */
+
+/* 强行锁死白天模式下，发帖弹窗内的所有文本标签颜色为深色 */
+#create-post-modal label,
+#create-post-modal h2,
+#create-post-modal p {
+    color: #333333 !important; /* 🌟 变成清晰的深灰色，不再隐形 */
+}
+
+/* 顺便规范白天模式下的输入框边框和文字颜色 */
+#create-post-form-main input[type="text"] {
+    font-size: 1.2rem !important;   /* 🌟 Title 字体变大 */
+}
+#create-post-form-main textarea {
+    background-color: #ffffff !important;
+    color: #000000 !important; /* 白天输入的文字是黑色 */
+    border: 1px solid #cccccc !important; /* 浅灰色边框 */
+    font-size: 1rem;
+}
+
+/* 右上角关闭按钮在白天恢复正常的深色 */
+#create-post-modal button[onclick="togglePostModal()"] {
+    color: #666666 !important;
+}
+
+/* ==========================================================================
+   帖子详情页（Post Details Page）：修复内容文本不换行、连成一团的问题
+   ========================================================================= */
+
+
+
+/* Login and register input font size */
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    font-size: 1.1rem;
+}
+
+#user-info a {
+    color: #c45c00;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#user-info a:hover {
+    text-decoration: underline;
+}
+
+/* Allow long press save on images in PWA */
+img {
+    -webkit-touch-callout: default !important;
+    pointer-events: auto !important;
+}
+
+#dm-chat-window {
+    height: 100dvh;
+}
+
+#dm-messages {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-bottom: 65px;
+}
+
+#dm-input-bar {
+    transition: bottom 0.15s ease;
+}
+
+.leaflet-control-zoom a {
+    font-size: 18px !important;
+    line-height: 26px !important;
+    width: 26px !important;
+    height: 26px !important;
+    font-weight: bold !important;
+    background: rgba(255,255,255,0.3) !important;
+    backdrop-filter: blur(4px) !important;
+}
+
+.dark-mode .leaflet-control-zoom a {
+    background: rgba(0,0,0,0.3) !important;
+    color: #eee !important;
+    border-color: rgba(255,255,255,0.2) !important;
+}
+
+.leaflet-control-zoom {
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+}
+
+.leaflet-control-layers {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+}
+
+.leaflet-control-layers-toggle {
+    width: 36px !important;
+    height: 36px !important;
+}
+
+.leaflet-control-layers-expanded {
+    padding: 8px !important;
+    font-size: 0.85rem !important;
+    line-height: 1.8 !important;
+    white-space: nowrap !important;
+}
+
+.leaflet-popup-content-wrapper {
+    padding: 2px 4px !important;
+    border-radius: 4px !important;
+}
+
+.leaflet-popup-content {
+    margin: 2px 4px !important;
+    font-size: 0.85rem !important;
+}
+
+/* ==========================================================================
+   🛠️ 修正：地图切换控制面板——回归上下排列、极致紧凑化
+   ========================================================================== */
+
+/* 1. 强制选项上下垂直堆叠排列 */
+.leaflet-control-layers-base, 
+.leaflet-control-layers-overlays {
+    display: flex !important;
+    flex-direction: column !important; /* 👈 核心：确保上下垂直排列 */
+    gap: 3px !important;               /* 两个选项之间的上下间距（非常紧凑） */
+}
+
+/* 2. 调小每个选项的字体和内边距，使其不再臃肿 */
+.leaflet-control-layers label {
+    margin: 0 !important;
+    padding: 1px 2px !important;       /* 👈 极小的内边距，消除多余留白 */
+    font-size: 11px !important;        /* 👈 调小字体大小 */
+    display: flex !important;
+    align-items: center !important;    /* 让单选框圆点和文字垂直居中对齐 */
+    gap: 4px !important;               /* 圆点和文字之间的左右间距 */
+    cursor: pointer;
+}
+
+/* 3. 缩小整个展开后的控制面板（外壳）的四周留白 */
+.leaflet-control-layers-expanded {
+    padding: 4px 6px !important;       /* 让整个悬浮框包裹得更紧、更小巧 */
+    min-width: unset !important;       /* 取消默认的最小宽度限制 */
+}
+
+/* 4. 保持白天/夜间模式的文本颜色清晰可见 */
+.leaflet-control-layers label,
+.leaflet-control-layers label span {
+    color: #333333 !important;         /* 白天模式：深灰字 */
+}
+.dark-mode .leaflet-control-layers label,
+.dark-mode .leaflet-control-layers label span {
+    color: #eeeeee !important;         /* 暗黑模式：亮灰字 */
+}
+
+/* ==========================================================================
+   🧱 修复：提升地图面板层级，防止被小骷髅加载层遮挡
+   ========================================================================== */
+#map-panel {
+    position: relative;       /* 💡 核心：必须赋予定位属性，z-index 才会生效 */
+    z-index: 1005 !important; /* 💡 强制设为 1005，绝对碾压小骷髅的 999 */
+}
+
+#file-main {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    width: 330px;
+}
+
+#file-main:hover {
+    background-color: #45a049;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
+
+.post-body {
+    background: #f5f5f0 !important;
+    background-image: 
+        radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
+    background-size: 20px 20px;
+}
+
+.comment-item {
+    background: #f5f5f0 !important;
+    background-image: 
+        radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0);
+    background-size: 20px 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
