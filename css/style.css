@@ -1009,7 +1009,6 @@ button[type="submit"]:disabled {
 }
 
 #post-details-container .post-body {
-    background: #ffffff !important;
     color: #222 !important;
 }
 
