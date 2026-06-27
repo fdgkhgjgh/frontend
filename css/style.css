@@ -1319,19 +1319,27 @@ img {
     box-shadow: 0 3px 8px rgba(0,0,0,0.25);
 }
 
+/* 1. 帖子内容主框架：强制换上温暖的旧书报浅米黄色，加深黑点打印纹理 */
+#post-details-container .post-body,
 .post-body {
-    background-color: #f5f5f0 !important;
-    background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0) !important;
-    background-size: 20px 20px !important;
+    background: #f4f0e6 radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.07) 1px, transparent 0) repeat !important;
+    background-size: 16px 16px !important;
+    border: 1px solid #e1d7bc !important; /* 淡淡的纸张边缘磨损色 */
+    color: #222222 !important;
 }
 
+/* 2. 评论卡片：同步换上纸张纹理，确保文字与日期在白天模式下清晰可见 */
 .comment-item {
-    background-color: #f5f5f0 !important;
-    background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0) !important;
-    background-size: 20px 20px !important;
-    
-    /* Keeps the comments text and date crisp dark grey in daylight mode */
-    color: #333333 !important; 
+    background: #f4f0e6 radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.07) 1px, transparent 0) repeat !important;
+    background-size: 16px 16px !important;
+    border: 1px solid #e1d7bc !important;
+    color: #333333 !important; /* 强制评论主体及日期文本为深灰色 */
+}
+
+/* 3. 确保评论内部的所有后代元素（除了用户名链接）保持可读的深色 */
+.comment-item *, 
+.comment-item p {
+    color: #333333 !important;
 }
 
 
