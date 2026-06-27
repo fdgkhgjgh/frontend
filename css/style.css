@@ -131,7 +131,6 @@ nav a:hover {
 
 /* content backgroud */
 .post-body {
-    background: #ffffff !important;
     color: #222 !important;
     border-radius: 8px;
     padding: 16px;
@@ -1026,10 +1025,6 @@ button[type="submit"]:disabled {
     color: #f0f0f0;
 }
 
-.comment-item {
-    background: rgba(255, 255, 255, 0.92);
-    color: #222;
-}
 
 #comments-section {
     color: #fff;
