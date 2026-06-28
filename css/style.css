@@ -1319,28 +1319,46 @@ img {
     box-shadow: 0 3px 8px rgba(0,0,0,0.25);
 }
 
-/* 1. 帖子内容主框架：强制换上温暖的旧书报浅米黄色，加深黑点打印纹理 */
+/* ==========================================================================
+   仿 image_3.png 高级电子书/纸张色调（白天模式特供）
+   ========================================================================== */
+
+/* 1. 帖子内容主框架：完美复刻纸张底色与软炭黑文字 */
 #post-details-container .post-body,
 .post-body {
-    background: #f4f0e6 radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.07) 1px, transparent 0) repeat !important;
-    background-size: 16px 16px !important;
-    border: 1px solid #e1d7bc !important; /* 淡淡的纸张边缘磨损色 */
-    color: #222222 !important;
+    /* 精确提取自 image_3.png 的暖杏底色 + 融合底色的复古印刷微弱颗粒感 */
+    background: #efe3cb radial-gradient(circle at 1px 1px, rgba(74, 60, 49, 0.05) 1px, transparent 0) repeat !important;
+    background-size: 18px 18px !important;
+    
+    border: 1px solid #dfd2b5 !important; /* 融合纸张边缘的淡淡阴影色 */
+    border-radius: 8px !important;
+    color: #4a3c31 !important;            /* 提取自图片的温和深炭褐色，比纯黑更护眼 */
 }
 
-/* 2. 评论卡片：同步换上纸张纹理，确保文字与日期在白天模式下清晰可见 */
+/* 确保帖子内部的所有段落和文本都统一使用这种舒适的深炭褐 */
+.post-body p,
+.post-body *,
+#post-details-container .post-body p,
+#post-details-container .post-body * {
+    color: #4a3c31 !important;
+}
+
+/* 2. 评论卡片：同步复刻相同的书页纸张材质 */
 .comment-item {
-    background: #f4f0e6 radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.07) 1px, transparent 0) repeat !important;
-    background-size: 16px 16px !important;
-    border: 1px solid #e1d7bc !important;
-    color: #333333 !important; /* 强制评论主体及日期文本为深灰色 */
+    background: #efe3cb radial-gradient(circle at 1px 1px, rgba(74, 60, 49, 0.05) 1px, transparent 0) repeat !important;
+    background-size: 18px 18px !important;
+    
+    border: 1px solid #dfd2b5 !important;
+    color: #4a3c31 !important; /* 确保评论文字和日期也变成优雅的深炭褐 */
 }
 
-/* 3. 确保评论内部的所有后代元素（除了用户名链接）保持可读的深色 */
+/* 确保评论内部的所有文本、楼层数字和通用子元素保持色调一致 */
 .comment-item *, 
-.comment-item p {
-    color: #333333 !important;
+.comment-item p,
+.comment-number {
+    color: #4a3c31 !important;
 }
+
 
 
 
