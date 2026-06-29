@@ -481,7 +481,7 @@ if (createPostFormMain) {
             }
 
             //--- SET BUTTON TO "SENDING" STATE ---
-            setButtonState('sending');
+            setButtonState('发送中sending');
 
             const response = await fetch(`${API_BASE_URL}/posts`, {
                 method: "POST",
