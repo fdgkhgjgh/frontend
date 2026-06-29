@@ -51,7 +51,7 @@ let availableCurrencies = [];
 
 async function fetchRates(baseCurrency) {
     // ✅ Use cache if less than 1 hour old
-    if (ratesCache && ratesCacheTime && Date.now() - ratesCacheTime < 3600000) {
+    if (ratesCache && ratesCacheTime && Date.now() - ratesCacheTime < 7200000) {
         return ratesCache;
     }
 
