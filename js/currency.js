@@ -50,8 +50,13 @@ let ratesCacheTime = null;
 let availableCurrencies = [];
 
 async function fetchRates(baseCurrency) {
+    // ✅ Use cache if less than 1 hour old
+    if (ratesCache && ratesCacheTime && Date.now() - ratesCacheTime < 3600000) {
+        return ratesCache;
+    }
+
     try {
-        const response = await fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${baseCurrency}`);
+        const response = await fetch(`https://v6.exchangerate-api.com/v6/c7d15e9f7e70fca59d2678d5/latest/${baseCurrency}`);
         const data = await response.json();
         if (data.result === 'success') {
             ratesCache = data.conversion_rates;
@@ -62,6 +67,8 @@ async function fetchRates(baseCurrency) {
         console.error('Exchange rate fetch error:', err);
     }
     return null;
+}
+
 }
 
 async function initCurrencyConverter() {
@@ -132,7 +139,5 @@ window.convertCurrency = convertCurrency;
 document.addEventListener('DOMContentLoaded', () => {
     initCurrencyConverter();
 
-    document.getElementById('currency-amount').addEventListener('input', convertCurrency);
-    document.getElementById('currency-from').addEventListener('change', convertCurrency);
-    document.getElementById('currency-to').addEventListener('change', convertCurrency);
+    document.getElementById('currency-amount').addEventListener('change', convertCurrency);
 });
