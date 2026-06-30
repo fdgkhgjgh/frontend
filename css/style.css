@@ -1363,7 +1363,7 @@ img {
 /* --- 帖子内容区域的链接 --- */
 .post-context a, 
 .post-body a {
-    color: #5dade2; /* 这是一个极具现代感、易读的亮天蓝色 */
+    color: #5dade2 !important; /* 这是一个极具现代感、易读的亮天蓝色 */
     text-decoration: none; /* 去掉下划线，让界面更清爽 */
     transition: color 0.2s ease; /* 让颜色过渡更丝滑 */
 }
@@ -1378,7 +1378,7 @@ img {
 /* --- 评论区域的链接 --- */
 .comment-content a, 
 .comment-item a {
-    color: #5dade2; 
+    color: #5dade2 !important; 
     text-decoration: none;
     transition: color 0.2s ease;
 }
