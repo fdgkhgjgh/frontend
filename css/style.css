@@ -273,6 +273,7 @@ ul#comments-list {
 #comment-text,
 .reply-textarea {
     font-size: 1rem;
+    white-space: pre-wrap;
 }
 
 /* Style for reply button */
