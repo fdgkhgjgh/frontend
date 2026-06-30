@@ -89,7 +89,8 @@ authorDateElement.append(` on ${formatDate(post.createdAt)}${editedText}`);
             return formattedLine.trimEnd();
         }).join('\n'); // Join all formatted lines
 
-        contentElement.innerHTML = formattedContent.replace(/\n/g, '<br>');
+        const linkified = formattedContent.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#4f46e5;word-break:break-all;">$1</a>');
+contentElement.innerHTML = linkified.replace(/\n/g, '<br>');
     } else {
         contentElement.textContent = ''; // or some placeholder if content is empty
     }
@@ -764,14 +765,21 @@ function displayComments(comments) {
 
         // --- ADD PROFILE PICTURE HERE ---
         const textElement = document.createElement('p');
-        const usernameLink = document.createElement('a');  // Create an <a> tag
-        usernameLink.href = `profile.html?id=${comment.author._id}`; // Set the href to the profile page
-        usernameLink.textContent = comment.author?.username || "Unknown"; // Set the link text to the username
+const usernameLink = document.createElement('a');
+usernameLink.href = `profile.html?id=${comment.author._id}`;
+usernameLink.textContent = comment.author?.username || "Unknown";
 
-        textElement.append(usernameLink);  // Append the <a> tag to the <p>
-        textElement.append(`: ${comment.text} -- ${formatDate(comment.createdAt)}`); // Add the rest of the comment content
+textElement.appendChild(usernameLink);
 
-        commentItem.appendChild(textElement); // Then append the <p> with the <a> and text content.
+// ✅ Linkify and preserve newlines for comment text
+const commentTextSpan = document.createElement('span');
+const linkifiedComment = (comment.text || '')
+    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#4f46e5;word-break:break-all;">$1</a>')
+    .replace(/\n/g, '<br>');
+commentTextSpan.innerHTML = `: ${linkifiedComment} -- ${formatDate(comment.createdAt)}`;
+textElement.appendChild(commentTextSpan);
+
+commentItem.appendChild(textElement);
 
          // Add image display logic (similar to post detail, using the multi-image-container)
         if (comment.imageUrls && comment.imageUrls.length > 0) {
