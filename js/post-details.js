@@ -89,7 +89,7 @@ authorDateElement.append(` on ${formatDate(post.createdAt)}${editedText}`);
             return formattedLine.trimEnd();
         }).join('\n'); // Join all formatted lines
 
-        const linkified = formattedContent.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#4f46e5;word-break:break-all;">$1</a>');
+        const linkified = formattedContent.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#5dade2;word-break:break-all;">$1</a>');
 contentElement.innerHTML = linkified.replace(/\n/g, '<br>');
     } else {
         contentElement.textContent = ''; // or some placeholder if content is empty
@@ -774,7 +774,7 @@ textElement.appendChild(usernameLink);
 // ✅ Linkify and preserve newlines for comment text
 const commentTextSpan = document.createElement('span');
 const linkifiedComment = (comment.text || '')
-    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#4f46e5;word-break:break-all;">$1</a>')
+    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#5dade2;word-break:break-all;">$1</a>')
     .replace(/\n/g, '<br>');
 commentTextSpan.innerHTML = `: ${linkifiedComment} -- ${formatDate(comment.createdAt)}`;
 textElement.appendChild(commentTextSpan);
