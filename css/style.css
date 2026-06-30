@@ -1360,6 +1360,36 @@ img {
     color: #4a3c31 !important;
 }
 
+/* --- 帖子内容区域的链接 --- */
+.post-context a, 
+.post-body a {
+    color: #5dade2; /* 这是一个极具现代感、易读的亮天蓝色 */
+    text-decoration: none; /* 去掉下划线，让界面更清爽 */
+    transition: color 0.2s ease; /* 让颜色过渡更丝滑 */
+}
+
+/* 鼠标悬停在帖子链接上时变深一点点，提升交互感 */
+.post-context a:hover, 
+.post-body a:hover {
+    color: #3498db; 
+    text-decoration: underline; /* 悬停时显示下划线提示可点击 */
+}
+
+/* --- 评论区域的链接 --- */
+.comment-content a, 
+.comment-item a {
+    color: #5dade2; 
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+/* 鼠标悬停在评论链接上 */
+.comment-content a:hover, 
+.comment-item a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
 
 
 
