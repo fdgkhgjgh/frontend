@@ -142,7 +142,7 @@ function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
 
 
 //track line
-async function loadTracks(days = 15) {
+async function loadTracks(days = 180) {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
     startDate.setHours(0, 0, 0, 0);
