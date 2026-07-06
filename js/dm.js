@@ -348,10 +348,10 @@ async function appendDMMessage(msg) {
         background:none; border:1px solid #ddd; border-radius:10px;
         padding:1px 7px; font-size:0.7rem; color:#888; cursor:pointer;
     ">Tiếng Việt</button>
-    <button onclick="translateMessage('${decryptedMessage.replace(/'/g, "\\'")}', this, 'ko')" style="
+    <button onclick="translateMessage('${decryptedMessage.replace(/'/g, "\\'")}', this, 'id')" style="
         background:none; border:1px solid #ddd; border-radius:10px;
         padding:1px 7px; font-size:0.7rem; color:#888; cursor:pointer;
-    ">한국어</button>
+    ">Indonesia</button>
 </div>
 `;
 
