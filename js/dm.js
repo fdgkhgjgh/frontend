@@ -577,7 +577,7 @@ async function translateMessage(text, btnEl, targetLang) {
         // Detect source language
         const hasChinese = /[\u4e00-\u9fff]/.test(text);
         const hasJapanese = /[\u3040-\u30ff]/.test(text);
-        const hasIndonesian = /[\u00C0-\u00FF]/.test(text) || /\b(ada|dan|yang|untuk|dengan|ini|itu|adalah)\b/i.test(text);
+        const hasIndonesian = /\b(ada|dan|yang|untuk|dengan|ini|itu|adalah|tidak|saya|kami|mereka|bisa|akan|sudah|juga|dari|ke|di|ya|apa|bagaimana)\b/i.test(text);
         const hasVietnamese = /[àáâãèéêìíòóôõùúýăđơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/i.test(text);
 
         let sourceLang = 'en';
