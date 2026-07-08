@@ -612,15 +612,6 @@ const displayCoords = getLayerCoords(parsedLat, parsedLng);
 if (searchMarker) map.removeLayer(searchMarker);
 
 searchMarker = L.marker([displayCoords.lat, displayCoords.lng], {
-    // ... your icon setup
-}).addTo(map);
-
-searchMarker.bindPopup(display_name).openPopup();
-map.setView([displayCoords.lat, displayCoords.lng], 12);
-
-
-        // Add new marker
-        searchMarker = L.marker([parseFloat(lat), parseFloat(lon)], {
             icon: L.divIcon({
                 className: '',
                 html: `<div style="
@@ -637,7 +628,7 @@ map.setView([displayCoords.lat, displayCoords.lng], 12);
         }).addTo(map);
 
         searchMarker.bindPopup(display_name).openPopup();
-        map.setView([parseFloat(lat), parseFloat(lon)], 12);
+        map.setView([displayCoords.lat, displayCoords.lng], 12);
 
     } catch (err) {
         alert('搜索失败，请稍后重试');
