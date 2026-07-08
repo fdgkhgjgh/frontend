@@ -34,6 +34,15 @@ function initSupabase() {
     }
 }
 
+// Helper to get coordinates adjusted for the current active layer
+function getLayerCoords(lat, lng) {
+    if (currentMapLayer === 'amap') {
+        return wgs84ToGcj02(lat, lng);
+    }
+    return { lat, lng };
+}
+
+
 // Initialize map
 function initMap() {
     if (map) return;
@@ -66,7 +75,7 @@ function initMap() {
     // Default map
 yandexLayer.addTo(map);
 
-let currentMapLayer = 'yandex';
+currentMapLayer = 'yandex'; 
 
 L.control.layers({
     'World Map (Yandex)': yandexLayer,
@@ -78,6 +87,12 @@ map.on('baselayerchange', (e) => {
         currentMapLayer = 'amap';
     } else {
         currentMapLayer = 'yandex';
+    }
+    
+    // Force refresh all visual elements onto the newly shifted grid system
+    loadLocations();
+    if (tracksVisible) {
+        loadTracks();
     }
 });
 } // closes initMap
@@ -169,8 +184,12 @@ async function loadTracks(days = 180) {
     const grouped = {};
     chronologicalData.forEach(point => {
         if (!grouped[point.user_id]) grouped[point.user_id] = [];
-        grouped[point.user_id].push([point.latitude, point.longitude]);
+        
+        // Convert point coordinates for the active map layer
+        const displayCoords = getLayerCoords(point.latitude, point.longitude);
+        grouped[point.user_id].push([displayCoords.lat, displayCoords.lng]);
     });
+
 
     // Draw polyline for each user
     Object.entries(grouped).forEach(([userId, points]) => {
@@ -210,11 +229,14 @@ function updateMarker(userId, username, lat, lng, profilePic) {
     const { userId: currentUserId } = getCurrentUser();
     const isCurrentUser = userId === currentUserId;
 
+    // Convert coordinates depending on the active map layer
+    const displayCoords = getLayerCoords(lat, lng);
+
     if (markers[userId]) {
-        markers[userId].setLatLng([lat, lng]);
+        markers[userId].setLatLng([displayCoords.lat, displayCoords.lng]);
         markers[userId].setIcon(createMarkerIcon(username, isCurrentUser, profilePic));
     } else {
-        const marker = L.marker([lat, lng], {
+        const marker = L.marker([displayCoords.lat, displayCoords.lng], {
             icon: createMarkerIcon(username, isCurrentUser, profilePic)
         }).addTo(map);
         marker.bindPopup(`<strong>${username}</strong>`).openPopup();
@@ -313,10 +335,11 @@ async function startSharingLocation() {
         await loadTracks();
 
 
-        // ✅ Only center map on first update, not every update
+        // Inside startSharingLocation watchPosition callback:
         if (firstUpdate) {
-            map.setView([latitude, longitude], 14);
-            firstUpdate = false;
+          const displayCoords = getLayerCoords(latitude, longitude);
+          map.setView([displayCoords.lat, displayCoords.lng], 14);
+          firstUpdate = false;
         }
 
     }, (err) => {
@@ -578,10 +601,23 @@ async function searchMapLocation() {
             return;
         }
 
-        const { lat, lon, display_name } = data[0];
+        // Inside searchMapLocation success block:
+const { lat, lon, display_name } = data[0];
+const parsedLat = parseFloat(lat);
+const parsedLng = parseFloat(lon);
 
-        // Remove old search marker
-        if (searchMarker) map.removeLayer(searchMarker);
+// Convert search output coordinates
+const displayCoords = getLayerCoords(parsedLat, parsedLng);
+
+if (searchMarker) map.removeLayer(searchMarker);
+
+searchMarker = L.marker([displayCoords.lat, displayCoords.lng], {
+    // ... your icon setup
+}).addTo(map);
+
+searchMarker.bindPopup(display_name).openPopup();
+map.setView([displayCoords.lat, displayCoords.lng], 12);
+
 
         // Add new marker
         searchMarker = L.marker([parseFloat(lat), parseFloat(lon)], {
