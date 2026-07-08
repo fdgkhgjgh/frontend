@@ -169,7 +169,16 @@ async function loadTracks(days = 180) {
     const grouped = {};
     chronologicalData.forEach(point => {
         if (!grouped[point.user_id]) grouped[point.user_id] = [];
-        grouped[point.user_id].push([point.latitude, point.longitude]);
+        let lat = point.latitude;
+let lng = point.longitude;
+
+if (currentMapLayer === 'amap') {
+    const fixed = wgs84ToGcj02(lat, lng);
+    lat = fixed.lat;
+    lng = fixed.lng;
+}
+
+grouped[point.user_id].push([lat, lng]);
     });
 
     // Draw polyline for each user
@@ -211,7 +220,12 @@ function updateMarker(userId, username, lat, lng, profilePic) {
     const isCurrentUser = userId === currentUserId;
 
     if (markers[userId]) {
-        markers[userId].setLatLng([lat, lng]);
+        if (currentMapLayer === 'amap') {
+    const fixed = wgs84ToGcj02(lat, lng);
+    lat = fixed.lat;
+    lng = fixed.lng;
+}
+markers[userId].setLatLng([lat, lng]);
         markers[userId].setIcon(createMarkerIcon(username, isCurrentUser, profilePic));
     } else {
         const marker = L.marker([lat, lng], {
