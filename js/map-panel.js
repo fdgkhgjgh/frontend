@@ -617,9 +617,9 @@ searchMarker = L.marker([displayCoords.lat, displayCoords.lng], {
                 html: `<div style="
                     background: #e53e3e;
                     color: white;
-                    padding: 0.5px 1px;
-                    border-radius: 1px;
-                    font-size: 0.65rem;
+                    padding: 2px 5px;
+                    border-radius: 1.5px;
+                    font-size: 0.85rem;
                     white-space: nowrap;
                     box-shadow: 0 1px 2px rgba(0,0,0,0.3);
                 ">📍 ${input}</div>`,
