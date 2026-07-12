@@ -309,7 +309,7 @@ if (post.videoUrls && post.videoUrls.length > 0) {
     const firstVideoUrl = post.videoUrls[0];
 
     // Check if video is from R2 or Cloudinary
-const isR2Video = firstVideoUrl.includes('r2.dev');
+const isR2Video = firstVideoUrl.includes('video.mless.cc.cd');
 const thumbnailUrl = isR2Video 
     ? null  // R2 has no auto thumbnail
     : firstVideoUrl
