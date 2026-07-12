@@ -465,7 +465,7 @@ if (createPostFormMain) {
                     break;
                 default: // 'default' or any other state
                     createPostButton.disabled = false;
-                    createPostButton.textContent = 'Send New Post';
+                    createPostButton.textContent = '发送中...Sending..';
                     buttonSpinner.style.display = 'none';
                     buttonSuccessIcon.style.display = 'none';
                     break;
