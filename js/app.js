@@ -231,7 +231,7 @@ function createPostElement(post) {
         mediaElement.classList.add('post-list-image');
     } else if (post.videoUrls && post.videoUrls.length > 0) {
     const videoUrl = post.videoUrls[0];
-    const isR2Video = videoUrl.includes('r2.dev');
+    const isR2Video = videoUrl.includes('video.mless.cc.cd');
     
     mediaElement = document.createElement('img');
     mediaElement.alt = post.title;
