@@ -69,8 +69,6 @@ async function fetchRates(baseCurrency) {
     return null;
 }
 
-}
-
 async function initCurrencyConverter() {
     const fromSelect = document.getElementById('currency-from');
     const toSelect = document.getElementById('currency-to');
