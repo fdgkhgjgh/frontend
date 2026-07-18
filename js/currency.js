@@ -4,7 +4,7 @@ const API_KEY = 'c7d15e9f7e70fca59d2678d5';
 // Currency names in Chinese
 const CURRENCY_NAMES = {
     'USD': '美元 🇺🇸', 'CNY': '人民币 🇨🇳', 'EUR': '欧元 🇪🇺',
-    'GBP': '英镑 🇬🇧', 'JPY': '日元 🇯🇵', 'HKD': '港币 ◣',
+    'GBP': '英镑 🇬🇧', 'JPY': '日元 🇯🇵', 'HKD': '港币 🇭🇰',
     'TWD': '新台币 🇹🇼', 'KRW': '韩元 🇰🇷', 'SGD': '新加坡元 🇸🇬',
     'AUD': '澳元 🇦🇺', 'CAD': '加元 🇨🇦', 'CHF': '瑞士法郎 🇨🇭',
     'THB': '泰铢 🇹🇭', 'MYR': '马来西亚令吉 🇲🇾', 'IDR': '印尼盾 🇮🇩',
@@ -156,6 +156,29 @@ window.convertCurrency = convertCurrency;
 document.addEventListener('DOMContentLoaded', () => {
     initCurrencyConverter();
 
-    // 监听输入框失去焦点或回车事件
-    document.getElementById('currency-amount').addEventListener('change', convertCurrency);
+    // 1. 监听输入框失去焦点或回车事件
+    const amountInput = document.getElementById('currency-amount');
+    if (amountInput) {
+        amountInput.addEventListener('change', convertCurrency);
+    }
+
+    // 2. 新增：监听倒转互换按钮的点击事件
+    // 假设你的互换按钮 HTML 带有 id="currency-swap"
+    const swapBtn = document.getElementById('currency-swap');
+    if (swapBtn) {
+        swapBtn.addEventListener('click', () => {
+            const fromSelect = document.getElementById('currency-from');
+            const toSelect = document.getElementById('currency-to');
+            
+            if (fromSelect && toSelect) {
+                // 核心逻辑：用一个临时变量交换两边的 value
+                const temp = fromSelect.value;
+                fromSelect.value = toSelect.value;
+                toSelect.value = temp;
+                
+                // 交换完毕后，立刻调用一次换算函数更新结果
+                convertCurrency();
+            }
+        });
+    }
 });
