@@ -653,7 +653,7 @@
 </div>
 <script src="js/currency.js"></script>
 
-<!-- 全球+国内 快递查询组件（全能识别版） -->
+<!-- 全球+国内 快递查询组件（100% 稳定直达版） -->
 <div id="express-tracker" style="
     margin: 8px 8px 0 8px;
     background: rgba(255,255,255,0.15);
@@ -662,7 +662,7 @@
     backdrop-filter: blur(4px);
 ">
     <div style="display:flex; align-items:center; gap:8px;">
-        <input type="text" id="YQNum" maxlength="50" placeholder="输入单号(全球)delivery package check." style="
+        <input type="text" id="YQNum" maxlength="50" placeholder="输入单号(国内/国际均可)..." style="
             flex: 1;
             padding: 5px 8px;
             border: 1px solid rgba(255,255,255,0.3);
@@ -683,12 +683,8 @@
             white-space: nowrap;
         ">查快递</button>
     </div>
-    <!-- 17TRACK 国际查询容器 -->
-    <div id="YQContainer" style="margin-top: 8px;"></div>
 </div>
 
-<!-- 明确使用 https 协议引入 17TRACK 官方嵌入脚本 -->
-<script type="text/javascript" src="https://www.17track.net/externalcall.js"></script>
 <script type="text/javascript">
 function doExpressTrack() {
     var input = document.getElementById("YQNum");
@@ -699,30 +695,15 @@ function doExpressTrack() {
         return;
     }
 
-    // 清空 17TRACK 浮层
-    var container = document.getElementById("YQContainer");
-    if (container) container.innerHTML = "";
-
-    // 判断是否为国内快递（纯数字或 SF/JT/JD/YT 等常见前缀）
+    // 判断是否为国内快递（纯数字或 SF/JT/JD/YT 等国内前缀）
     var isDomestic = /^\d+$/.test(num) || /^(SF|JT|JTE|JD|YT|YTO|DB|STO|ZTO|YUNDA)/.test(num);
 
     if (isDomestic) {
-        // 升级：跳转到百度快递卡片（无限额度，自动识别顺丰、极兔、邮政、京东等）
+        // 国内单号：百度卡片直达（无限额度，支持顺丰/极兔/邮政等）
         window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(num), '_blank');
     } else {
-        // 国际件：继续走 17TRACK 嵌入浮层
-        if (typeof YQV5 !== 'undefined') {
-            YQV5.trackSingleF1({
-                YQ_ElementId: "YQContainer",
-                YQ_Width: 360,
-                YQ_Height: 500,
-                YQ_Fc: "0",
-                YQ_Lang: "zh-CN",
-                YQ_Num: num
-            });
-        } else {
-            window.open('https://www.17track.net/zh-cn/track#nums=' + num, '_blank');
-        }
+        // 国际单号：17TRACK 官方结果页直达（解决手机端/Safari脚本被拦截无响应的问题）
+        window.open('https://www.17track.net/zh-cn/track#nums=' + encodeURIComponent(num), '_blank');
     }
 }
 </script>
