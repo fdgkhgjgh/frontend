@@ -699,20 +699,18 @@ function doExpressTrack() {
         return;
     }
 
-    // 清空上次可能留下的 17TRACK 容器内容
+    // 清空 17TRACK 浮层
     var container = document.getElementById("YQContainer");
     if (container) container.innerHTML = "";
 
-    // 判断是否为国内快递：
-    // 1. 纯数字单号 (邮政13位、申通、中通、韵达等)
-    // 2. 带国内常见字母前缀 (SF顺丰, JT/JTE极兔, JD京东, YT/YTO圆通, DB德邦等)
-    var isDomestic = /^\d+$/.test(num) || /^(SF|JT|JTE|JD|YT|YTO|DB|STO|ZTO)/.test(num);
+    // 判断是否为国内快递（纯数字或 SF/JT/JD/YT 等常见前缀）
+    var isDomestic = /^\d+$/.test(num) || /^(SF|JT|JTE|JD|YT|YTO|DB|STO|ZTO|YUNDA)/.test(num);
 
     if (isDomestic) {
-        // 国内快递统一走快递100，完美支持 SF123... / JT123... 等格式
-        window.open('https://m.kuaidi100.com/result.jsp?nu=' + num, '_blank');
+        // 升级：跳转到百度快递卡片（无限额度，自动识别顺丰、极兔、邮政、京东等）
+        window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(num), '_blank');
     } else {
-        // 国际快递使用 17TRACK 嵌入浮层；若脚本被拦截则降级跳转
+        // 国际件：继续走 17TRACK 嵌入浮层
         if (typeof YQV5 !== 'undefined') {
             YQV5.trackSingleF1({
                 YQ_ElementId: "YQContainer",
@@ -723,7 +721,6 @@ function doExpressTrack() {
                 YQ_Num: num
             });
         } else {
-            // 降级方案：脚本被插件阻断时直接打开 17TRACK 官方结果页
             window.open('https://www.17track.net/zh-cn/track#nums=' + num, '_blank');
         }
     }
