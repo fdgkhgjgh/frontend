@@ -653,7 +653,7 @@
 </div>
 <script src="js/currency.js"></script>
 
-<!-- 全球快递查询（永久免费零额度限制） -->
+<!-- 全球快递查询组件（内嵌不跳转版） -->
 <div id="express-tracker" style="
     margin: 8px 8px 0 8px;
     background: rgba(255,255,255,0.15);
@@ -661,8 +661,8 @@
     padding: 10px 12px;
     backdrop-filter: blur(4px);
 ">
-    <form action="https://www.17track.net/zh-cn/track" method="get" target="_blank" style="display:flex; align-items:center; gap:8px;">
-        <input type="text" name="nums" placeholder="输入全球快递单号..." required style="
+    <div style="display:flex; align-items:center; gap:8px;">
+        <input type="text" id="YQNum" maxlength="50" placeholder="输入全球快递单号..delivery package check." style="
             flex: 1;
             padding: 5px 8px;
             border: 1px solid rgba(255,255,255,0.3);
@@ -672,7 +672,7 @@
             font-size: 0.9rem;
             outline: none;
         "/>
-        <button type="submit" style="
+        <button type="button" onclick="doExpressTrack()" style="
             background: #10b981;
             color: white;
             border: none;
@@ -682,8 +682,32 @@
             font-size: 0.85rem;
             white-space: nowrap;
         ">查快递</button>
-    </form>
+    </div>
+    <!-- 查询结果浮层锚点容器 -->
+    <div id="YQContainer" style="margin-top: 8px;"></div>
 </div>
+
+<!-- 引入 17TRACK 官方免跳转嵌入脚本 -->
+<script type="text/javascript" src="//www.17track.net/externalcall.js"></script>
+<script type="text/javascript">
+function doExpressTrack() {
+    var num = document.getElementById("YQNum").value.trim();
+    if (!num) {
+        alert("请输入快递单号！");
+        return;
+    }
+    
+    // 调用 17TRACK 官方嵌入方法，直接在页面内弹出浮动查询框
+    YQV5.trackSingleF1({
+        YQ_ElementId: "YQContainer", // 绑定的容器ID
+        YQ_Width: 360,               // 浮动窗口宽度
+        YQ_Height: 500,              // 浮动窗口高度
+        YQ_Fc: "0",                  // 0 为自动识别快递公司
+        YQ_Lang: "zh-CN",            // 中文界面
+        YQ_Num: num                  // 传入的单号
+    });
+}
+</script>
 
 
    <!--Start of Tawk.to Script-->
