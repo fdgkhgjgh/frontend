@@ -653,7 +653,7 @@
 </div>
 <script src="js/currency.js"></script>
 
-<!-- 全球快递查询组件（内嵌不跳转版） -->
+<!-- 全球+国内 快递查询组件（免费双引擎版） -->
 <div id="express-tracker" style="
     margin: 8px 8px 0 8px;
     background: rgba(255,255,255,0.15);
@@ -662,7 +662,7 @@
     backdrop-filter: blur(4px);
 ">
     <div style="display:flex; align-items:center; gap:8px;">
-        <input type="text" id="YQNum" maxlength="50" placeholder="输入全球快递单号..delivery package check." style="
+        <input type="text" id="YQNum" maxlength="50" placeholder="输入快递单号(国内/国际). delivery package check" style="
             flex: 1;
             padding: 5px 8px;
             border: 1px solid rgba(255,255,255,0.3);
@@ -683,7 +683,7 @@
             white-space: nowrap;
         ">查快递</button>
     </div>
-    <!-- 查询结果浮层锚点容器 -->
+    <!-- 17TRACK 国际查询容器 -->
     <div id="YQContainer" style="margin-top: 8px;"></div>
 </div>
 
@@ -697,15 +697,23 @@ function doExpressTrack() {
         return;
     }
     
-    // 调用 17TRACK 官方嵌入方法，直接在页面内弹出浮动查询框
-    YQV5.trackSingleF1({
-        YQ_ElementId: "YQContainer", // 绑定的容器ID
-        YQ_Width: 360,               // 浮动窗口宽度
-        YQ_Height: 500,              // 浮动窗口高度
-        YQ_Fc: "0",                  // 0 为自动识别快递公司
-        YQ_Lang: "zh-CN",            // 中文界面
-        YQ_Num: num                  // 传入的单号
-    });
+    // 判断是否为国内纯数字单号（如中国邮政13位纯数字、顺丰、圆通等）
+    var isDomesticPureDigits = /^\d+$/.test(num);
+
+    if (isDomesticPureDigits) {
+        // 国内单号：通过快递100免API页面直接打开查询（100%支持中国邮政国内件）
+        window.open('https://m.kuaidi100.com/result.jsp?nu=' + num, '_blank');
+    } else {
+        // 国际/跨境单号：继续调用 17TRACK 内嵌浮层
+        YQV5.trackSingleF1({
+            YQ_ElementId: "YQContainer",
+            YQ_Width: 360,
+            YQ_Height: 500,
+            YQ_Fc: "0",
+            YQ_Lang: "zh-CN",
+            YQ_Num: num
+        });
+    }
 }
 </script>
 
