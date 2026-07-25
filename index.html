@@ -653,6 +653,38 @@
 </div>
 <script src="js/currency.js"></script>
 
+<!-- 全球快递查询（永久免费零额度限制） -->
+<div id="express-tracker" style="
+    margin: 8px 8px 0 8px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 10px 12px;
+    backdrop-filter: blur(4px);
+">
+    <form action="https://www.17track.net/zh-cn/track" method="get" target="_blank" style="display:flex; align-items:center; gap:8px;">
+        <input type="text" name="nums" placeholder="输入全球快递单号..." required style="
+            flex: 1;
+            padding: 5px 8px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.2);
+            color: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        "/>
+        <button type="submit" style="
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        ">查快递</button>
+    </form>
+</div>
+
 
    <!--Start of Tawk.to Script-->
     <script type="text/javascript">
