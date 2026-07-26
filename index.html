@@ -425,6 +425,20 @@
         <p id="create-post-message-main"></p>
     </div>
 </div>
+
+<!-- 1. 触发按钮（你可以把这个 button 放到页面任何想放的位置，比如查快递/汇率组件附近） -->
+<div style="text-align: center; margin: 8px 0;">
+    <button type="button" onclick="toggleMarketModal()" style="
+        padding: 6px 14px;
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 8px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 0.85rem;
+        backdrop-filter: blur(4px);
+    ">📈</button>
+</div>
     <!-- DM Panel -->
 <div id="dm-panel" style="
     display: none;
@@ -945,20 +959,6 @@ if (location.search.includes('debug=true')) {
 }
 </script>
 <!-- ================= 全球股市/大宗商品行情弹窗组件 ================= -->
-
-<!-- 1. 触发按钮（你可以把这个 button 放到页面任何想放的位置，比如查快递/汇率组件附近） -->
-<div style="text-align: center; margin: 8px 0;">
-    <button type="button" onclick="toggleMarketModal()" style="
-        padding: 6px 14px;
-        background: rgba(255,255,255,0.2);
-        border: 1px solid rgba(255,255,255,0.3);
-        border-radius: 8px;
-        color: #fff;
-        cursor: pointer;
-        font-size: 0.85rem;
-        backdrop-filter: blur(4px);
-    ">📈 全球指数/大宗商品</button>
-</div>
 
 <!-- 2. 弹窗遮罩及内容区 -->
 <div id="market-modal" style="
