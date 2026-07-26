@@ -372,7 +372,7 @@
         color: white;
         border: none;
         padding: 10px 24px;
-        border-radius: 20px;
+        border-radius: 1px;
         font-size: 1rem;
         cursor: pointer;
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
@@ -1097,7 +1097,7 @@ function switchToDomesticSource() {
     // 引入国内新浪行情 API (新增日欧股市指数 + 黄金原油，抹去 Referer 绕过防盗链)
     const script = document.createElement('script');
     script.referrerPolicy = 'no-referrer';
-    script.src = 'https://hq.sinajs.cn/list=s_sh000001,s_hkHSI,gb_$inx,gb_$ixic,int_nikkei,int_dax,hf_XAU,hf_CL';
+    script.src = 'https://hq.sinajs.cn/list=s_sh000001,s_hkHSI,gb_$inx,gb_$ixic,b_N225,b_DAX,hf_XAU,hf_CL';
     
     script.onload = renderDomesticMarketData;
     script.onerror = loadTencentBackupData;
@@ -1115,8 +1115,8 @@ function renderDomesticMarketData() {
         { name: '🇭🇰 恒生指数', key: 'hq_str_s_hkHSI', type: 'cn' },
         { name: '🇺🇸 标普500', key: 'hq_str_gb_$inx', type: 'gb' },
         { name: '🇺🇸 纳斯达克', key: 'hq_str_gb_$ixic', type: 'gb' },
-        { name: '🇯🇵 日经225', key: 'hq_str_int_nikkei', type: 'cn' },
-        { name: '🇩🇪 德国DAX', key: 'hq_str_int_dax', type: 'cn' },
+        { name: '🇯🇵 日经225', key: 'hq_str_b_N225', type: 'cn' },
+        { name: '🇩🇪 德国DAX', key: 'hq_str_b_DAX', type: 'cn' },
         { name: '🏆 现货黄金', key: 'hq_str_hf_XAU', type: 'hf' },
         { name: '🛢️ WTI 原油', key: 'hq_str_hf_CL', type: 'hf' }
     ];
