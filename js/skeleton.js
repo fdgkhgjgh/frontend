@@ -1,160 +1,121 @@
-// skeleton.js - Skeleton loading with Pulp Fiction style dancing SVG
+// skeleton.js - 轻量版（针对 iPhone 发热优化）
 
 function showSkeleton() {
     const postList = document.getElementById('post-list');
     if (!postList) return;
 
+    // 先清理可能残留的定时器
+    clearInterval(window.loadingMsgInterval);
+    window.loadingMsgInterval = null;
+
     postList.innerHTML = `
         <div style="
-            position:relative;
-            min-height:350px;
-            width:100%;
-            box-sizing:border-box;
+            position: relative;
+            min-height: 350px;
+            width: 100%;
+            box-sizing: border-box;
         ">
-
             <div class="skeleton-theme-overlay" style="
-                position:absolute;
-                inset:0;
-
-                display:flex;
-                flex-direction:column;
-                justify-content:center;
-                align-items:center;
-
-                backdrop-filter:blur(4px);
-                border-radius:4px;
-
-                z-index:999;
+                position: absolute;
+                inset: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                border-radius: 4px;
+                z-index: 999;
+                /* 去掉 blur，改用半透明背景，大幅降低性能消耗 */
+                background: rgba(139, 196, 139, 0.92);
             ">
-
                 <div class="shimmer-wrapper">
-
                     <svg width="120" height="170"
                          viewBox="0 0 100 150"
                          xmlns="http://www.w3.org/2000/svg"
-                         style="overflow:visible;">
+                         style="overflow: visible;">
 
-                        <g class="dance-body" style="transform-origin:50px 68px;">
+                        <g class="dance-body" style="transform-origin: 50px 68px;">
                             
                             <g class="dance-head" style="transform-origin: 50px 44px;">
                                 <line x1="50" y1="32"
-                                    x2="50" y2="48"
-                                    stroke="rgba(255,255,255,.85)"
-                                    stroke-width="6"
-                                    stroke-linecap="round"/>
+                                      x2="50" y2="48"
+                                      stroke="rgba(255,255,255,.85)"
+                                      stroke-width="6"
+                                      stroke-linecap="round"/>
                                 
                                 <text x="50" y="36"
-                                    text-anchor="middle"
-                                    font-size="32">
+                                      text-anchor="middle"
+                                      font-size="32">
                                     💀
                                 </text>
                             </g>
 
                             <rect x="40" y="44"
-                                width="20"
-                                height="28"
-                                rx="4"
-                                fill="rgba(255,255,255,.85)"/>
+                                  width="20"
+                                  height="28"
+                                  rx="4"
+                                  fill="rgba(255,255,255,.85)"/>
 
                             <polygon
                                 points="50,46 47,56 50,60 53,56"
                                 fill="rgba(220,40,40,.9)"/>
                         </g>
 
-                        <g class="dance-left-arm" style="transform-origin:40px 52px;">
-                            <line x1="40" y1="52"
-                                x2="22" y2="38"
-                                stroke="white"
-                                stroke-width="5"
-                                stroke-linecap="round"/>
-                            <line x1="22" y1="38"
-                                x2="18" y2="28"
-                                stroke="white"
-                                stroke-width="3"
-                                stroke-linecap="round"/>
-                            
+                        <g class="dance-left-arm" style="transform-origin: 40px 52px;">
+                            <line x1="40" y1="52" x2="22" y2="38" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="22" y1="38" x2="18" y2="28" stroke="white" stroke-width="3" stroke-linecap="round"/>
                             <line x1="18" y1="28" x2="11" y2="22" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                             <line x1="18" y1="28" x2="15" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                             <line x1="18" y1="28" x2="21" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                         </g>
 
-                        <g class="dance-right-arm" style="transform-origin:60px 52px;">
-                            <line x1="60" y1="52"
-                                x2="78" y2="38"
-                                stroke="white"
-                                stroke-width="5"
-                                stroke-linecap="round"/>
-                            <line x1="78" y1="38"
-                                x2="82" y2="28"
-                                stroke="white"
-                                stroke-width="3"
-                                stroke-linecap="round"/>
-
+                        <g class="dance-right-arm" style="transform-origin: 60px 52px;">
+                            <line x1="60" y1="52" x2="78" y2="38" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="78" y1="38" x2="82" y2="28" stroke="white" stroke-width="3" stroke-linecap="round"/>
                             <line x1="82" y1="28" x2="89" y2="22" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                             <line x1="82" y1="28" x2="85" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                             <line x1="82" y1="28" x2="79" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                         </g>
 
-                        <g class="dance-hip" style="transform-origin:50px 76px;">
-                            <rect x="38"
-                                y="72"
-                                width="24"
-                                height="10"
-                                rx="4"
-                                fill="rgba(255,255,255,.7)"/>
+                        <g class="dance-hip" style="transform-origin: 50px 76px;">
+                            <rect x="38" y="72" width="24" height="10" rx="4" fill="rgba(255,255,255,.7)"/>
                         </g>
 
-                        <g class="dance-left-leg" style="transform-origin:44px 82px;">
-                            <line x1="44" y1="82"
-                                x2="34" y2="112"
-                                stroke="white"
-                                stroke-width="5"
-                                stroke-linecap="round"/>
-                            <line x1="34" y1="112"
-                                x2="26" y2="102"
-                                stroke="white"
-                                stroke-width="5"
-                                stroke-linecap="round"/>
-
+                        <g class="dance-left-leg" style="transform-origin: 44px 82px;">
+                            <line x1="44" y1="82" x2="34" y2="112" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="34" y1="112" x2="26" y2="102" stroke="white" stroke-width="5" stroke-linecap="round"/>
                             <line x1="26" y1="102" x2="12" y2="104" stroke="white" stroke-width="5" stroke-linecap="round"/>
                             <line x1="12" y1="104" x2="7" y2="106" stroke="white" stroke-width="3" stroke-linecap="round"/>
                             <line x1="14" y1="103" x2="9" y2="108" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                         </g>
 
-                        <g class="dance-right-leg" style="transform-origin:56px 82px;">
-                            <line x1="56" y1="82"
-                                x2="66" y2="112"
-                                stroke="white"
-                                stroke-width="5"
-                                stroke-linecap="round"/>
-                            <line x1="66" y1="112"
-                                x2="74" y2="102"
-                                stroke="white"
-                                stroke-width="5"
-                                stroke-linecap="round"/>
-
+                        <g class="dance-right-leg" style="transform-origin: 56px 82px;">
+                            <line x1="56" y1="82" x2="66" y2="112" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="66" y1="112" x2="74" y2="102" stroke="white" stroke-width="5" stroke-linecap="round"/>
                             <line x1="74" y1="102" x2="88" y2="104" stroke="white" stroke-width="5" stroke-linecap="round"/>
                             <line x1="88" y1="104" x2="93" y2="106" stroke="white" stroke-width="3" stroke-linecap="round"/>
                             <line x1="86" y1="103" x2="91" y2="108" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
                         </g>
-
                     </svg>
 
                     <div id="loading-text" class="skeleton-theme-text"
-                        style="
-                            margin-top:10px;
-                            font-size:.9rem;
-                            font-weight:bold;
-                        ">
+                         style="
+                            margin-top: 10px;
+                            font-size: .9rem;
+                            font-weight: bold;
+                         ">
                         💀 Waking up Render server...
                     </div>
-
                 </div>
-
             </div>
-
         </div>
     `;
+
+    // 夜间模式兼容：如果当前是 dark-mode，给 overlay 加上对应 class
+    if (document.documentElement.classList.contains('dark-mode') || 
+        document.body.classList.contains('dark-mode')) {
+        const overlay = postList.querySelector('.skeleton-theme-overlay');
+        if (overlay) overlay.classList.add('dark-mode');
+    }
 
     const messages = [
         "💀 正在唤醒服务器...",
@@ -167,20 +128,53 @@ function showSkeleton() {
 
     let i = 0;
 
-    clearInterval(window.loadingMsgInterval);
-
     window.loadingMsgInterval = setInterval(() => {
         const el = document.getElementById('loading-text');
-
         if (el) {
             el.textContent = messages[i % messages.length];
             i++;
         }
     }, 3000);
+
+    // 超时保护：最长跳 12 秒，之后强制停止动画（防止一直发热）
+    clearTimeout(window.skeletonTimeout);
+    window.skeletonTimeout = setTimeout(() => {
+        const overlay = document.querySelector('.skeleton-theme-overlay');
+        if (overlay) {
+            // 强制停止所有动画
+            overlay.querySelectorAll('[class*="dance-"]').forEach(el => {
+                el.style.animation = 'none';
+            });
+            const shimmer = overlay.querySelector('.shimmer-wrapper');
+            if (shimmer) shimmer.style.animation = 'none';
+        }
+        clearInterval(window.loadingMsgInterval);
+        window.loadingMsgInterval = null;
+    }, 12000);
 }
 
 function hideSkeleton() {
-    // Skeleton is replaced when posts load — no action needed
+    // 清理定时器
+    clearInterval(window.loadingMsgInterval);
+    window.loadingMsgInterval = null;
+
+    clearTimeout(window.skeletonTimeout);
+    window.skeletonTimeout = null;
+
+    // 强制停止动画（即使后面会覆盖 innerHTML，也先停掉更保险）
+    const overlay = document.querySelector('.skeleton-theme-overlay');
+    if (overlay) {
+        overlay.querySelectorAll('[class*="dance-"]').forEach(el => {
+            el.style.animation = 'none';
+        });
+
+        const shimmer = overlay.querySelector('.shimmer-wrapper');
+        if (shimmer) {
+            shimmer.style.animation = 'none';
+        }
+    }
+
+    // 注意：实际内容会通过 postList.innerHTML = ... 覆盖，这里只负责清理资源
 }
 
 window.showSkeleton = showSkeleton;
