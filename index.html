@@ -1069,9 +1069,13 @@ document.getElementById('market-modal').addEventListener('click', function(e) {
 });
 
 let isFallbackLoaded = false;
+const TWELVE_API_KEY = '493ab34d589e4093bd422633ecdfb479';
+const CACHE_KEY = 'twelve_market_data';
+const CACHE_TIME_KEY = 'twelve_market_time';
+const EXPIRE_TIME = 6 * 60 * 60 * 1000; // 6 小时缓存 (单位: 毫秒)
 
-// 国内网络极简无广告原生渲染降级方案
-function switchToDomesticSource() {
+// 降级方案：Twelve Data + 6小时 localStorage 智能缓存
+async function switchToDomesticSource() {
     if (isFallbackLoaded) return;
     isFallbackLoaded = true;
 
@@ -1080,7 +1084,7 @@ function switchToDomesticSource() {
 
     container.innerHTML = `
         <div style="font-size: 0.75rem; color: #fbbf24; text-align: center; margin-bottom: 8px;">
-            ⚡ 已切换至国内数据源 (极简无广告)
+            ⚡ 已切换至 Twelve Data 数据源 (6小时自动更新)
         </div>
         <div id="domestic-market-list" style="
             display: flex; 
@@ -1094,133 +1098,103 @@ function switchToDomesticSource() {
         </div>
     `;
 
-    // 引入国内新浪行情 API (新增日欧股市指数 + 黄金原油，抹去 Referer 绕过防盗链)
-    const script = document.createElement('script');
-    script.referrerPolicy = 'no-referrer';
-    script.src = 'https://hq.sinajs.cn/list=s_sh000001,s_hkHSI,gb_$inx,gb_$ixic,b_N225,b_DAX,hf_XAU,hf_CL';
-    
-    script.onload = renderDomesticMarketData;
-    script.onerror = loadTencentBackupData;
+    const items = [
+        { name: '🇨🇳 上证指数', symbol: '000001' },
+        { name: '🇭🇰 恒生指数', symbol: 'HSI' },
+        { name: '🇺🇸 标普500', symbol: 'SPX' },
+        { name: '🇺🇸 纳斯达克', symbol: 'IXIC' },
+        { name: '🇯🇵 日经225', symbol: 'N225' },
+        { name: '🇩🇪 德国DAX', symbol: 'GDAXI' },
+        { name: '🏆 现货黄金', symbol: 'XAU/USD' },
+        { name: '🛢️ WTI 原油', symbol: 'WTI/USD' }
+    ];
 
-    document.body.appendChild(script);
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+    const now = Date.now();
+
+    let data = null;
+
+    // 校验是否有缓存且在 6 小时有效期内
+    if (cachedData && cachedTime && (now - parseInt(cachedTime) < EXPIRE_TIME)) {
+        try {
+            data = JSON.parse(cachedData);
+        } catch(e) {
+            data = null;
+        }
+    }
+
+    // 如果没有有效缓存，才发起 API 请求
+    if (!data) {
+        const symbolsQuery = items.map(i => i.symbol).join(',');
+        const apiUrl = `https://api.twelvedata.com/quote?symbol=${symbolsQuery}&apikey=${TWELVE_API_KEY}`;
+
+        try {
+            const response = await fetch(apiUrl);
+            data = await response.json();
+
+            // 请求成功后写入本地缓存并记录时间
+            if (data && !data.code) {
+                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                localStorage.setItem(CACHE_TIME_KEY, now.toString());
+            }
+        } catch (error) {
+            console.error('Twelve Data 请求失败:', error);
+        }
+    }
+
+    renderMarketList(data, items);
 }
 
-// 解析新浪 API 数据并渲染
-function renderDomesticMarketData() {
+// 渲染列表函数
+function renderMarketList(data, items) {
     const listEl = document.getElementById('domestic-market-list');
     if (!listEl) return;
 
-    const items = [
-        { name: '🇨🇳 上证指数', key: 'hq_str_s_sh000001', type: 'cn' },
-        { name: '🇭🇰 恒生指数', key: 'hq_str_s_hkHSI', type: 'cn' },
-        { name: '🇺🇸 标普500', key: 'hq_str_gb_$inx', type: 'gb' },
-        { name: '🇺🇸 纳斯达克', key: 'hq_str_gb_$ixic', type: 'gb' },
-        { name: '🇯🇵 日经225', key: 'hq_str_b_N225', type: 'cn' },
-        { name: '🇩🇪 德国DAX', key: 'hq_str_b_DAX', type: 'cn' },
-        { name: '🏆 现货黄金', key: 'hq_str_hf_XAU', type: 'hf' },
-        { name: '🛢️ WTI 原油', key: 'hq_str_hf_CL', type: 'hf' }
-    ];
+    if (!data) {
+        listEl.innerHTML = '<div style="color:#ef4444; text-align:center;">行情数据获取失败</div>';
+        return;
+    }
 
     let html = '';
 
     items.forEach(item => {
-        const raw = window[item.key];
-        if (!raw) return;
+        const itemData = data[item.symbol] || (data.symbol === item.symbol ? data : null);
+        if (!itemData || itemData.status === 'error' || !itemData.close) return;
 
-        const parts = raw.split(',');
-        let price = '0.00', change = '0.00', rate = '0.00%';
+        const price = parseFloat(itemData.close).toFixed(2);
+        const change = parseFloat(itemData.change || 0).toFixed(2);
+        const percentChange = parseFloat(itemData.percent_change || 0).toFixed(2);
 
-        try {
-            if (item.type === 'cn') { // 中/港/日/欧指数
-                price = parseFloat(parts[1]).toFixed(2);
-                change = parseFloat(parts[2]).toFixed(2);
-                rate = parseFloat(parts[3]).toFixed(2) + '%';
-            } else if (item.type === 'gb') { // 美股指数
-                price = parseFloat(parts[1]).toFixed(2);
-                change = parseFloat(parts[4]).toFixed(2);
-                rate = parseFloat(parts[2]).toFixed(2) + '%';
-            } else if (item.type === 'hf') { // 期货/黄金/原油
-                price = parseFloat(parts[0]).toFixed(2);
-                rate = parseFloat(parts[1]).toFixed(2) + '%';
-                change = (price * (parseFloat(rate) / 100)).toFixed(2);
-            }
+        const isUp = parseFloat(percentChange) >= 0;
+        const color = isUp ? '#10b981' : '#ef4444'; // 绿涨红跌 (美式)
+        const sign = isUp ? '+' : '';
 
-            const isUp = parseFloat(rate) >= 0;
-            const color = isUp ? '#10b981' : '#ef4444'; //红跌绿涨
-            const sign = isUp ? '+' : '';
-
-            html += `
-                <div style="
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    background: rgba(255, 255, 255, 0.08);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    border-radius: 8px;
-                    padding: 10px 12px;
-                ">
-                    <span style="color: #fff; font-weight: 500; font-size: 0.88rem;">${item.name}</span>
-                    <div style="text-align: right;">
-                        <div style="color: #fff; font-weight: bold; font-size: 0.9rem;">${price}</div>
-                        <div style="color: ${color}; font-size: 0.75rem; font-weight: 500;">
-                            ${sign}${change} (${sign}${rate})
-                        </div>
+        html += `
+            <div style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 10px 12px;
+            ">
+                <span style="color: #fff; font-weight: 500; font-size: 0.88rem;">${item.name}</span>
+                <div style="text-align: right;">
+                    <div style="color: #fff; font-weight: bold; font-size: 0.9rem;">${price}</div>
+                    <div style="color: ${color}; font-size: 0.75rem; font-weight: 500;">
+                        ${sign}${change} (${sign}${percentChange}%)
                     </div>
                 </div>
-            `;
-        } catch(e) {}
+            </div>
+        `;
     });
 
     listEl.innerHTML = html || '<div style="color:#aaa; text-align:center;">暂无最新行情数据</div>';
 }
 
-// 腾讯备用接口（双保险降级）
-function loadTencentBackupData() {
-    const script = document.createElement('script');
-    script.referrerPolicy = 'no-referrer';
-    script.src = 'https://qt.gtimg.cn/q=s_sh000001,s_r_hkHSI,usIXIC,usINX,usN225';
-    script.onload = () => {
-        const listEl = document.getElementById('domestic-market-list');
-        if (!listEl) return;
-        
-        let html = '';
-        const tencentItems = [
-            { name: '🇨🇳 上证指数', key: 'v_s_sh000001' },
-            { name: '🇭🇰 恒生指数', key: 'v_s_r_hkHSI' },
-            { name: '🇺🇸 标普500', key: 'v_usINX' },
-            { name: '🇺🇸 纳斯达克', key: 'v_usIXIC' },
-            { name: '🇯🇵 日经225', key: 'v_usN225' }
-        ];
-
-        tencentItems.forEach(item => {
-            const raw = window[item.key];
-            if (!raw) return;
-            const parts = raw.split('~');
-            if (parts.length > 5) {
-                const price = parseFloat(parts[3]).toFixed(2);
-                const change = parseFloat(parts[4]).toFixed(2);
-                const rate = parseFloat(parts[5]).toFixed(2) + '%';
-                const isUp = parseFloat(rate) >= 0;
-                const color = isUp ? '#10b981' : '#ef4444';
-                const sign = isUp ? '+' : '';
-
-                html += `
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px;">
-                        <span style="color: #fff; font-size: 0.88rem;">${item.name}</span>
-                        <div style="text-align: right;">
-                            <div style="color: #fff; font-weight: bold; font-size: 0.9rem;">${price}</div>
-                            <div style="color: ${color}; font-size: 0.75rem;">${sign}${change} (${sign}${rate})</div>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-        listEl.innerHTML = html || '<div style="color:#aaa; text-align:center;">数据获取失败</div>';
-    };
-    document.body.appendChild(script);
-}
-
-// 自动检测网络：如果 3.5 秒内 TradingView 被 GFW 阻断，自动切换到国内无广告原生卡片
+// 自动检测网络：如果 3.5 秒内 TradingView 被 GFW 阻断，自动触发直连降级渲染
 setTimeout(() => {
     const tvIframe = document.querySelector('.tradingview-widget-container iframe');
     if (!tvIframe) {
