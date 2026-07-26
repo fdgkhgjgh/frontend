@@ -993,14 +993,8 @@ button[type="submit"]:disabled {
 }
 
 #create-post-btn {
-    animation: shine 2s infinite;
-}
-
-@keyframes shine {
-    0%   { box-shadow: 0 0 6px rgba(79, 70, 229, 0.6); }
-    50%  { box-shadow: 0 0 16px rgba(79, 70, 229, 1), 0 0 30px rgba(79, 70, 229, 0.4); }
-    100% { box-shadow: 0 0 6px rgba(79, 70, 229, 0.6); }
-}
+    animation: none !important;
+    }
 
 /* Post detail page text visibility */
 
