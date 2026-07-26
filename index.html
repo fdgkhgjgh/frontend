@@ -1146,7 +1146,7 @@ function renderDomesticMarketData() {
             }
 
             const isUp = parseFloat(rate) >= 0;
-            const color = isUp ? '#ef4444' : '#10b981'; // 红涨绿跌
+            const color = isUp ? '#10b981' : '#ef4444'; //红跌绿涨
             const sign = isUp ? '+' : '';
 
             html += `
@@ -1201,7 +1201,7 @@ function loadTencentBackupData() {
                 const change = parseFloat(parts[4]).toFixed(2);
                 const rate = parseFloat(parts[5]).toFixed(2) + '%';
                 const isUp = parseFloat(rate) >= 0;
-                const color = isUp ? '#ef4444' : '#10b981';
+                const color = isUp ? '#10b981' : '#ef4444';
                 const sign = isUp ? '+' : '';
 
                 html += `
