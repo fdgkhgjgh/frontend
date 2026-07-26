@@ -432,8 +432,8 @@ ul#comments-list {
 #pagination-container {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 /* Basic button styles */
