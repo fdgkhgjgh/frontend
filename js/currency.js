@@ -25,14 +25,14 @@ const CURRENCY_NAMES = {
     'UAH': '乌克兰格里夫纳 🇺🇦', 'BYN': '白俄罗斯卢布 🇧🇾', 'MDL': '摩尔多瓦列伊 🇲🇩',
     'RON': '罗马尼亚列伊 🇷🇴', 'BGN': '保加利亚列弗 🇧🇬', 'HRK': '克罗地亚库纳 🇭🇷',
     'RSD': '塞尔维亚第纳尔 🇷🇸', 'BAM': '波黑可兑换马克 🇧🇦', 'MKD': '北马其顿代纳尔 🇲🇰',
-    'ALL': '阿尔巴尼亚列克 🇦🇱', 'ISK': '冰岛克朗 🇮慢', 'QAR': '卡塔尔里亚尔 🇶🇦',
+    'ALL': '阿尔巴尼亚列克 🇦🇱', 'ISK': '冰岛克朗 🇮🇸', 'QAR': '卡塔尔里亚尔 🇶🇦',
     'KWD': '科威特第纳尔 🇰🇼', 'BHD': '巴林第纳尔 🇧🇭', 'OMR': '阿曼里亚尔 🇴🇲',
     'JOD': '约旦第纳尔 🇯🇴', 'LBP': '黎巴嫩镑 🇱🇧', 'IQD': '伊拉克第纳尔 🇮🇶',
     'IRR': '伊朗里亚尔 🇮🇷', 'AFN': '阿富汗尼 🇦🇫', 'GTQ': '危地马拉格查尔 🇬🇹',
     'HNL': '洪都拉斯伦皮拉 🇭🇳', 'NIO': '尼加拉瓜科多巴 🇳🇮', 'CRC': '哥斯达黎加科朗 🇨🇷',
     'PAB': '巴拿马巴波亚 🇵🇦', 'DOP': '多米尼加比索 🇩🇴', 'CUP': '古巴比索 🇨🇺',
     'JMD': '牙买加元 🇯🇲', 'TTD': '特立尼达元 🇹🇹', 'BBD': '巴巴多斯元 🇧🇧',
-    'BSD': '巴哈马元 🇧幕', 'HTG': '海地古德 🇭🇹', 'UYU': '乌拉圭比索 🇺🇾',
+    'BSD': '巴哈马元 🇧🇸', 'HTG': '海地古德 🇭🇹', 'UYU': '乌拉圭比索 🇺🇾',
     'PYG': '巴拉圭瓜拉尼 🇵🇾', 'BOB': '玻利维亚诺 🇧🇴', 'VES': '委内瑞拉玻利瓦尔 🇻🇪',
     'GYD': '圭亚那元 🇬🇾', 'SRD': '苏里南元 🇸🇷', 'AWG': '阿鲁巴弗罗林 🇦🇼',
     'TZS': '坦桑尼亚先令 🇹🇿', 'UGX': '乌干达先令 🇺🇬', 'RWF': '卢旺达法郎 🇷🇼',
@@ -52,7 +52,7 @@ function getCachedRates() {
     const cache = localStorage.getItem('er_rates_cache');
     const timestamp = localStorage.getItem('er_rates_timestamp');
     
-    // 24小时 = 86400000 毫秒（免费版API每天仅更新一次，因此设为24小时最合理）
+    // 24小时内优先使用本地缓存
     if (cache && timestamp && (Date.now() - parseInt(timestamp) < 86400000)) {
         return JSON.parse(cache);
     }
@@ -60,16 +60,13 @@ function getCachedRates() {
 }
 
 async function fetchRates() {
-    // 优先读取本地 24 小时内的缓存
     const cached = getCachedRates();
     if (cached) return cached;
 
     try {
-        // 固定的基准货币设为 USD，以此减少多余的 API 请求
         const response = await fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`);
         const data = await response.json();
         if (data.result === 'success') {
-            // 存入 localStorage
             localStorage.setItem('er_rates_cache', JSON.stringify(data.conversion_rates));
             localStorage.setItem('er_rates_timestamp', Date.now().toString());
             return data.conversion_rates;
@@ -85,7 +82,6 @@ async function initCurrencyConverter() {
     const toSelect = document.getElementById('currency-to');
     if (!fromSelect || !toSelect) return;
 
-    // 获取汇率数据（首次加载或过期时才会触发真实 Fetch）
     const rates = await fetchRates();
     if (!rates) {
         document.getElementById('currency-result').textContent = '汇率加载失败';
@@ -112,12 +108,18 @@ async function initCurrencyConverter() {
 }
 
 async function convertCurrency() {
-    const amount = parseFloat(document.getElementById('currency-amount').value);
-    const from = document.getElementById('currency-from').value;
-    const to = document.getElementById('currency-to').value;
+    const amountInput = document.getElementById('currency-amount');
+    const fromSelect = document.getElementById('currency-from');
+    const toSelect = document.getElementById('currency-to');
     const resultEl = document.getElementById('currency-result');
 
-    if (!amount || isNaN(amount) || amount < 0) {
+    if (!amountInput || !fromSelect || !toSelect || !resultEl) return;
+
+    const amount = parseFloat(amountInput.value);
+    const from = fromSelect.value;
+    const to = toSelect.value;
+
+    if (isNaN(amount) || amount < 0) {
         resultEl.textContent = '请输入有效金额';
         return;
     }
@@ -127,14 +129,10 @@ async function convertCurrency() {
         return;
     }
 
-    resultEl.textContent = '换算中...';
-
     try {
-        // 同样优先走本地缓存
         const rates = await fetchRates();
         if (!rates) throw new Error('fetch failed');
 
-        // 核心数学转换：利用本地已有的 USD 汇率表进行交叉相除
         const rateFromUSD = rates[from]; 
         const rateToUSD = rates[to];     
 
@@ -156,27 +154,31 @@ window.convertCurrency = convertCurrency;
 document.addEventListener('DOMContentLoaded', () => {
     initCurrencyConverter();
 
-    // 1. 监听输入框失去焦点或回车事件
     const amountInput = document.getElementById('currency-amount');
+    const fromSelect = document.getElementById('currency-from');
+    const toSelect = document.getElementById('currency-to');
+    const swapBtn = document.getElementById('currency-swap');
+
+    // 1. 监听数字输入：使用 input 事件，边敲字边自动实时计算
     if (amountInput) {
-        amountInput.addEventListener('change', convertCurrency);
+        amountInput.addEventListener('input', convertCurrency);
     }
 
-    // 2. 新增：监听倒转互换按钮的点击事件
-    // 假设你的互换按钮 HTML 带有 id="currency-swap"
-    const swapBtn = document.getElementById('currency-swap');
+    // 2. 监听货币选择：选择新货币自动计算
+    if (fromSelect) {
+        fromSelect.addEventListener('change', convertCurrency);
+    }
+    if (toSelect) {
+        toSelect.addEventListener('change', convertCurrency);
+    }
+
+    // 3. 监听倒转互换按钮：点击互换自动计算
     if (swapBtn) {
         swapBtn.addEventListener('click', () => {
-            const fromSelect = document.getElementById('currency-from');
-            const toSelect = document.getElementById('currency-to');
-            
             if (fromSelect && toSelect) {
-                // 核心逻辑：用一个临时变量交换两边的 value
                 const temp = fromSelect.value;
                 fromSelect.value = toSelect.value;
                 toSelect.value = temp;
-                
-                // 交换完毕后，立刻调用一次换算函数更新结果
                 convertCurrency();
             }
         });
