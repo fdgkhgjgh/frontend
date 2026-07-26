@@ -1068,30 +1068,105 @@ document.getElementById('market-modal').addEventListener('click', function(e) {
     }
 });
 
-// 切换至国内直连数据源（新浪财经极简面板）
 let isFallbackLoaded = false;
+
+// 国内网络极简无广告原生渲染降级方案
 function switchToDomesticSource() {
     if (isFallbackLoaded) return;
     isFallbackLoaded = true;
 
     const container = document.getElementById('tv-widget-box');
-    if (container) {
-        container.innerHTML = `
-            <div style="font-size: 0.75rem; color: #fbbf24; text-align: center; padding-bottom: 4px;">
-                ⚠️ 已自动切换至国内直连数据源
-            </div>
-            <iframe src="https://finance.sina.com.cn/pad/center/index.shtml" style="
-                width: 100%;
-                flex: 1;
-                border: none;
-                border-radius: 8px;
-                background: #fff;
-            "></iframe>
-        `;
-    }
+    if (!container) return;
+
+    container.innerHTML = `
+        <div style="font-size: 0.75rem; color: #fbbf24; text-align: center; margin-bottom: 8px;">
+            ⚡ 已切换至国内免翻墙数据源 (极简无广告)
+        </div>
+        <div id="domestic-market-list" style="
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            overflow-y: auto; 
+            flex: 1; 
+            padding-right: 4px;
+        ">
+            <div style="color: #aaa; text-align: center; padding: 30px 0; font-size: 0.85rem;">实时行情加载中...</div>
+        </div>
+    `;
+
+    // 引入国内新浪行情 API 脚本
+    const script = document.createElement('script');
+    script.src = 'https://hq.sinajs.cn/list=s_sh000001,s_hkHSI,gb_$inx,gb_$ixic,hf_XAU,hf_CL';
+    script.onload = renderDomesticMarketData;
+    document.body.appendChild(script);
 }
 
-// 自动检测网络：如果 3.5 秒内 TradingView 脚本被防火墙拦截未能渲染出 iframe，则触发无缝降级
+// 解析 API 数据并生成与全站风格统一的暗黑卡片
+function renderDomesticMarketData() {
+    const listEl = document.getElementById('domestic-market-list');
+    if (!listEl) return;
+
+    const items = [
+        { name: '🇨🇳 上证指数', key: 'hq_str_s_sh000001', type: 'cn' },
+        { name: '🇭🇰 恒生指数', key: 'hq_str_s_hkHSI', type: 'cn' },
+        { name: '🇺🇸 标普500', key: 'hq_str_gb_$inx', type: 'gb' },
+        { name: '🇺🇸 纳斯达克', key: 'hq_str_gb_$ixic', type: 'gb' },
+        { name: '🏆 现货黄金', key: 'hq_str_hf_XAU', type: 'hf' },
+        { name: '🛢️ WTI 原油', key: 'hq_str_hf_CL', type: 'hf' }
+    ];
+
+    let html = '';
+
+    items.forEach(item => {
+        const raw = window[item.key];
+        if (!raw) return;
+
+        const parts = raw.split(',');
+        let price = '0.00', change = '0.00', rate = '0.00%';
+
+        if (item.type === 'cn') { // 简易国内指数
+            price = parseFloat(parts[1]).toFixed(2);
+            change = parseFloat(parts[2]).toFixed(2);
+            rate = parseFloat(parts[3]).toFixed(2) + '%';
+        } else if (item.type === 'gb') { // 美股指数
+            price = parseFloat(parts[1]).toFixed(2);
+            change = parseFloat(parts[4]).toFixed(2);
+            rate = parseFloat(parts[2]).toFixed(2) + '%';
+        } else if (item.type === 'hf') { // 期货/大宗
+            price = parseFloat(parts[0]).toFixed(2);
+            rate = parseFloat(parts[1]).toFixed(2) + '%';
+            change = (price * (parseFloat(rate) / 100)).toFixed(2);
+        }
+
+        const isUp = parseFloat(rate) >= 0;
+        const color = isUp ? '#ef4444' : '#10b981'; // 红涨绿跌 (国内习惯)
+        const sign = isUp ? '+' : '';
+
+        html += `
+            <div style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 10px 12px;
+            ">
+                <span style="color: #fff; font-weight: 500; font-size: 0.88rem;">${item.name}</span>
+                <div style="text-align: right;">
+                    <div style="color: #fff; font-weight: bold; font-size: 0.9rem;">${price}</div>
+                    <div style="color: ${color}; font-size: 0.75rem; font-weight: 500;">
+                        ${sign}${change} (${sign}${rate})
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    listEl.innerHTML = html || '<div style="color:#aaa; text-align:center;">暂无最新行情数据</div>';
+}
+
+// 自动检测网络：如果 3.5 秒内 TradingView 被 GFW 阻断，自动切换到无广告原生卡片
 setTimeout(() => {
     const tvIframe = document.querySelector('.tradingview-widget-container iframe');
     if (!tvIframe) {
