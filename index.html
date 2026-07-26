@@ -1080,7 +1080,7 @@ function switchToDomesticSource() {
 
     container.innerHTML = `
         <div style="font-size: 0.75rem; color: #fbbf24; text-align: center; margin-bottom: 8px;">
-            ⚡ 已切换至国内数据源 (极简无广告)
+            ⚡ 已切换至国内免翻墙数据源 (极简无广告)
         </div>
         <div id="domestic-market-list" style="
             display: flex; 
@@ -1094,14 +1094,12 @@ function switchToDomesticSource() {
         </div>
     `;
 
-    // 引入国内新浪行情 API (必须加入 no-referrer 破解防盗链拦截)
+    // 引入国内新浪行情 API (新增日欧股市指数 + 黄金原油，抹去 Referer 绕过防盗链)
     const script = document.createElement('script');
-    script.referrerPolicy = 'no-referrer'; // 关键：抹去域名来源 Header
-    script.src = 'https://hq.sinajs.cn/list=s_sh000001,s_hkHSI,gb_$inx,gb_$ixic,hf_XAU,hf_CL';
+    script.referrerPolicy = 'no-referrer';
+    script.src = 'https://hq.sinajs.cn/list=s_sh000001,s_hkHSI,gb_$inx,gb_$ixic,int_nikkei,int_dax,hf_XAU,hf_CL';
     
     script.onload = renderDomesticMarketData;
-    
-    // 如果新浪接口依然失败，自动降级切换至备用接口（腾讯行情）
     script.onerror = loadTencentBackupData;
 
     document.body.appendChild(script);
@@ -1117,6 +1115,8 @@ function renderDomesticMarketData() {
         { name: '🇭🇰 恒生指数', key: 'hq_str_s_hkHSI', type: 'cn' },
         { name: '🇺🇸 标普500', key: 'hq_str_gb_$inx', type: 'gb' },
         { name: '🇺🇸 纳斯达克', key: 'hq_str_gb_$ixic', type: 'gb' },
+        { name: '🇯🇵 日经225', key: 'hq_str_int_nikkei', type: 'cn' },
+        { name: '🇩🇪 德国DAX', key: 'hq_str_int_dax', type: 'cn' },
         { name: '🏆 现货黄金', key: 'hq_str_hf_XAU', type: 'hf' },
         { name: '🛢️ WTI 原油', key: 'hq_str_hf_CL', type: 'hf' }
     ];
@@ -1131,7 +1131,7 @@ function renderDomesticMarketData() {
         let price = '0.00', change = '0.00', rate = '0.00%';
 
         try {
-            if (item.type === 'cn') { // 国内/港股指数
+            if (item.type === 'cn') { // 中/港/日/欧指数
                 price = parseFloat(parts[1]).toFixed(2);
                 change = parseFloat(parts[2]).toFixed(2);
                 rate = parseFloat(parts[3]).toFixed(2) + '%';
@@ -1139,7 +1139,7 @@ function renderDomesticMarketData() {
                 price = parseFloat(parts[1]).toFixed(2);
                 change = parseFloat(parts[4]).toFixed(2);
                 rate = parseFloat(parts[2]).toFixed(2) + '%';
-            } else if (item.type === 'hf') { // 期货/大宗
+            } else if (item.type === 'hf') { // 期货/黄金/原油
                 price = parseFloat(parts[0]).toFixed(2);
                 rate = parseFloat(parts[1]).toFixed(2) + '%';
                 change = (price * (parseFloat(rate) / 100)).toFixed(2);
@@ -1174,11 +1174,11 @@ function renderDomesticMarketData() {
     listEl.innerHTML = html || '<div style="color:#aaa; text-align:center;">暂无最新行情数据</div>';
 }
 
-// 腾讯备用接口（双保险）
+// 腾讯备用接口（双保险降级）
 function loadTencentBackupData() {
     const script = document.createElement('script');
     script.referrerPolicy = 'no-referrer';
-    script.src = 'https://qt.gtimg.cn/q=s_sh000001,s_r_hkHSI,usIXIC,usINX';
+    script.src = 'https://qt.gtimg.cn/q=s_sh000001,s_r_hkHSI,usIXIC,usINX,usN225';
     script.onload = () => {
         const listEl = document.getElementById('domestic-market-list');
         if (!listEl) return;
@@ -1187,8 +1187,9 @@ function loadTencentBackupData() {
         const tencentItems = [
             { name: '🇨🇳 上证指数', key: 'v_s_sh000001' },
             { name: '🇭🇰 恒生指数', key: 'v_s_r_hkHSI' },
+            { name: '🇺🇸 标普500', key: 'v_usINX' },
             { name: '🇺🇸 纳斯达克', key: 'v_usIXIC' },
-            { name: '🇺🇸 标普500', key: 'v_usINX' }
+            { name: '🇯🇵 日经225', key: 'v_usN225' }
         ];
 
         tencentItems.forEach(item => {
@@ -1219,7 +1220,7 @@ function loadTencentBackupData() {
     document.body.appendChild(script);
 }
 
-// 自动检测网络：如果 3.5 秒内 TradingView 被 GFW 阻断，自动切换到无广告原生卡片
+// 自动检测网络：如果 3.5 秒内 TradingView 被 GFW 阻断，自动切换到国内无广告原生卡片
 setTimeout(() => {
     const tvIframe = document.querySelector('.tradingview-widget-container iframe');
     if (!tvIframe) {
