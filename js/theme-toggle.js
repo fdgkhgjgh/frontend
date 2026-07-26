@@ -49,7 +49,7 @@ function createStars() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const stars = Array.from({ length: 150 }, () => ({
+    const stars = Array.from({ length: 60 }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         r: Math.random() * 1.5 + 0.5,
