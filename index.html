@@ -589,55 +589,75 @@
 
 
 
-    <!-- Currency Converter -->
+    <!-- Currency Converter (手机端双行极致压缩版) -->
 <div id="currency-converter" style="
     margin: 8px 8px 0 8px;
     background: rgba(255,255,255,0.15);
     border-radius: 10px;
-    padding: 10px 12px;
+    padding: 8px 10px;
     backdrop-filter: blur(4px);
 ">
-    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+    <!-- 第一行：输入框 + 货币选择 + 互换，强制单行排布 -->
+    <div style="display:flex; align-items:center; gap:4px; flex-wrap:nowrap;">
+        <!-- 金额输入框（压缩宽度，文字居中） -->
         <input id="currency-amount" type="number" value="1" min="0" style="
-            width: 70px;
-            padding: 5px 8px;
+            width: 48px;
+            padding: 5px 4px;
             border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 8px;
+            border-radius: 6px;
             background: rgba(255,255,255,0.2);
             color: inherit;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             outline: none;
+            text-align: center;
+            flex-shrink: 0;
         "/>
+
+        <!-- 源货币（自动伸展占据可用空间） -->
         <select id="currency-from" style="
-            padding: 5px 8px;
+            flex: 1;
+            min-width: 0;
+            padding: 5px 2px;
             border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 8px;
+            border-radius: 6px;
             background: rgba(255,255,255,0.2);
             color: inherit;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             outline: none;
             cursor: pointer;
         "></select>
-        
-        <span id="currency-swap" style="font-size:1rem; cursor: pointer; padding: 0 4px; user-select: none;">⇄</span>
-        
+
+        <!-- 倒转按钮 -->
+        <span id="currency-swap" style="
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 0 2px;
+            user-select: none;
+            flex-shrink: 0;
+        ">⇄</span>
+
+        <!-- 目标货币 -->
         <select id="currency-to" style="
-            padding: 5px 8px;
+            flex: 1;
+            min-width: 0;
+            padding: 5px 2px;
             border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 8px;
+            border-radius: 6px;
             background: rgba(255,255,255,0.2);
             color: inherit;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             outline: none;
             cursor: pointer;
         "></select>
     </div>
+
+    <!-- 第二行：换算结果居中显示 -->
     <div id="currency-result" style="
         margin-top: 6px;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         font-weight: bold;
         color: #fff;
-        min-height: 20px;
+        text-align: center;
     "></div>
 </div>
 <script src="js/currency.js"></script>
