@@ -1070,9 +1070,11 @@ document.getElementById('market-modal').addEventListener('click', function(e) {
 
 let isFallbackLoaded = false;
 const TWELVE_API_KEY = '493ab34d589e4093bd422633ecdfb479';
-const CACHE_KEY = 'twelve_market_data';
-const CACHE_TIME_KEY = 'twelve_market_time';
-const EXPIRE_TIME = 6 * 60 * 60 * 1000; // 6 小时缓存 (单位: 毫秒)
+
+// 更新 Key 版本号以强制清空本地旧缓存
+const CACHE_KEY = 'twelve_market_data_v2';
+const CACHE_TIME_KEY = 'twelve_market_time_v2';
+const EXPIRE_TIME = 6 * 60 * 60 * 1000; // 6 小时缓存
 
 // 降级方案：Twelve Data + 6小时 localStorage 智能缓存
 async function switchToDomesticSource() {
@@ -1084,7 +1086,7 @@ async function switchToDomesticSource() {
 
     container.innerHTML = `
         <div style="font-size: 0.75rem; color: #fbbf24; text-align: center; margin-bottom: 8px;">
-            ⚡ 已切换至 Twelve Data 数据源 (6小时自动更新)
+            ⚡ 已切换至 Twelve Data 直连行情 (6小时缓存)
         </div>
         <div id="domestic-market-list" style="
             display: flex; 
@@ -1098,15 +1100,16 @@ async function switchToDomesticSource() {
         </div>
     `;
 
+    // 替换为 Twelve Data 免费版完全开放且支持的 ETF/商品代号
     const items = [
         { name: '🇨🇳 上证指数', symbol: '000001' },
-        { name: '🇭🇰 恒生指数', symbol: 'HSI' },
-        { name: '🇺🇸 标普500', symbol: 'SPX' },
-        { name: '🇺🇸 纳斯达克', symbol: 'IXIC' },
-        { name: '🇯🇵 日经225', symbol: 'N225' },
-        { name: '🇩🇪 德国DAX', symbol: 'GDAXI' },
+        { name: '🇭🇰 恒生 ETF', symbol: 'EWH' },
+        { name: '🇺🇸 标普500 (SPY)', symbol: 'SPY' },
+        { name: '🇺🇸 纳斯达克 (QQQ)', symbol: 'QQQ' },
+        { name: '🇯🇵 日经 ETF', symbol: 'EWJ' },
+        { name: '🇩🇪 德国 DAX ETF', symbol: 'EWG' },
         { name: '🏆 现货黄金', symbol: 'XAU/USD' },
-        { name: '🛢️ WTI 原油', symbol: 'WTI/USD' }
+        { name: '🛢️ WTI 原油', symbol: 'USO' }
     ];
 
     const cachedData = localStorage.getItem(CACHE_KEY);
@@ -1126,7 +1129,7 @@ async function switchToDomesticSource() {
 
     // 如果没有有效缓存，才发起 API 请求
     if (!data) {
-        const symbolsQuery = items.map(i => i.symbol).join(',');
+        const symbolsQuery = items.map(i => encodeURIComponent(i.symbol)).join(',');
         const apiUrl = `https://api.twelvedata.com/quote?symbol=${symbolsQuery}&apikey=${TWELVE_API_KEY}`;
 
         try {
