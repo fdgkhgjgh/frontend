@@ -964,14 +964,12 @@ if (location.search.includes('debug=true')) {
     document.body.appendChild(script);
 }
 </script>
-<!-- ================= 全球股市/大宗商品行情弹窗组件 ================= -->
-
-<!-- 2. 弹窗遮罩及内容区 -->
+<!-- 全球股市/大宗商品/加密货币 行情弹窗 (智能降级版) -->
 <div id="market-modal" style="
     display: none;
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     z-index: 9999;
@@ -981,8 +979,8 @@ if (location.search.includes('debug=true')) {
     <div style="
         width: 90%;
         max-width: 420px;
-        height: 520px;
-        background: rgba(30, 30, 35, 0.85);
+        height: 540px;
+        background: rgba(30, 30, 35, 0.9);
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 14px;
         padding: 12px;
@@ -997,63 +995,65 @@ if (location.search.includes('debug=true')) {
             <span onclick="toggleMarketModal()" style="color: #aaa; cursor: pointer; font-size: 1.2rem; padding: 0 4px; user-select: none;">✕</span>
         </div>
 
-        <!-- TradingView 全球行情嵌入挂件 -->
-        <div class="tradingview-widget-container" style="flex: 1; height: 100%; border-radius: 8px; overflow: hidden;">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-            {
-              "colorTheme": "dark",
-              "dateRange": "12M",
-              "showChart": false,
-              "locale": "zh_CN",
-              "width": "100%",
-              "height": "100%",
-              "largeChartUrl": "",
-              "isTransparent": true,
-              "showSymbolLogo": true,
-              "showFloatingTooltip": false,
-              "tabs": [
+        <!-- 动态行情容器区 -->
+        <div id="tv-widget-box" style="flex: 1; height: 100%; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column;">
+            <div class="tradingview-widget-container" style="width: 100%; height: 100%;">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async onerror="switchToDomesticSource()">
                 {
-                  "title": "全球指数",
-                  "symbols": [
-                    { "s": "FOREXCOM:SPXUSD", "d": "标普500 (美)" },
-                    { "s": "FOREXCOM:NSXUSD", "d": "纳斯达克 (美)" },
-                    { "s": "INDEX:DBI", "d": "道琼斯 (美)" },
-                    { "s": "INDEX:DEU40", "d": "德国DAX (欧)" },
-                    { "s": "INDEX:NKY", "d": "日经225 (日)" },
-                    { "s": "KRX:KOSPI", "d": "韩国KOSPI (韩)" },
-                    { "s": "TWSE:TAIEX", "d": "台湾加权 (台)" },
-                    { "s": "SSE:000001", "d": "上证指数 (中)" },
-                    { "s": "HKEX:HSI", "d": "恒生指数 (港)" }
-                  ]
-                },
-                {
-                  "title": "黄金石油",
-                  "symbols": [
-                    { "s": "TVC:GOLD", "d": "现货黄金 (XAUUSD)" },
-                    { "s": "TVC:SILVER", "d": "现货白银 (XAGUSD)" },
-                    { "s": "TVC:USOIL", "d": "WTI 美原油" },
-                    { "s": "TVC:UKOIL", "d": "布伦特原油" }
-                  ]
-                },
-                 {
-                  "title": "加密货币",
-                  "symbols": [
-                    { "s": "BITSTAMP:BTCUSD", "d": "比特币 (BTC)" },
-                    { "s": "BITSTAMP:ETHUSD", "d": "以太坊 (ETH)" },
-                    { "s": "COINBASE:SOLUSD", "d": "Solana (SOL)" },
-                    { "s": "BINANCE:BNBUSDT", "d": "币安币 (BNB)" }
+                  "colorTheme": "dark",
+                  "dateRange": "12M",
+                  "showChart": false,
+                  "locale": "zh_CN",
+                  "width": "100%",
+                  "height": "100%",
+                  "largeChartUrl": "",
+                  "isTransparent": true,
+                  "showSymbolLogo": true,
+                  "showFloatingTooltip": false,
+                  "tabs": [
+                    {
+                      "title": "全球指数",
+                      "symbols": [
+                        { "s": "SSE:000001", "d": "上证指数 (中)" },
+                        { "s": "HKEX:HSI", "d": "恒生指数 (港)" },
+                        { "s": "FOREXCOM:SPXUSD", "d": "标普500 (美)" },
+                        { "s": "FOREXCOM:NSXUSD", "d": "纳斯达克 (美)" },
+                        { "s": "INDEX:DBI", "d": "道琼斯 (美)" },
+                        { "s": "INDEX:DEU40", "d": "德国DAX (欧)" },
+                        { "s": "INDEX:NKY", "d": "日经225 (日)" },
+                        { "s": "KRX:KOSPI", "d": "韩国KOSPI (韩)" },
+                        { "s": "TWSE:TAIEX", "d": "台湾加权 (台)" }
+                      ]
+                    },
+                    {
+                      "title": "大宗商品",
+                      "symbols": [
+                        { "s": "TVC:GOLD", "d": "现货黄金 (XAU)" },
+                        { "s": "TVC:SILVER", "d": "现货白银 (XAG)" },
+                        { "s": "TVC:USOIL", "d": "WTI 美原油" },
+                        { "s": "TVC:UKOIL", "d": "布伦特原油" }
+                      ]
+                    },
+                    {
+                      "title": "加密货币",
+                      "symbols": [
+                        { "s": "BITSTAMP:BTCUSD", "d": "比特币 (BTC)" },
+                        { "s": "BITSTAMP:ETHUSD", "d": "以太坊 (ETH)" },
+                        { "s": "COINBASE:SOLUSD", "d": "Solana (SOL)" },
+                        { "s": "BINANCE:BNBUSDT", "d": "币安币 (BNB)" }
+                      ]
+                    }
                   ]
                 }
-              ]
-            }
-            </script>
+                </script>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- 3. 控制弹窗打开/关闭的 JS 代码 -->
 <script>
+// 控制弹窗开关
 function toggleMarketModal() {
     const modal = document.getElementById('market-modal');
     if (modal) {
@@ -1061,12 +1061,43 @@ function toggleMarketModal() {
     }
 }
 
-// 点击遮罩阴影区域自动关闭面板
+// 点击遮罩阴影区域自动关闭
 document.getElementById('market-modal').addEventListener('click', function(e) {
     if (e.target === this) {
         toggleMarketModal();
     }
 });
+
+// 切换至国内直连数据源（新浪财经极简面板）
+let isFallbackLoaded = false;
+function switchToDomesticSource() {
+    if (isFallbackLoaded) return;
+    isFallbackLoaded = true;
+
+    const container = document.getElementById('tv-widget-box');
+    if (container) {
+        container.innerHTML = `
+            <div style="font-size: 0.75rem; color: #fbbf24; text-align: center; padding-bottom: 4px;">
+                ⚠️ 已自动切换至国内直连数据源
+            </div>
+            <iframe src="https://finance.sina.com.cn/pad/center/index.shtml" style="
+                width: 100%;
+                flex: 1;
+                border: none;
+                border-radius: 8px;
+                background: #fff;
+            "></iframe>
+        `;
+    }
+}
+
+// 自动检测网络：如果 3.5 秒内 TradingView 脚本被防火墙拦截未能渲染出 iframe，则触发无缝降级
+setTimeout(() => {
+    const tvIframe = document.querySelector('.tradingview-widget-container iframe');
+    if (!tvIframe) {
+        switchToDomesticSource();
+    }
+}, 3500);
 </script>
 </body>
 </html>
