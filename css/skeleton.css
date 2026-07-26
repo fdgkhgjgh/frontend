@@ -5,19 +5,22 @@
     background: #8BC48B;
     transition: background-color 0.3s ease;
 }
+
 .skeleton-theme-text {
     color: #2d5a1b;
     transition: color 0.3s ease;
 }
+
 .dark-mode .skeleton-theme-overlay {
     background: #2a2a2a;
 }
+
 .dark-mode .skeleton-theme-text {
     color: #dddddd;
 }
 
 /* ==========================================
-   骨架屏扫光（Shimmer）动画
+   骨架屏扫光（Shimmer）动画 - 性能优化版
    ========================================== */
 .shimmer-wrapper {
     position: relative;
@@ -29,118 +32,96 @@
     border-radius: 8px;
 }
 
-/* 扫光的那一束白光线 */
+/* 扫光光束（使用 transform，对 GPU 更友好） */
 .shimmer-wrapper::after {
     content: '';
     position: absolute;
     top: 0;
-    left: -100%;
+    left: 0;
     width: 60%;
     height: 100%;
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.45), /* 🌟 稍微调亮，让光泽在白色指骨上更显眼 */
+        rgba(255, 255, 255, 0.42),
         transparent
     );
-    transform: skewX(-20deg);
-    animation: shimmer 2s infinite linear;
-    
-    /* 🌟 核心修复点 🌟 */
-    z-index: 9;                 /* 强制把白光提到最上层，覆盖在 SVG 和文字正上方 */
-    pointer-events: none;       /* 确保这层光不影响任何点击或 hover 事件 */
+    transform: skewX(-20deg) translateX(-160%);
+    animation: shimmer 2.2s infinite linear;
+    z-index: 9;
+    pointer-events: none;
 }
 
-/* 夜间模式下的扫光线 */
+/* 夜间模式扫光 */
 .dark-mode .shimmer-wrapper::after {
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.25),
+        rgba(255, 255, 255, 0.22),
         transparent
     );
 }
 
 /* ==========================================
-   🕺 核心改变：全套疯狂扭胯舞步规则 🕺
+   🕺 轻量版跳舞动画（只保留 3 个部位）
    ========================================== */
 
-/* 1. 身体和脑袋：带有一点点左右平移的扭动，让动作更舒展 */
+/* 身体轻微扭动 */
 .dance-body {
-    animation: bodyTwist 0.58s ease-in-out infinite alternate;
+    animation: bodyTwist 0.85s ease-in-out infinite alternate;
 }
+
+/* 头部轻微甩动（带一点延迟） */
 .dance-head {
-    animation: headBob 0.58s ease-in-out infinite alternate;
-    animation-delay: -0.08s; /* 脑袋稍微慢半拍，做出自然的物理甩头感 */
+    animation: headBob 0.85s ease-in-out infinite alternate;
+    animation-delay: -0.12s;
 }
 
-/* 2. 手臂：关键点！右手加了延迟，这样左手上去时，右手刚好下来，告别大雁展翅 */
-.dance-left-arm {
-    animation: leftArmRaise 0.45s ease-in-out infinite alternate;
-}
-.dance-right-arm {
-    animation: rightArmWave 0.45s ease-in-out infinite alternate;
-    animation-delay: -0.22s; /* 完美错开双臂，形成交叉摇摆的律动 */
-}
-
-/* 3. 胯骨与下肢：缩短周期让扭胯更鬼畜，双腿 staggered 错位，形成交替踏步 */
+/* 胯部扭动（节奏稍快一点） */
 .dance-hip {
-    animation: hipShake 0.28s ease-in-out infinite alternate;
-}
-.dance-left-leg {
-    animation: leftLegKick 0.38s ease-in-out infinite alternate;
-}
-.dance-right-leg {
-    animation: rightLegStep 0.38s ease-in-out infinite alternate;
-    animation-delay: -0.19s; /* 左右脚交替踩点，跳出 Twist 舞步 */
+    animation: hipShake 0.55s ease-in-out infinite alternate;
 }
 
+/* 手臂和腿全部关闭动画，保持静态，大幅降低 GPU 负担 */
+.dance-left-arm,
+.dance-right-arm,
+.dance-left-leg,
+.dance-right-leg {
+    animation: none !important;
+}
 
 /* ==========================================
-   🔥 重新优化的舞姿关键帧 🔥
+   关键帧定义
    ========================================== */
 @keyframes headBob {
-    from { transform: rotate(-6deg) translateY(0px); }
-    to   { transform: rotate(12deg) translateY(-3px); }
+    from { transform: rotate(-5deg) translateY(0); }
+    to   { transform: rotate(9deg) translateY(-2px); }
 }
 
 @keyframes bodyTwist {
-    from { transform: rotate(-8deg) translateX(-1px); }
-    to   { transform: rotate(8deg) translateX(1px); }
+    from { transform: rotate(-6deg) translateX(-1px); }
+    to   { transform: rotate(6deg) translateX(1px); }
 }
 
-@keyframes leftArmRaise {
-    from { transform: rotate(-55deg) scaleY(0.9); }
-    to   { transform: rotate(25deg) scaleY(1.05); }
-}
-
-@keyframes rightArmWave {
-    from { transform: rotate(45deg) scaleY(1.05); }
-    to   { transform: rotate(-35deg) scaleY(0.9); }
-}
-
-/* 扭胯的同时稍微往下蹲一点点（translateY），更具动感 */
 @keyframes hipShake {
-    from { transform: translateX(-4px) translateY(0px) rotate(-6deg); }
-    to   { transform: translateX(4px) translateY(2px) rotate(6deg); }
+    from { transform: translateX(-3px) translateY(0) rotate(-5deg); }
+    to   { transform: translateX(3px) translateY(1.5px) rotate(5deg); }
 }
 
-/* 让腿部在旋转时伴随轻微缩放，模拟膝盖弯曲和伸直的动作 */
-@keyframes leftLegKick {
-    from { transform: rotate(-30deg) scaleY(1); }
-    to   { transform: rotate(15deg) scaleY(0.85); }
-}
-
-@keyframes rightLegStep {
-    from { transform: rotate(15deg) scaleY(0.85); }
-    to   { transform: rotate(-30deg) scaleY(1); }
+/* 扫光动画（使用 transform） */
+@keyframes shimmer {
+    0%   { transform: skewX(-20deg) translateX(-160%); }
+    100% { transform: skewX(-20deg) translateX(260%); }
 }
 
 /* ==========================================
-   补充漏掉的扫光动画轨迹（加在文件最底部）
+   系统减少动态效果支持（重要）
    ========================================== */
-@keyframes shimmer {
-    0%   { left: -100%; }
-    100% { left: 150%; }
+@media (prefers-reduced-motion: reduce) {
+    .dance-body,
+    .dance-head,
+    .dance-hip,
+    .shimmer-wrapper::after {
+        animation: none !important;
+    }
 }
-
