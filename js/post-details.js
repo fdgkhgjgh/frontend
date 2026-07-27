@@ -1014,6 +1014,31 @@ postDetailsContainer.addEventListener('click', async (event) => {
     }
 });
 
+function updateLoadMoreButton(show) {
+    let btn = document.getElementById('load-more-comments');
+    if (!btn) {
+        btn = document.createElement('button');
+        btn.id = 'load-more-comments';
+        btn.textContent = '加载更多评论';
+        btn.style.cssText = `
+            display: block;
+            margin: 16px auto;
+            padding: 8px 24px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background: #f5f5f5;
+            cursor: pointer;
+        `;
+        btn.addEventListener('click', () => {
+            const postId = new URLSearchParams(window.location.search).get('id');
+            loadComments(postId, currentCommentPage + 1, true);
+        });
+        // 放在 commentsList 后面
+        commentsList.parentNode.insertBefore(btn, commentsList.nextSibling);
+    }
+    btn.style.display = show ? 'block' : 'none';
+}
+
 async function deleteComment(commentId, commentElement) {
     const postId = new URLSearchParams(window.location.search).get('id');
     // *** ADD CONFIRMATION DIALOG HERE ***
