@@ -695,11 +695,17 @@ async function loadComments(postId, page = 1, append = false) {
 
     } catch (err) {
         console.error(err);
-        if (loadingEl) loadingEl.textContent = '加载失败，点击重试';
+        if (loadingEl) {
+            loadingEl.textContent = '加载失败，点击重试';
+            loadingEl.style.cursor = 'pointer';
+            loadingEl.onclick = () => {
+                loadingEl.onclick = null; // 防止重复点击
+                loadComments(postId, page, append);
+            };
+        }
     } finally {
         isLoadingComments = false;
     }
-}
 
 // Function to set the comment button state
 function setCommentButtonState(state) {
