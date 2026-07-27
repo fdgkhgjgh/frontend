@@ -835,7 +835,8 @@ function displayComments(comments, append = false) {
         // --- ADD PROFILE PICTURE HERE ---
         const textElement = document.createElement('p');
 const usernameLink = document.createElement('a');
-usernameLink.href = `profile.html?id=${comment.author._id}`;
+// ✅ 修改后的代码：
+usernameLink.href = comment.author?._id ? `profile.html?id=${comment.author._id}` : '#';
 usernameLink.textContent = comment.author?.username || "Unknown";
 
 textElement.appendChild(usernameLink);
