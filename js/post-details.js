@@ -12,8 +12,12 @@ const addCommentButton = document.getElementById('add-comment-button');
 const commentButtonSpinner = document.getElementById('comment-button-spinner');
 const commentButtonSuccessIcon = document.getElementById('comment-button-success-icon');
 
+let currentCommentPage = 1;
+const COMMENTS_PER_PAGE = 30;
+let hasMoreComments = true;
+let isLoadingComments = false;
 
-// --- Load Post Details and Comments ---
+
 async function loadPostDetails(postId) {
     try {
         const response = await fetch(`${API_BASE_URL}/posts/${postId}`);
@@ -21,10 +25,13 @@ async function loadPostDetails(postId) {
             throw new Error(`Failed to fetch post: ${response.status}`);
         }
         const post = await response.json();
-        //console.log("Fetched post details:", post);
-        displayPostDetails(post);
-        displayComments(post.comments);
+        displayPostDetails(post);          // 只渲染帖子本身
 
+        // 重置评论分页
+        currentCommentPage = 1;
+        hasMoreComments = true;
+        commentsList.innerHTML = '';
+        await loadComments(postId, 1);     // 加载第一页评论
     } catch (error) {
         console.error('Error loading post details:', error);
         postDetailsContainer.innerHTML = '<p>Error loading post details.</p>';
@@ -641,6 +648,59 @@ postBody.appendChild(voteContainer);
 
 }
 
+async function loadComments(postId, page = 1, append = false) {
+    if (isLoadingComments) return;
+    if (!hasMoreComments && page > 1) return;
+
+    isLoadingComments = true;
+
+    // loading 提示
+    let loadingEl = document.getElementById('comments-loading');
+    if (!loadingEl) {
+        loadingEl = document.createElement('li');
+        loadingEl.id = 'comments-loading';
+        loadingEl.textContent = '加载中...';
+        commentsList.appendChild(loadingEl);
+    } else {
+        loadingEl.style.display = 'list-item';
+        loadingEl.textContent = '加载中...';
+    }
+
+    try {
+        const res = await fetch(
+            `${API_BASE_URL}/posts/${postId}/comments?page=${page}&limit=${COMMENTS_PER_PAGE}`
+        );
+        if (!res.ok) throw new Error('Failed to load comments');
+
+        const data = await res.json(); // { comments, page, limit, total, hasMore }
+
+        if (loadingEl) loadingEl.remove();
+
+        if (!append) {
+            commentsList.innerHTML = '';
+        }
+
+        if ((!data.comments || data.comments.length === 0) && page === 1) {
+            commentsList.innerHTML = '<li>No comments yet.</li>';
+            hasMoreComments = false;
+            updateLoadMoreButton(false);
+            return;
+        }
+
+        displayComments(data.comments, append);
+
+        hasMoreComments = data.hasMore;
+        currentCommentPage = page;
+        updateLoadMoreButton(hasMoreComments);
+
+    } catch (err) {
+        console.error(err);
+        if (loadingEl) loadingEl.textContent = '加载失败，点击重试';
+    } finally {
+        isLoadingComments = false;
+    }
+}
+
 // Function to set the comment button state
 function setCommentButtonState(state) {
     switch (state) {
@@ -740,21 +800,30 @@ if (addCommentForm) {
 }
 
 // Function to display comments
-function displayComments(comments) {
-    commentsList.innerHTML = ''; // Clear existing comments
+function displayComments(comments, append = false) {
+    if (!append) {
+        commentsList.innerHTML = '';
+    }
+
     if (!comments || comments.length === 0) {
-        commentsList.innerHTML = '<li>No comments yet.</li>';
+        if (!append) commentsList.innerHTML = '<li>No comments yet.</li>';
         return;
     }
-    comments.forEach((comment, index) => { // <--- ADDED INDEX HERE
-        const commentItem = document.createElement('li');
-        commentItem.classList.add('comment-item'); // ADDED CLASS
 
-        // Add comment number
-        const commentNumber = document.createElement('span');  // Create a span element
-        commentNumber.classList.add('comment-number');  //Add comment-number class.
-        commentNumber.textContent = `${index + 1}.`;  // Number, starting from 1
-        commentItem.appendChild(commentNumber);  //Add the number to the comment item
+    // 连续编号
+    const startIndex = append
+        ? commentsList.querySelectorAll('.comment-item').length
+        : 0;
+
+    comments.forEach((comment, index) => {
+        const commentItem = document.createElement('li');
+        commentItem.classList.add('comment-item');
+
+        // 序号
+        const commentNumber = document.createElement('span');
+        commentNumber.classList.add('comment-number');
+        commentNumber.textContent = `${startIndex + index + 1}.`;
+        commentItem.appendChild(commentNumber);
 
         // --- ADD PROFILE PICTURE HERE ---
         const profilePicture = document.createElement('img');
