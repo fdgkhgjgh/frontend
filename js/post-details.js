@@ -31,7 +31,7 @@ async function loadPostDetails(postId) {
         currentCommentPage = 1;
         hasMoreComments = true;
         commentsList.innerHTML = '';
-        await loadComments(postId, 1);     // 加载第一页评论
+        await loadComments(postId, 1,false);     // 加载第一页评论
     } catch (error) {
         console.error('Error loading post details:', error);
         postDetailsContainer.innerHTML = '<p>Error loading post details.</p>';
