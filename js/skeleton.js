@@ -118,9 +118,9 @@ function showSkeleton() {
     }
 
     const messages = [
-        "💀 正在唤醒服务器...",
+        "⌛️ 正在唤醒服务器...",
         "☕ Backend is making coffee...",
-        "🦥 Free plan detected...",
+        "🔜 正在运行…almost get there",
         "📦 正在加载帖子...",
         "⚡ Summoning data...",
         "🎉 就快到达了..."
