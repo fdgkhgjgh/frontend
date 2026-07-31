@@ -767,23 +767,6 @@ function doExpressTrack() {
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
-/* 2. 跟随系统的夜间模式 */
-@media (prefers-color-scheme: dark) {
-    .device-query-card {
-        --dq-bg: #1e1e1e;
-        --dq-text: #e0e0e0;
-        --dq-title: #ffffff;
-        --dq-subtext: #aaaaaa;
-        --dq-border: #333333;
-        --dq-input-bg: #2b2b2b;
-        --dq-input-border: #444444;
-        --dq-res-bg: #252525;
-        --dq-res-border: #383838;
-        --dq-info-bg: #1a2736;
-        --dq-info-border: #293f59;
-        --dq-info-text: #73b3ff;
-    }
-}
 
 /* 3. 兼容手动切换夜间模式类 (body/html 上挂有 dark 或 dark-mode) */
 body.dark .device-query-card,
