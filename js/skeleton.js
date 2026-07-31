@@ -1,4 +1,4 @@
-// skeleton.js - 轻量版（针对 iPhone 发热优化）
+// skeleton.js - 轻量版（针对 iPhone 发热优化 + 恢复夜间模式）
 
 function showSkeleton() {
     const postList = document.getElementById('post-list');
@@ -7,6 +7,12 @@ function showSkeleton() {
     // 先清理可能残留的定时器
     clearInterval(window.loadingMsgInterval);
     window.loadingMsgInterval = null;
+    clearTimeout(window.skeletonTimeout);
+    window.skeletonTimeout = null;
+
+    // 判断是否夜间模式
+    const isDark = document.documentElement.classList.contains('dark-mode') ||
+                   document.body.classList.contains('dark-mode');
 
     postList.innerHTML = `
         <div style="
@@ -15,7 +21,7 @@ function showSkeleton() {
             width: 100%;
             box-sizing: border-box;
         ">
-            <div class="skeleton-theme-overlay" style="
+            <div class="skeleton-theme-overlay${isDark ? ' dark-mode' : ''}" style="
                 position: absolute;
                 inset: 0;
                 display: flex;
@@ -24,8 +30,6 @@ function showSkeleton() {
                 align-items: center;
                 border-radius: 4px;
                 z-index: 999;
-                /* 去掉 blur，改用半透明背景，大幅降低性能消耗 */
-                background: rgba(139, 196, 139, 0.92);
             ">
                 <div class="shimmer-wrapper">
                     <svg width="120" height="170"
@@ -110,13 +114,6 @@ function showSkeleton() {
         </div>
     `;
 
-    // 夜间模式兼容：如果当前是 dark-mode，给 overlay 加上对应 class
-    if (document.documentElement.classList.contains('dark-mode') || 
-        document.body.classList.contains('dark-mode')) {
-        const overlay = postList.querySelector('.skeleton-theme-overlay');
-        if (overlay) overlay.classList.add('dark-mode');
-    }
-
     const messages = [
         "⌛️ 正在唤醒服务器...",
         "☕ Backend is making coffee...",
@@ -136,12 +133,10 @@ function showSkeleton() {
         }
     }, 3000);
 
-    // 超时保护：最长跳 12 秒，之后强制停止动画（防止一直发热）
-    clearTimeout(window.skeletonTimeout);
+    // 超时保护：最长 12 秒后强制停止动画（防止一直发热）
     window.skeletonTimeout = setTimeout(() => {
         const overlay = document.querySelector('.skeleton-theme-overlay');
         if (overlay) {
-            // 强制停止所有动画
             overlay.querySelectorAll('[class*="dance-"]').forEach(el => {
                 el.style.animation = 'none';
             });
@@ -154,14 +149,12 @@ function showSkeleton() {
 }
 
 function hideSkeleton() {
-    // 清理定时器
     clearInterval(window.loadingMsgInterval);
     window.loadingMsgInterval = null;
 
     clearTimeout(window.skeletonTimeout);
     window.skeletonTimeout = null;
 
-    // 强制停止动画（即使后面会覆盖 innerHTML，也先停掉更保险）
     const overlay = document.querySelector('.skeleton-theme-overlay');
     if (overlay) {
         overlay.querySelectorAll('[class*="dance-"]').forEach(el => {
@@ -173,8 +166,6 @@ function hideSkeleton() {
             shimmer.style.animation = 'none';
         }
     }
-
-    // 注意：实际内容会通过 postList.innerHTML = ... 覆盖，这里只负责清理资源
 }
 
 window.showSkeleton = showSkeleton;
