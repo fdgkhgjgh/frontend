@@ -737,7 +737,7 @@ function doExpressTrack() {
 }
 </script>
 
-<!-- 📱 手机序列号/保修查询组件 (支持夜间模式) -->
+<!-- 📱 手机序列号/保修查询组件 (含免费本地解析 & 支持夜间模式) -->
 <style>
 /* 1. 默认浅色模式样式变量 */
 .device-query-card {
@@ -750,8 +750,9 @@ function doExpressTrack() {
     --dq-input-border: #cccccc;
     --dq-res-bg: #f8f9fa;
     --dq-res-border: #eeeeee;
-    --dq-copy-bg: #e9ecef;
-    --dq-copy-border: #ced4da;
+    --dq-info-bg: #eef6ff;
+    --dq-info-border: #d0e3ff;
+    --dq-info-text: #1a56a6;
 
     max-width: 400px;
     margin: 15px auto;
@@ -778,12 +779,13 @@ function doExpressTrack() {
         --dq-input-border: #444444;
         --dq-res-bg: #252525;
         --dq-res-border: #383838;
-        --dq-copy-bg: #333333;
-        --dq-copy-border: #444444;
+        --dq-info-bg: #1a2736;
+        --dq-info-border: #293f59;
+        --dq-info-text: #73b3ff;
     }
 }
 
-/* 3. 兼容手动切换夜间模式类 (如 body/html 上挂有 dark 或 dark-mode) */
+/* 3. 兼容手动切换夜间模式类 (body/html 上挂有 dark 或 dark-mode) */
 body.dark .device-query-card,
 body.dark-mode .device-query-card,
 [data-theme="dark"] .device-query-card {
@@ -796,11 +798,11 @@ body.dark-mode .device-query-card,
     --dq-input-border: #444444;
     --dq-res-bg: #252525;
     --dq-res-border: #383838;
-    --dq-copy-bg: #333333;
-    --dq-copy-border: #444444;
+    --dq-info-bg: #1a2736;
+    --dq-info-border: #293f59;
+    --dq-info-text: #73b3ff;
 }
 
-/* 组件细部样式 */
 .device-query-card h4 {
     margin: 0 0 10px 0;
     font-size: 14px;
@@ -854,28 +856,30 @@ body.dark-mode .device-query-card,
     border-radius: 4px;
 }
 
-.device-query-card .copy-btn {
-    flex: 1;
-    padding: 4px 6px;
+.device-query-card .info-box {
+    margin: 8px 0;
+    padding: 6px 8px;
+    background: var(--dq-info-bg);
+    border: 1px solid var(--dq-info-border);
+    border-radius: 4px;
+    color: var(--dq-info-text);
     font-size: 11px;
-    background: var(--dq-copy-bg);
-    border: 1px solid var(--dq-copy-border);
-    border-radius: 3px;
-    cursor: pointer;
-    color: var(--dq-text);
+    line-height: 1.4;
 }
 
 .device-query-card .jump-link {
-    flex: 1;
+    display: block;
+    width: 100%;
     text-align: center;
     text-decoration: none;
-    padding: 4px 6px;
-    font-size: 11px;
+    padding: 6px;
+    font-size: 12px;
     background: #28a745;
     color: #ffffff;
-    border-radius: 3px;
-    display: inline-block;
+    border-radius: 4px;
     box-sizing: border-box;
+    font-weight: 500;
+    margin-top: 6px;
 }
 
 .device-query-card .tip-text {
@@ -909,15 +913,18 @@ body.dark-mode .device-query-card,
     </div>
 
     <!-- 3. 操作按钮 -->
-    <button id="query-btn">生成查询直达链接</button>
+    <button id="query-btn">查询并显示已知信息</button>
 
-    <!-- 4. 查询结果与直达区域 -->
+    <!-- 4. 查询结果区域 -->
     <div id="query-result" class="query-result">
-        <p style="margin: 0 0 6px 0; font-size: 12px;">准备就绪：<strong id="display-sn" style="color: #0070f3;"></strong></p>
-        <div style="display: flex; gap: 6px;">
-            <button id="copy-btn" class="copy-btn">📋 复制序列号</button>
-            <a id="jump-link" class="jump-link" href="#" target="_blank" rel="noreferrer noopener">🚀 直达官网查询</a>
-        </div>
+        <p style="margin: 0 0 6px 0; font-size: 12px;">已输入的号码：<strong id="display-sn" style="color: #0070f3;"></strong></p>
+        
+        <!-- 免费本地解析结果展示盒 -->
+        <div id="local-info-box" class="info-box"></div>
+
+        <!-- 仅保留直达官网按钮 -->
+        <a id="jump-link" class="jump-link" href="#" target="_blank" rel="noreferrer noopener">🚀 直达官网查询保修与激活</a>
+        
         <p id="tip-text" class="tip-text"></p>
     </div>
 </div>
@@ -926,18 +933,18 @@ body.dark-mode .device-query-card,
 const BRAND_URLS = {
     apple: {
         name: '苹果官方',
-        url: 'https://checkcoverage.apple.com/cn/zh/', // 正确的中文官方查询路径
-        tip: '提示：序列号已自动复制，跳转后直接粘贴到苹果官网输入框即可。'
+        url: 'https://checkcoverage.apple.com/cn/zh/',
+        tip: '💡 <b>激活时间推算小技巧：</b><br>苹果官网查询出的“保修到期日”往前倒推1年即为设备的<b>首次激活时间</b>（例：保修至 2027-07-20，则激活日为 2026-07-21）。若需免费查询 Find My iPhone 激活锁状态，可使用 Sickw 网页版的 FREE FMI 工具。'
     },
     xiaomi: {
         name: '小米官方',
         url: 'https://www.mi.com/service/warranty',
-        tip: '提示：请在小米服务页面粘贴序列号（SN/IMEI）查询保修权益。'
+        tip: '提示：直达小米官方服务页面，可查询硬件保修剩余时长及电子三包凭证。'
     },
     huawei: {
         name: '华为官方',
         url: 'https://consumer.huawei.com/cn/support/warranty-policy/smartphone/',
-        tip: '提示：直达华为服务官网，输入序列号即可查询电子三包凭证。'
+        tip: '提示：直达华为服务官网，输入序列号即可查询权益及激活日期。'
     },
     oppo: {
         name: 'OPPO官方',
@@ -951,6 +958,70 @@ const BRAND_URLS = {
     }
 };
 
+// 苹果 12 位 SN 产地字典
+const APPLE_FACTORIES = {
+    'F4H': '深圳富士康', 'F17': '深圳富士康', 'F2L': '深圳富士康', 'FK1': '深圳富士康', 'FK2': '深圳富士康',
+    'C3K': '郑州富士康', 'C3M': '郑州富士康', 'C7G': '郑州富士康', 'C28': '郑州富士康', 'C17': '郑州富士康',
+    'DN': '成都富士康', 'DNP': '成都富士康',
+    'C02': '上海达丰', 'C07': '上海达丰',
+    'G6': '巴西圣保罗富士康', 'G8': '巴西圣保罗富士康'
+};
+
+// 苹果 12 位 SN 年份字典
+const APPLE_YEARS = {
+    'C': { year: 2010, half: 1 }, 'D': { year: 2010, half: 2 },
+    'F': { year: 2011, half: 1 }, 'G': { year: 2011, half: 2 },
+    'H': { year: 2012, half: 1 }, 'J': { year: 2012, half: 2 },
+    'K': { year: 2013, half: 1 }, 'L': { year: 2013, half: 2 },
+    'M': { year: 2014, half: 1 }, 'N': { year: 2014, half: 2 },
+    'P': { year: 2015, half: 1 }, 'Q': { year: 2015, half: 2 },
+    'R': { year: 2016, half: 1 }, 'S': { year: 2016, half: 2 },
+    'T': { year: 2017, half: 1 }, 'V': { year: 2017, half: 2 },
+    'W': { year: 2018, half: 1 }, 'X': { year: 2018, half: 2 },
+    'Y': { year: 2019, half: 1 }, 'Z': { year: 2019, half: 2 },
+    '1': { year: 2020, half: 1 }, '2': { year: 2020, half: 2 },
+    '3': { year: 2021, half: 1 }, '4': { year: 2021, half: 2 }
+};
+
+// 15 位 IMEI Luhn 校验算法
+function validateIMEI(imei) {
+    if (!/^\d{15}$/.test(imei)) return false;
+    let sum = 0;
+    for (let i = 0; i < 15; i++) {
+        let digit = parseInt(imei[i], 10);
+        if (i % 2 === 1) {
+            digit *= 2;
+            if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+    }
+    return sum % 10 === 0;
+}
+
+// 解析苹果序列号函数
+function parseAppleSN(sn) {
+    sn = sn.toUpperCase();
+    if (sn.length === 10) {
+        return "🔍 <b>本地解析：</b>这是 2021 年后采用的 10 位随机序列号，已取消本地编码规律，详细出厂与激活数据请点击下方直达官网查询。";
+    } else if (sn.length === 12) {
+        const factoryCode = sn.substring(0, 3);
+        const yearCode = sn.charAt(3);
+        const weekCode = sn.charAt(4);
+
+        let factory = APPLE_FACTORIES[factoryCode] || "中国大陆代工厂";
+        let yearInfo = APPLE_YEARS[yearCode];
+        let dateDesc = "生产时间未知";
+
+        if (yearInfo) {
+            let baseWeek = yearInfo.half === 1 ? 0 : 26;
+            dateDesc = `${yearInfo.year} 年第 ${baseWeek} 周左右`;
+        }
+
+        return `🔍 <b>本地解析结果 (12位SN)：</b><br>• 生产代工厂：<b>${factory}</b><br>• 估计生产时期：<b>${dateDesc}</b>`;
+    }
+    return null;
+}
+
 document.getElementById('query-btn').addEventListener('click', () => {
     const brandKey = document.getElementById('brand-select').value;
     const snValue = document.getElementById('sn-input').value.trim();
@@ -963,55 +1034,44 @@ document.getElementById('query-btn').addEventListener('click', () => {
     const config = BRAND_URLS[brandKey];
     const resultArea = document.getElementById('query-result');
     const displaySn = document.getElementById('display-sn');
+    const localInfoBox = document.getElementById('local-info-box');
     const jumpLink = document.getElementById('jump-link');
     const tipText = document.getElementById('tip-text');
 
     displaySn.textContent = snValue;
     jumpLink.href = config.url;
-    // 防 403 跨域来源拦截
     jumpLink.rel = "noreferrer noopener";
-    jumpLink.textContent = `直达 ${config.name} 查询`;
-    tipText.textContent = config.tip;
+    jumpLink.textContent = `🚀 直达 ${config.name} 查询具体保修/激活`;
+    tipText.innerHTML = config.tip;
 
+    // 本地信息解析逻辑
+    let localHtml = "";
+    
+    // 1. IMEI 校验
+    if (/^\d{15}$/.test(snValue)) {
+        const isValid = validateIMEI(snValue);
+        const tac = snValue.substring(0, 8);
+        localHtml += `📋 <b>设备号码识别：</b>15 位标准的 IMEI 码<br>`;
+        localHtml += `• TAC 识别码：<b>${tac}</b><br>`;
+        localHtml += `• Luhn 算法结构校验：<b>${isValid ? '<span style="color:green;">合法 (通过校验)</span>' : '<span style="color:red;">异常 (未通过校验)</span>'}</b><br>`;
+    }
+
+    // 2. 苹果序列号解析
+    if (brandKey === 'apple') {
+        const appleParsed = parseAppleSN(snValue);
+        if (appleParsed) {
+            localHtml += (localHtml ? "<hr style='border:none;border-top:1px dashed var(--dq-info-border);margin:4px 0;'>" : "") + appleParsed;
+        }
+    }
+
+    // 格式未触发上述解析时的保底提示
+    if (!localHtml) {
+        localHtml = "📋 <b>基本类型：</b>设备序列号 (SN)。详细的官方三包凭证与硬件激活数据，请点击下方按钮直达官网查询。";
+    }
+
+    localInfoBox.innerHTML = localHtml;
     resultArea.style.display = 'block';
-
-    // 尝试剪贴板自动复制
-    copyToClipboard(snValue, false);
 });
-
-document.getElementById('copy-btn').addEventListener('click', () => {
-    const snValue = document.getElementById('sn-input').value.trim();
-    if (snValue) {
-        copyToClipboard(snValue, true);
-    }
-});
-
-function copyToClipboard(text, showAlert) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-            if (showAlert) alert('序列号已成功复制！');
-        }).catch(() => {
-            fallbackCopy(text, showAlert);
-        });
-    } else {
-        fallbackCopy(text, showAlert);
-    }
-}
-
-// 兼容性降级复制逻辑
-function fallbackCopy(text, showAlert) {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.select();
-    try {
-        document.execCommand('copy');
-        if (showAlert) alert('序列号已成功复制！');
-    } catch (err) {
-        if (showAlert) alert('复制失败，请手动选中复制');
-    }
-    document.body.removeChild(textArea);
-}
 </script>
 
 
