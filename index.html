@@ -737,6 +737,121 @@ function doExpressTrack() {
 }
 </script>
 
+<!-- 查询组件容器 -->
+<div class="device-query-card" style="max-width: 500px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+    <h3>📱 手机序列号/保修查询</h3>
+    
+    <!-- 1. 选择品牌 -->
+    <div style="margin-bottom: 15px;">
+        <label for="brand-select">选择品牌：</label>
+        <select id="brand-select" style="width: 100%; padding: 8px; margin-top: 5px;">
+            <option value="apple">🍏 苹果 (Apple)</option>
+            <option value="xiaomi">🟠 小米 / 红米 (Xiaomi/Redmi)</option>
+            <option value="huawei">🔴 华为 / 荣耀 (Huawei/Honor)</option>
+            <option value="oppo">🟢 OPPO / 一加 (OPPO/OnePlus)</option>
+            <option value="vivo">🔵 Vivo / iQOO</option>
+        </select>
+    </div>
+
+    <!-- 2. 输入序列号/IMEI -->
+    <div style="margin-bottom: 15px;">
+        <label for="sn-input">设备序列号 (SN) 或 IMEI：</label>
+        <input type="text" id="sn-input" placeholder="请输入12位/10位序列号或15位IMEI" style="width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box;" />
+    </div>
+
+    <!-- 3. 操作按钮 -->
+    <button id="query-btn" style="width: 100%; padding: 10px; background-color: #0070f3; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        生成查询直达链接
+    </button>
+
+    <!-- 4. 查询结果提示与直达区域 -->
+    <div id="query-result" style="display: none; margin-top: 20px; padding: 12px; background: #f5f5f5; border-radius: 5px;">
+        <p style="margin: 0 0 10px 0;">已准备就绪：<strong id="display-sn"></strong></p>
+        <div style="display: flex; gap: 10px;">
+            <button id="copy-btn" style="flex: 1; padding: 8px; background: #e0e0e0; border: none; border-radius: 4px; cursor: pointer;">
+                📋 复制序列号
+            </button>
+            <a id="jump-link" href="#" target="_blank" style="flex: 1; text-align: center; text-decoration: none; padding: 8px; background: #28a745; color: white; border-radius: 4px;">
+                🚀 直达官网查询
+            </a>
+        </div>
+        <p id="tip-text" style="font-size: 0.85rem; color: #666; margin-top: 10px; margin-bottom: 0;"></p>
+    </div>
+</div>
+
+<script>
+// 各大品牌官方保修/真伪/激活查询地址映射
+const BRAND_URLS = {
+    apple: {
+        name: '苹果官方',
+        url: 'https://checkcoverage.apple.com/',
+        tip: '提示：点击按钮后已自动复制序列号，粘贴到苹果官网输入框中即可查询保修与激活状态。'
+    },
+    xiaomi: {
+        name: '小米官方',
+        url: 'https://www.mi.com/service/warranty',
+        tip: '提示：请在小米服务页面粘贴序列号（SN/IMEI）查询保修权益。'
+    },
+    huawei: {
+        name: '华为官方',
+        url: 'https://consumer.huawei.com/cn/support/warranty-policy/smartphone/',
+        tip: '提示：直达华为消费者服务官网，输入序列号即可查询电子三包凭证。'
+    },
+    oppo: {
+        name: 'OPPO官方',
+        url: 'https://www.oppo.com/cn/service/check/',
+        tip: '提示：直达 OPPO 真伪与保修查询页面。'
+    },
+    vivo: {
+        name: 'Vivo官方',
+        url: 'https://www.vivo.com.cn/service/authenticityCheck',
+        tip: '提示：直达 Vivo 真伪与保修查询页面。'
+    }
+};
+
+document.getElementById('query-btn').addEventListener('click', () => {
+    const brandKey = document.getElementById('brand-select').value;
+    const snValue = document.getElementById('sn-input').value.trim();
+
+    if (!snValue) {
+        alert('请输入序列号或 IMEI！');
+        return;
+    }
+
+    const config = BRAND_URLS[brandKey];
+    const resultArea = document.getElementById('query-result');
+    const displaySn = document.getElementById('display-sn');
+    const jumpLink = document.getElementById('jump-link');
+    const tipText = document.getElementById('tip-text');
+
+    displaySn.textContent = snValue;
+    jumpLink.href = config.url;
+    jumpLink.textContent = `直达 ${config.name} 查询`;
+    tipText.textContent = config.tip;
+
+    resultArea.style.display = 'block';
+
+    // 点击按钮时自动尝试复制一次
+    copyToClipboard(snValue, false);
+});
+
+// 手动复制按钮点击逻辑
+document.getElementById('copy-btn').addEventListener('click', () => {
+    const snValue = document.getElementById('sn-input').value.trim();
+    if (snValue) {
+        copyToClipboard(snValue, true);
+    }
+});
+
+function copyToClipboard(text, showAlert) {
+    navigator.clipboard.writeText(text).then(() => {
+        if (showAlert) alert('序列号已成功复制到剪贴板！');
+    }).catch(err => {
+        console.error('复制失败:', err);
+    });
+}
+</script>
+
 
    <!--Start of Tawk.to Script-->
     <script type="text/javascript">
