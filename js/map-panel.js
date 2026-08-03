@@ -156,19 +156,28 @@ function createMarkerIcon(username, isCurrentUser, profilePicUrl) {
 }
 
 
-//track line
+//track part
+let tracksVisible = false;
+
 async function loadTracks(days = 180) {
+    // 关键：如果当前是隐藏状态，直接不画
+    if (!tracksVisible) {
+        // 顺便清理一下已有的线（防止残留）
+        Object.values(polylines).forEach(line => map.removeLayer(line));
+        polylines = {};
+        return;
+    }
+
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
     startDate.setHours(0, 0, 0, 0);
 
-    // 1. Change sorting to descending (false) to prioritize your LATEST positions
     const { data, error } = await supabaseClient
         .from('location_tracks')
         .select('*')
         .gte('recorded_at', startDate.toISOString())
-        .order('recorded_at', { ascending: false }) 
-        .limit(2000); // Raise the roof on max points fetched if needed
+        .order('recorded_at', { ascending: false })
+        .limit(2000);
 
     if (error) {
         console.error('Load tracks error:', error);
@@ -177,21 +186,15 @@ async function loadTracks(days = 180) {
 
     if (!data || data.length === 0) return;
 
-    // 2. Flip the array back around so Leaflet draws the lines chronologically
     const chronologicalData = [...data].reverse();
 
-    // Group by user_id
     const grouped = {};
     chronologicalData.forEach(point => {
         if (!grouped[point.user_id]) grouped[point.user_id] = [];
-        
-        // Convert point coordinates for the active map layer
         const displayCoords = getLayerCoords(point.latitude, point.longitude);
         grouped[point.user_id].push([displayCoords.lat, displayCoords.lng]);
     });
 
-
-    // Draw polyline for each user
     Object.entries(grouped).forEach(([userId, points]) => {
         if (polylines[userId]) {
             map.removeLayer(polylines[userId]);
@@ -207,20 +210,17 @@ async function loadTracks(days = 180) {
     });
 }
 
-//track part
-let tracksVisible = false;
-
 function toggleTracks() {
     const btn = document.getElementById('toggle-tracks-btn');
+    tracksVisible = !tracksVisible;   // 先切换状态
+
     if (tracksVisible) {
+        loadTracks();
+        btn.textContent = '隐藏轨迹';
+    } else {
         Object.values(polylines).forEach(line => map.removeLayer(line));
         polylines = {};
-        tracksVisible = false;
         btn.textContent = '显示轨迹';
-    } else {
-        loadTracks();
-        tracksVisible = true;
-        btn.textContent = '隐藏轨迹';
     }
 }
 
@@ -332,7 +332,9 @@ async function startSharingLocation() {
             lastSavedLng = longitude;
         }
 
-        await loadTracks();
+        if (tracksVisible) {
+    await loadTracks();
+}
 
 
         // Inside startSharingLocation watchPosition callback:
@@ -534,7 +536,6 @@ async function initMapPanel() {
     subscribeLocations();
     await loadChatMessages();
     subscribeChat();
-    await loadTracks();
 }
 // chat extension 
 let mapChatExpanded = false;
